@@ -3,15 +3,15 @@ var express = require('express');
 
 var cors = require('cors');
 var path = require('path');
-var cookieParser = require('cookie-parser');
+// var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 require('./db.js')
 
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var ordersRouter = require('./routes/orders')
+var usersRouter = require('./routes/users.js');
+var ordersRouter = require('./routes/orders.js')
 
 var app = express();
 
@@ -22,7 +22,7 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+// app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
@@ -49,9 +49,14 @@ app.use(function(err, req, res, next) {
 const corsOptions = {
   origin: '*', 
   allowedHeaders: 'Content-Type', 
-  credentials: true
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  // credentials: true
 };
 
 app.use(cors(corsOptions));
+
+// app.listen(3001, function () {
+//   console.log('CORS-enabled web server listening on port 3001')
+// })
 
 module.exports = app;
