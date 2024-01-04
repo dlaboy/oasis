@@ -57,7 +57,17 @@ function OrderScreen() {
               {currentOrders.map(order =>(
                 <div key={order._id}>
                   <button className='list-group-item list-group-item-action p-3' onClick={() => toggleVisibility(order._id)}>{order.client_name}</button>
-                  <div className={itemVisibility[order._id] ? 'd-flex':'d-none'}>
+                  <div className={itemVisibility[order._id] ? 'd-flex bg-primary-subtle':'d-none bg-primary-subtle'}>
+                    {order.name}
+                    {order.items.map(item =>(
+                      <div className="">
+                        <div className="">{item.type}</div>
+                        <div className="">{item.ings}</div>
+                        <div className="">{item.tops}</div>
+                        <div className="">{item.qty}</div>
+                        <div className="">{item.comments}</div>
+                      </div>
+                    ))}
                     {order.payment_method}
                   </div>
                 </div>
