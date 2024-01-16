@@ -6,6 +6,7 @@ import Queue from './pages/Queue'
 import { Routes, Route } from 'react-router-dom'
 
 import { ItemContext } from "../context/ItemContext"
+import Home from './pages/Home'
 
 
 function App() {
@@ -20,9 +21,16 @@ function App() {
 
   const [renderOrdersKey, setRenderOrdersKey ] = useState(1);
 
+  const [itemCounter, setItemCounter] = useState(0);
+
+  const [metodo, setMetodo] = useState("");
+
+  const [newItem, setNewItem] = useState({});
+
   return (
-    <ItemContext.Provider value={{order, setOrder, name, setName, renderOrdersKey, setRenderOrdersKey}}>
+    <ItemContext.Provider value={{order, setOrder, name, setName, renderOrdersKey, setRenderOrdersKey, itemCounter, setItemCounter, metodo, setMetodo, newItem, setNewItem}}>
       <Routes>
+        <Route path="/" element={<Home/>}/>
         <Route path="/terminal" element={<Terminal/>}/>
         <Route path="/queue" element={<Queue/>}/>
       </Routes>

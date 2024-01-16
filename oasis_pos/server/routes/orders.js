@@ -41,4 +41,30 @@ router.post('/', async function (req, res) {
 
 })
 
+router.delete('/', async function (req, res){
+        try{
+            console.log(req.body.id)
+            await Order.findByIdAndDelete(req.body.id);
+            res.status(200).json({ success: true, msg: 'Order Deleted' });
+        }
+        catch(error){
+            console.log('Error:', error)
+        }
+
+})
+
+router.put('/', async function (req, res){
+    try{
+        console.log(req.body.id)
+        const updatedOrder = await Order.findByIdAndUpdate(req.body.id, req.body.data, { new: true })
+
+        if (!updatedOrder) {
+            return res.status(404).json({ message: 'Item not found' });
+          }
+    } catch (error) {
+        console.error('Error updating item:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+      }
+})
+
 module.exports = router;
