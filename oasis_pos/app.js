@@ -11,7 +11,8 @@ require('./db.js')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users.js');
-var ordersRouter = require('./routes/orders.js')
+var ordersRouter = require('./routes/orders.js');
+const { type } = require('os');
 
 var app = express();
 
@@ -54,7 +55,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
+console.log()
 if (process.env.NODE_ENV === "production"){
   app.use(express.static("client/public"))
   app.get("*", (req, res) => {
