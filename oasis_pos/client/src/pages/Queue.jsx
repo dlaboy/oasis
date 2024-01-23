@@ -55,6 +55,23 @@ export default function Queue() {
     
       }
 
+      const handleOrderClear = async () =>{
+
+        try {
+          
+          const response = axios.delete("/orders",)
+          console.log(response.data)
+        } catch (error) {
+          console.log("error:", error)
+        }
+    
+        setRenderOrdersKey(prevKey => prevKey + 1)
+    
+        location.reload()
+        
+      }
+    
+
   const [itemVisibility, setItemVisibility] = useState({});
   const [editEnable, isEditEnable] = useState({})
 
@@ -90,6 +107,8 @@ export default function Queue() {
 
             </h6>
             </div>
+            <button className='btn btn-outline-dark p-2' onClick={handleOrderClear}>Clear</button>
+
         </div>
          {currentOrders ? (
         <div className='list-group h-100'> 
