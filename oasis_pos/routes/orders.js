@@ -1,7 +1,7 @@
 var express = require('express');
 var mongoose = require("mongoose");
 var router = express.Router();
-var Order = require('../models/order.js')
+var Order = require('../routes/orders.js')
 var db = require("../db.js");
 
 

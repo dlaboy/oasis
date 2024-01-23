@@ -55,8 +55,16 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// app.listen(3001, function () {
-//   console.log('CORS-enabled web server listening on port 3001')
-// })
+if (process.env.NODE_ENV === "production"){
+  app.use(express.static("client/public"))
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "index.html"));
+  })
+}
+
+
+app.listen(process.env.PORT || 3001, function () {
+  console.log('CORS-enabled web server listening on port 3001')
+})
 
 module.exports = app;
