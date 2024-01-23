@@ -42,6 +42,7 @@ router.post('/', async function (req, res) {
 })
 
 router.delete('/', async function (req, res){
+    if(req.body.id != undefined){
         try{
             console.log(req.body.id)
             await Order.findByIdAndDelete(req.body.id);
@@ -50,6 +51,11 @@ router.delete('/', async function (req, res){
         catch(error){
             console.log('Error:', error)
         }
+    }
+    else{
+        await Order.deleteMany({})
+
+    }
 
 })
 

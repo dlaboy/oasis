@@ -65,14 +65,78 @@ function TerminalScreen() {
     const [ingsFlag, setIngsFlag] = useState({
         fresaIng:false,
         nutellaIng:false,
-        oreoIng:false
+        oreoIng:false,
+        maniIng:false,
+        almendraIng:false,
+        cocoIng:false,
+        bizvainillaIng:false,
+        pisIng:false,
+        amaIng:false,
+        granIng:false,
+        parchaIng:false,
+        mangoIng:false,
+        canelaIng:false,
+        anisIng:false,
+        limonIng:false,
+        cafeIng:false,
+        brownieIng:false,
+        guineoIng:false,
+        cameoIng:false,
+        tronkyIng:false,
+        chipsIng:false,
+        cheesecakeIng:false,
+        chocblancoIng:false,
+        fruityIng:false,
+        cocoaIng:false,
+        quesoIng:false,
+        uvaIng:false,
+        chinaIng:false,
+        guanabanaIng:false,
+        chipsahoyIng:false,
+        kitkatIng:false,
+        blueIng:false,
+        redvelvettIng:false,
+        nuecesIng:false,
+        carameloIng:false,
+        cherryIng:false,
+        brandyIng:false,
+        pinaIng:false,
+        pinacoladaIng:false,
+        manzanaIng:false,
+        guayabaIng:false,
+        zanahoriaIng:false,
+        ferreroIng:false,
+
         
     })
 
     const [topsFlag, setTopsFlag] = useState({
         fresaTop:false,
         nutellaTop:false,
-        oreoTop:false
+        oreoTop:false,
+        whippedTop:false,
+        maniTop:false,
+        almendraTop:false,
+        cherryTop:false,
+        carameloTop:false,
+        canelaTop:false,
+        nuecesTop:false,
+        cocorayadoTop:false,
+        pinaTop:false,
+        cafeTop:false,
+        chipsTop:false,
+        sprinkesdecoloresTop:false,
+        sprinkesdechocTop:false,
+        chocolateTop:false,
+        gummiesTop:false,
+        granoTop:false,
+        mielTop:false,
+        guineoTop:false,
+        cocoaTop:false,
+        fruityTop:false,
+        mymTop:false,
+        marshTop:false,
+
     })
 
     const nameMounted = useRef(false);
@@ -538,9 +602,9 @@ function TerminalScreen() {
 
     return (
         <div className="m-2 bg-secondary-subtle w-100 ">
-            <div className='  d-flex flex-column row ' style={{height:'100vh', overflowY:'scroll'}} key={componentKey}>
-                <div className="col w-100">
-                    <div className="m-2 col w-75 d-flex justify-content-evenly">
+            <div className='  d-flex flex-column  ' style={{height:'95vh',overflowY:'scroll', width:'75vw'}} key={componentKey}>
+                <div className="col w-100 " >
+                    <div className="m-2 col w-75 d-flex justify-content-evenly pt-4">
                         <label htmlFor="cliente">Nombre</label>
                         <div className="w-25 d-flex justify-content-between">
                             <input type="text" name='cliente'  disabled={isInputDisabled} value={name} onChange={handleName} />
@@ -571,7 +635,7 @@ function TerminalScreen() {
                         <button className='btn btn-primary '>New Item</button>
                     </div> */}
                 </div>
-                <div className="col h-75">
+                <div className="col">
                         { typeAlert && <div className='text-danger text-center'>Only One Type per Item</div> }
                     <div className='col d-flex flex-row m-1 p-3 w-100'>
                         <div className="col w-25  text-start">Type</div>
@@ -600,13 +664,52 @@ function TerminalScreen() {
                             Ingredients
                         </button>
                         {ingredientsButtons && <div className="col " >
-                            <button className={ingsFlag.fresaIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' }value={'fresa'} onClick={add}  >Fresa</button>
+                            <button className={ingsFlag.fresaIng  ? 'btn btn-outline-dark m-1 ingredients active p-3 ' : 'btn btn-outline-dark m-1 ingredients p-3' }value={'fresa'} onClick={add}  >Fresa</button>
                             <button className={ingsFlag.nutellaIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'nutella'} onClick={add} >Nutella</button>
                             <button className={ingsFlag.oreoIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'oreo'} onClick={add} >Oreo</button>
-                            <button className='btn btn-outline-dark m-1 p-3'>Mani</button>
-                            <button className='btn btn-outline-dark m-1 p-3'>Almendra</button>
-                            <button className='btn btn-outline-dark m-1 p-3'>Coco</button>
-                            <button className='btn btn-outline-dark m-1 p-3'>Biz. de Vainilla</button>
+                            <button className={ingsFlag.maniIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'mani'} onClick={add} >Mani</button>
+                            <button className={ingsFlag.almendraIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'almendra'} onClick={add} >Almendra</button>
+                            <button className={ingsFlag.cocoIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'coco'} onClick={add} >Coco</button>
+                            <button className={ingsFlag.bizvainillaIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'bizcocho de vainilla'} onClick={add} >Biz. de Vainilla</button>
+                            <button className={ingsFlag.pisIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'pistachio'} onClick={add} >Pistachio</button>
+                            <button className={ingsFlag.amaIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'amaretto'} onClick={add} >Amaretto</button>
+                            <button className={ingsFlag.granIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'granola'} onClick={add} >Granola</button>
+                            <button className={ingsFlag.parchaIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'parcha'} onClick={add} >Parcha</button>
+                            <button className={ingsFlag.mangoIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'mango'} onClick={add} >Mangó</button>
+                            <button className={ingsFlag.canelaIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'canela'} onClick={add} >Canela</button>
+                            <button className={ingsFlag.anisIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'anis'} onClick={add} >Anís</button>
+                            <button className={ingsFlag.limonIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'limon'} onClick={add} >Limón</button>
+                            <button className={ingsFlag.cafeIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'cafe'} onClick={add} >Café</button>
+                            <button className={ingsFlag.brownieIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'brownie'} onClick={add} >Brownie</button>
+                            <button className={ingsFlag.guineoIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'guineo'} onClick={add} >Guineo</button>
+                            <button className={ingsFlag.cameoIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'cameo'} onClick={add} >Cameo</button>
+                            <button className={ingsFlag.tronkyIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'tronky'} onClick={add} >Tronky</button>
+                            <button className={ingsFlag.chipsIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'chocolate chips'} onClick={add} >Chocolate Chips</button>
+                            <button className={ingsFlag.cheesecakeIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'cheesecake'} onClick={add} >Cheese Cake</button>
+                            <button className={ingsFlag.chocblancoIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'chocolate blanco'} onClick={add} >Chocolate Blanco</button>
+                            <button className={ingsFlag.fruityIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'fruity pebbles'} onClick={add} >Fruity Pebbles</button>
+                            <button className={ingsFlag.cocoaIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'cocoa pebbles'} onClick={add} >Cocoa Pebbles</button>
+                            <button className={ingsFlag.quesoIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'queso crema'} onClick={add} >Queso Crema</button>
+                            <button className={ingsFlag.uvaIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'uva'} onClick={add} >Uva</button>
+                            <button className={ingsFlag.chinaIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'china'} onClick={add} >China</button>
+                            <button className={ingsFlag.guanabanaIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'guanábana'} onClick={add} >Guanábana</button>
+                            <button className={ingsFlag.chipsahoyIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'chips ahoy'} onClick={add} >Chips Ahoy</button>
+                            <button className={ingsFlag.kitkatIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'kit-kat'} onClick={add} >Kit-Kat</button>
+                            <button className={ingsFlag.blueIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'blueberry'} onClick={add} >Blueberry</button>
+                            <button className={ingsFlag.redvelvettIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'red velvet'} onClick={add} >Red Velvet</button>
+                            <button className={ingsFlag.nuecesIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'nueces'} onClick={add} >Nueces</button>
+                            <button className={ingsFlag.carameloIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'caramelo'} onClick={add} >Caramelo</button>
+                            <button className={ingsFlag.cherryIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'cherry'} onClick={add} >Cherry</button>
+                            <button className={ingsFlag.brandyIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'brandy'} onClick={add} >Brandy</button>
+                            <button className={ingsFlag.pinaIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'piña'} onClick={add} >Piña</button>
+                            <button className={ingsFlag.pinacoladaIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'piña colada'} onClick={add} >Piña Colada</button>
+                            <button className={ingsFlag.manzanaIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'manzana'} onClick={add} >Manzana</button>
+                            <button className={ingsFlag.guayabaIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'guayaba'} onClick={add} >Guayaba</button>
+                            <button className={ingsFlag.zanahoriaIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'bizcocho de zanahoria'} onClick={add} >Bizcocho de Zanahoria</button>
+                            <button className={ingsFlag.ferreroIng  ? 'btn btn-outline-dark m-1 ingredients active p-3' : 'btn btn-outline-dark m-1 ingredients p-3' } value={'ferrero'} onClick={add} >Ferrero</button>
+
+
+
                         </div>}
                     </div>
                     <div className='col m-2'> 
@@ -614,13 +717,32 @@ function TerminalScreen() {
                             Toppings
                         </button>
                         {toppingsButtons && <div className="col " >
+                            <button className={topsFlag.whippedTop ? 'btn btn-outline-dark m-1 toppings active p-3':'btn btn-outline-dark m-1 toppings p-3'} value={'whipped cream'} onClick={add}>Whipped Cream</button>
                             <button className={topsFlag.fresaTop ? 'btn btn-outline-dark m-1 toppings active p-3':'btn btn-outline-dark m-1 toppings p-3'} value={'fresa'} onClick={add}>Fresa</button>
                             <button className={topsFlag.nutellaTop ? 'btn btn-outline-dark m-1 toppings active p-3':'btn btn-outline-dark m-1 toppings p-3'} value={'nutella'} onClick={add}>Nutella</button>
                             <button className={topsFlag.oreoTop ? 'btn btn-outline-dark m-1 toppings active p-3':'btn btn-outline-dark m-1 toppings p-3'} value={'oreo'} onClick={add}>Oreo</button>
-                            <button className='btn btn-outline-dark m-1 p-3'>Mani</button>
-                            <button className='btn btn-outline-dark m-1 p-3'>Almendra</button>
-                            <button className='btn btn-outline-dark m-1 p-3'>Coco</button>
-                            <button className='btn btn-outline-dark m-1 p-3'>Biz. de Vainilla</button>
+                            <button className={topsFlag.maniTop ? 'btn btn-outline-dark m-1 toppings active p-3':'btn btn-outline-dark m-1 toppings p-3'} value={'mani'} onClick={add}>Mani</button>
+                            <button className={topsFlag.almendraTop ? 'btn btn-outline-dark m-1 toppings active p-3':'btn btn-outline-dark m-1 toppings p-3'} value={'almendra'} onClick={add}>Almendra</button>
+                            <button className={topsFlag.cherryTop ? 'btn btn-outline-dark m-1 toppings active p-3':'btn btn-outline-dark m-1 toppings p-3'} value={'cherry'} onClick={add}>Cherry</button>
+                            <button className={topsFlag.canelaTop ? 'btn btn-outline-dark m-1 toppings active p-3':'btn btn-outline-dark m-1 toppings p-3'} value={'caramelo'} onClick={add}>Caramelo</button>
+                            <button className={topsFlag.nuecesTop ? 'btn btn-outline-dark m-1 toppings active p-3':'btn btn-outline-dark m-1 toppings p-3'} value={'canela'} onClick={add}>Canela</button>
+                            <button className={topsFlag.cocorayadoTop ? 'btn btn-outline-dark m-1 toppings active p-3':'btn btn-outline-dark m-1 toppings p-3'} value={'nueces'} onClick={add}>Nueces</button>
+                            <button className={topsFlag.cocoaTop ? 'btn btn-outline-dark m-1 toppings active p-3':'btn btn-outline-dark m-1 toppings p-3'} value={'coco rayado'} onClick={add}>Coco Rayado</button>
+                            <button className={topsFlag.pinaTop ? 'btn btn-outline-dark m-1 toppings active p-3':'btn btn-outline-dark m-1 toppings p-3'} value={'piña'} onClick={add}>Piña</button>
+                            <button className={topsFlag.cafeTop ? 'btn btn-outline-dark m-1 toppings active p-3':'btn btn-outline-dark m-1 toppings p-3'} value={'café'} onClick={add}>Café</button>
+                            <button className={topsFlag.chipsTop ? 'btn btn-outline-dark m-1 toppings active p-3':'btn btn-outline-dark m-1 toppings p-3'} value={'chocolate chips'} onClick={add}>Chocolate Chips</button>
+                            <button className={topsFlag.sprinkesdecoloresTop ? 'btn btn-outline-dark m-1 toppings active p-3':'btn btn-outline-dark m-1 toppings p-3'} value={'sprinkles de colores'} onClick={add}>Sprinkles de Colores</button>
+                            <button className={topsFlag.sprinkesdechocTop ? 'btn btn-outline-dark m-1 toppings active p-3':'btn btn-outline-dark m-1 toppings p-3'} value={'sprinkles de chocolate'} onClick={add}>Sprinkles de Chocolate</button>
+                            <button className={topsFlag.chocolateTop ? 'btn btn-outline-dark m-1 toppings active p-3':'btn btn-outline-dark m-1 toppings p-3'} value={'chocolate'} onClick={add}>Chocolate</button>
+                            <button className={topsFlag.gummiesTop ? 'btn btn-outline-dark m-1 toppings active p-3':'btn btn-outline-dark m-1 toppings p-3'} value={'gummies'} onClick={add}>Gummies</button>
+                            <button className={topsFlag.granoTop ? 'btn btn-outline-dark m-1 toppings active p-3':'btn btn-outline-dark m-1 toppings p-3'} value={'granola'} onClick={add}>Granola</button>
+                            <button className={topsFlag.mielTop ? 'btn btn-outline-dark m-1 toppings active p-3':'btn btn-outline-dark m-1 toppings p-3'} value={'miel'} onClick={add}>Miel</button>
+                            <button className={topsFlag.guineoTop ? 'btn btn-outline-dark m-1 toppings active p-3':'btn btn-outline-dark m-1 toppings p-3'} value={'guineo'} onClick={add}>Guineo</button>
+                            <button className={topsFlag.cocoaTop ? 'btn btn-outline-dark m-1 toppings active p-3':'btn btn-outline-dark m-1 toppings p-3'} value={'cocoa pebbles'} onClick={add}>Cocoa Pebbles</button>
+                            <button className={topsFlag.fruityTop ? 'btn btn-outline-dark m-1 toppings active p-3':'btn btn-outline-dark m-1 toppings p-3'} value={'fruity pebbles'} onClick={add}>Fruity Pebbles</button>
+                            <button className={topsFlag.mymTop ? 'btn btn-outline-dark m-1 toppings active p-3':'btn btn-outline-dark m-1 toppings p-3'} value={'m&m'} onClick={add}>M&M</button>
+                            <button className={topsFlag.marshTop ? 'btn btn-outline-dark m-1 toppings active p-3':'btn btn-outline-dark m-1 toppings p-3'} value={'marshmellow'} onClick={add}>Marshmellow</button>
+                           
                         </div>}
                     </div>
                     <div className='col d-flex flex-row m-2 p-3 bg-secondary-subtle'>
@@ -641,7 +763,7 @@ function TerminalScreen() {
                     <div className='col m-2 d-flex flex-row ps-3'>
                         <div className="col">Comments</div>
                         <div className="col">
-                            <textarea name="" id="" cols="30" rows="5" defaultValue={comments} onChange={handleComments}></textarea>
+                            <textarea name="" id="" cols="30" rows="2" defaultValue={comments} onChange={handleComments}></textarea>
                         </div>
                     </div>
                     <div className="col w-100 d-flex justify-content-center align-items-center">

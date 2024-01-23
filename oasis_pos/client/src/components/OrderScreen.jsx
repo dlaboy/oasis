@@ -6,6 +6,7 @@ import { Nav } from 'react-bootstrap'
 import { NavLink } from 'react-router-dom'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import './OrderScreen.css'
 
 
 const LOCAL_NAME_KEY = import.meta.env.VITE_REACT_APP_LOCAL_NAME_KEY;
@@ -188,16 +189,38 @@ function OrderScreen() {
 
     reloadChannel.postMessage({ action: 'reload' });
 
-}
+  }
+  const handleOrderClear = async () =>{
+
+    try {
+      
+      const response = axios.delete("/orders",)
+      console.log(response.data)
+    } catch (error) {
+      console.log("error:", error)
+    }
+
+    setRenderOrdersKey(prevKey => prevKey + 1)
+
+
+    reloadChannel.postMessage({ action: 'reload' });
+  }
+
 
   return (
-    <div className='m-2 bg-secondary-subtle w-25' style={{height:'100vh'}}>
+    <div className='m-2 bg-secondary-subtle w-25' style={{height:'95vh'}}>
         <div    className="">
           <div className="d-flex flex-column text-center">
             <Nav>
               <Nav.Link to='/' as={NavLink} className='btn b p-3   w-100  text-center'>Home</Nav.Link>
             </Nav>
-            <div className='p-3 text-start'>Queued Orders</div>
+            <div className='d-flex flex-row w-100 justify-content-between p-3 text-start'>
+                <div className="">
+                Queued Orders
+                </div>
+                <button className='btn btn-outline-dark p-2' onClick={handleOrderClear}>Clear</button>
+            </div>
+
           </div>
           <div style={{height:'25vh'}} className="overflow-scroll">
 
@@ -332,7 +355,7 @@ function OrderScreen() {
               </div>
             </div>
             
-            <div style={{height:'25vh'}} className="m-3 overflow-scroll ">
+            <div style={order.items ? {height:'25vh'}: {height:'0vh'}} className="m-3 overflow-scroll ">
               { order.items ? (
 
                 order.items.map(item =>  (
@@ -385,7 +408,7 @@ function OrderScreen() {
             </div>
             
           </div>
-          <div className="d-flex align-items-center justify-content-center h-100">
+          <div className="d-flex align-items-center justify-content-center" >
             <button type='button' onClick={handleShow} className='btn btn-primary p-3'>Send Order</button>
           </div>
 
