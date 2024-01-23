@@ -58,13 +58,12 @@ app.use(cors(corsOptions));
 if (process.env.NODE_ENV === "production"){
   app.use(express.static("client/public"))
   app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname,"oasis_pos", "client", "dist" ,"index.html"));
+    res.sendFile(path.resolve(__dirname, "client", "dist" ,"index.html"));
   })
+  console.log("AGH")
 }
 
 
-app.listen(process.env.PORT || 3001, function () {
-  console.log('CORS-enabled web server listening on port 3001')
-})
+
 
 module.exports = app;
