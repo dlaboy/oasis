@@ -24,7 +24,7 @@ var app = express();
 // app.set('views', path.join(__dirname, 'server','views'));
 // app.set('view engine', 'jade');
 
-app.use(logger('dev'));
+// app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // app.use(cookieParser());
@@ -35,9 +35,9 @@ app.use('/users', usersRouter);
 app.use('/orders', ordersRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
+// app.use(function(req, res, next) {
+//   next(createError(404));
+// });
 
 // // error handler
 // app.use(function(err, req, res, next) {
@@ -60,7 +60,6 @@ const corsOptions = {
 
 
 app.use(cors(corsOptions));
-
 
 /**
  * Module dependencies.
@@ -156,24 +155,23 @@ function onListening() {
 console.log(process.env.NODE_ENV)
 __dirname = path.resolve()
 console.log(path.join(__dirname,'/client/dist'))
-// if (process.env.NODE_ENV === "production"){
-//   app.use(express.static(path.join(__dirname,'/client/dist')))
-//   app.get("*", (req, res) => {
-//     try {
-//       res.sendFile(path.join(__dirname,'/client/dist/index.html'),function (err) {
-//         if (err) {
-//             console.error('Error sending file:', err);
-//         } else {
-//             console.log('Sent:', fileName);
-//         }
-//       });
-//     } catch (error) {
-//       console.log("error",error)
-//     }
-//   })
 
+app.use(express.static(path.join(__dirname,'/client/dist')))
 
-// }
+app.get("*", (req, res) => {
+  try {
+    res.sendFile(path.join(__dirname,'/client/dist/index.html'),function (err) {
+      if (err) {
+          console.error('Error sending file:', err);
+      } else {
+          console.log('Sent:', fileName);
+      }
+    });
+  } catch (error) {
+    console.log("error",error)
+  }
+})
+
 
 
 
