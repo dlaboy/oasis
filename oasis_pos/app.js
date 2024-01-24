@@ -8,6 +8,11 @@ var logger = require('morgan');
 
 require('./db.js')
 
+const dotenv = require('dotenv');
+
+dotenv.config();
+
+
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users.js');
