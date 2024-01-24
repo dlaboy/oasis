@@ -8,7 +8,7 @@ export default defineConfig({
     port:3000,
     proxy: {
       '/orders': {
-        target: 'https://oasispos-6173005c2083.herokuapp.com/orders', // Your API server address
+        target: 'https://scintillating-dusk-7a0ddd.netlify.app/orders', // Your API server address
         changeOrigin: true,
         rewrite: (path) => path.replace('/orders', ''),
       },

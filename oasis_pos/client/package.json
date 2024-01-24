@@ -2,7 +2,7 @@
   "name": "client",
   "private": true,
   "version": "0.0.0",
-  "proxy": "https://oasispos-6173005c2083.herokuapp.com/",
+  "proxy": "https://scintillating-dusk-7a0ddd.netlify.app",
   "type": "module",
   "scripts": {
     "start": "node app.js",
