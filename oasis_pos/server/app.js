@@ -173,10 +173,9 @@ if (process.env.NODE_ENV === "production"){
 
 
 }
-else{
-  app.use('/', indexRouter);
-}
 
+
+app.use('/', indexRouter);
 
 
 
