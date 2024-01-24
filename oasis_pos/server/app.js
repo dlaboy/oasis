@@ -21,7 +21,7 @@ var ordersRouter = require('./routes/orders.js');
 var app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'server','views'));
 app.set('view engine', 'jade');
 
 app.use(logger('dev'));
@@ -38,16 +38,16 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+// // error handler
+// app.use(function(err, req, res, next) {
+//   // set locals, only providing error in development
+//   res.locals.message = err.message;
+//   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+//   // render the error page
+//   res.status(err.status || 500);
+//   res.render('error');
+// });
 
 // Cors settings 
 const corsOptions = {
@@ -159,7 +159,13 @@ if (process.env.NODE_ENV === "production"){
   app.use(express.static(path.join(__dirname,'/client/dist')))
   app.get("*", (req, res) => {
     try {
-      res.sendFile(path.join(__dirname,'/client/dist/index.html'));
+      res.sendFile(path.join(__dirname,'/client/dist/index.html'),function (err) {
+        if (err) {
+            console.error('Error sending file:', err);
+        } else {
+            console.log('Sent:', fileName);
+        }
+      });
     } catch (error) {
       console.log("error",error)
     }
