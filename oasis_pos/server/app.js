@@ -15,15 +15,15 @@ dotenv.config();
 
 
 
-// var indexRouter = require('./routes/index');
+var indexRouter = require('./routes/index.js');
 var usersRouter = require('./routes/users.js');
 var ordersRouter = require('./routes/orders.js');
 
 var app = express();
 
 // view engine setup
-// app.set('views', path.join(__dirname, 'server','views'));
-// app.set('view engine', 'jade');
+app.set('views', path.join(__dirname, 'server','views'));
+app.set('view engine', 'jade');
 
 // app.use(logger('dev'));
 app.use(express.json());
@@ -31,7 +31,7 @@ app.use(express.urlencoded({ extended: false }));
 // app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use('/', indexRouter);
+app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/orders', ordersRouter);
 
@@ -160,7 +160,7 @@ app.listen(PORT, () =>{
 console.log(process.env.NODE_ENV)
 __dirname = path.resolve()
 
-app.use(express.static('dist'));
+// app.use(express.static('dist'));
 
 // app.get("*", (req, res) => {
 //   try {
