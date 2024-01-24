@@ -30,6 +30,7 @@ app.use(express.urlencoded({ extended: false }));
 // app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/orders', ordersRouter);
 
@@ -155,27 +156,27 @@ function onListening() {
 console.log(process.env.NODE_ENV)
 __dirname = path.resolve()
 console.log(path.join(__dirname,'/client/dist'))
-if (process.env.NODE_ENV === "production"){
-  app.use(express.static(path.join(__dirname,'/client/dist')))
-  app.get("*", (req, res) => {
-    try {
-      res.sendFile(path.join(__dirname,'/client/dist/index.html'),function (err) {
-        if (err) {
-            console.error('Error sending file:', err);
-        } else {
-            console.log('Sent:', fileName);
-        }
-      });
-    } catch (error) {
-      console.log("error",error)
-    }
-  })
+// if (process.env.NODE_ENV === "production"){
+//   app.use(express.static(path.join(__dirname,'/client/dist')))
+//   app.get("*", (req, res) => {
+//     try {
+//       res.sendFile(path.join(__dirname,'/client/dist/index.html'),function (err) {
+//         if (err) {
+//             console.error('Error sending file:', err);
+//         } else {
+//             console.log('Sent:', fileName);
+//         }
+//       });
+//     } catch (error) {
+//       console.log("error",error)
+//     }
+//   })
 
 
 }
 
 
-app.use('/', indexRouter);
+
 
 
 
