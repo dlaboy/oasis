@@ -5,10 +5,10 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   server: {
     base: '/oasispos/',
-    port:5173,
+    port:3000,
     proxy: {
       '/orders': {
-        target: 'http://localhost:3000/orders', // Your API server address
+        target: 'https://oasispos-6173005c2083.herokuapp.com/orders', // Your API server address
         changeOrigin: true,
         rewrite: (path) => path.replace('/orders', ''),
       },
