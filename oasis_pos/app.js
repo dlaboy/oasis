@@ -156,7 +156,7 @@ console.log(process.env.NODE_ENV)
 __dirname = path.resolve()
 if (process.env.NODE_ENV === "production"){
   app.use(express.static(path.join(__dirname,'/client/dist')))
-  app.get("/", (req, res) => {
+  app.get("*", (req, res) => {
     try {
       res.sendFile(path.resolve(__dirname, "client", "dist" ,"index.html"));
     } catch (error) {
