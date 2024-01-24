@@ -1,6 +1,7 @@
 <<<<<<< HEAD
 /node_modules
 .env
+/dist
 =======
 # Logs
 logs
