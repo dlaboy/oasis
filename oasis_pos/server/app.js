@@ -154,11 +154,12 @@ function onListening() {
 
 console.log(process.env.NODE_ENV)
 __dirname = path.resolve()
+console.log(path.join(__dirname,'/client/dist'))
 if (process.env.NODE_ENV === "production"){
   app.use(express.static(path.join(__dirname,'/client/dist')))
   app.get("*", (req, res) => {
     try {
-      res.sendFile(path.resolve(__dirname, "client", "dist" ,"index.html"));
+      res.sendFile(path.join(__dirname,'/client/dist'));
     } catch (error) {
       console.log("error",error)
     }
