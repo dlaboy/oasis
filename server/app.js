@@ -13,6 +13,7 @@ const PORT = process.env.PORT || 3000;
 
 dotenv.config();
 
+app.use(express.static(path.join(__dirname, '../client/dist')));
 
 
 var indexRouter = require('./routes/index.js');
@@ -26,7 +27,6 @@ app.set('views', path.join(__dirname,'views'));
 
 app.set('view engine', 'jade');
 // Serve static files from the React app
-app.use(express.static(path.join(__dirname, '../client/dist')));
 
 
 
@@ -38,6 +38,16 @@ app.use(express.urlencoded({ extended: false }));
 // app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/orders', ordersRouter);
+
+
+
+
+app.use(cors(corsOptions));
+
+
+app.listen(PORT, () =>{
+  console.log("server started")
+})
 
 // // Handles any requests that don't match the ones above
 app.get('*', (req, res) => {
@@ -51,14 +61,6 @@ const corsOptions = {
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
  
 };
-
-
-app.use(cors(corsOptions));
-
-
-app.listen(PORT, () =>{
-  console.log("server started")
-})
 
 
 __dirname = path.resolve()
