@@ -63,9 +63,6 @@ app.get('*', (req, res) => {
 });
 
 
-
-
-
 __dirname = path.resolve()
 
 
