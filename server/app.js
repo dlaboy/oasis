@@ -13,7 +13,6 @@ const PORT = process.env.PORT || 3000;
 
 dotenv.config();
 
-app.use(express.static(path.join(__dirname, '../client/dist')));
 
 
 var indexRouter = require('./routes/index.js');
@@ -21,6 +20,8 @@ var usersRouter = require('./routes/users.js');
 var ordersRouter = require('./routes/orders.js');
 
 var app = express();
+app.use(express.static(path.join(__dirname, '../client/dist')));
+
 
 // view engine setup
 app.set('views', path.join(__dirname,'views'));
