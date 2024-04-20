@@ -53,8 +53,10 @@ app.get('*', (req, res) => {
 
 app.listen(PORT, () =>{
   console.log("server started")
-  console.log(__dirname)
+  console.log("127.0.0.1:3000")
 
 })
+
+
 
 module.exports = app;
