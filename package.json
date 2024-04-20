@@ -1,0 +1,8 @@
+{
+    "scripts": {
+      "start": "node server/app.js",
+      "build": "cd client && npm install && npm run build && cd ../server && npm install",
+      "postinstall": "npm run build"
+    }
+  }
+  
