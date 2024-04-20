@@ -2,7 +2,7 @@ import { defineConfig, preprocessCSS } from 'vite'
 import react from '@vitejs/plugin-react'
 const dotenv = require('dotenv');
 
-dotenv.config()
+dotenv.config();
 var NODE_ENV = process.env.NODE_ENV;
 var URL;
 
