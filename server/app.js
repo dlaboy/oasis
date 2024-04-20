@@ -20,7 +20,7 @@ var usersRouter = require('./routes/users.js');
 var ordersRouter = require('./routes/orders.js');
 
 var app = express();
-app.use(express.static(path.join(__dirname, '../server/dist')));
+app.use(express.static(path.join(__dirname, '../client/dist')));
 
 
 // view engine setup
@@ -53,7 +53,7 @@ app.use(cors(corsOptions));
 
 // // Handles any requests that don't match the ones above
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../server/dist', 'index.html'));
+  res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
 });
 
 
