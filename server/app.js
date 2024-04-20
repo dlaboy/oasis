@@ -41,9 +41,16 @@ app.use('/users', usersRouter);
 app.use('/orders', ordersRouter);
 
 
-
+// Cors settings 
+const corsOptions = {
+  origin: '*', 
+  allowedHeaders: 'Content-Type', 
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+ 
+};
 
 app.use(cors(corsOptions));
+
 
 
 app.listen(PORT, () =>{
@@ -55,13 +62,8 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
 });
 
-// Cors settings 
-const corsOptions = {
-  origin: '*', 
-  allowedHeaders: 'Content-Type', 
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
- 
-};
+
+
 
 
 __dirname = path.resolve()
