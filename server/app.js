@@ -65,7 +65,7 @@ app.get('*', (req, res) => {
 
 __dirname = path.resolve()
 
-print(__dirname)
+console.log(__dirname)
 
 
 
