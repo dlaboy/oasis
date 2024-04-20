@@ -51,21 +51,22 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-
-
-app.listen(PORT, () =>{
-  console.log("server started")
-})
-
 // // Handles any requests that don't match the ones above
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../server/dist', 'index.html'));
 });
 
 
-__dirname = path.resolve()
+app.listen(PORT, () =>{
+  console.log("server started")
+  console.log(__dirname)
 
-console.log(__dirname)
+})
+
+
+
+// __dirname = path.resolve()
+
 
 
 
