@@ -13,8 +13,6 @@ const PORT = process.env.PORT || 3000;
 
 dotenv.config();
 
-
-
 var indexRouter = require('./routes/index.js');
 var usersRouter = require('./routes/users.js');
 var ordersRouter = require('./routes/orders.js');
@@ -22,15 +20,11 @@ var ordersRouter = require('./routes/orders.js');
 var app = express();
 app.use(express.static(path.join(__dirname, '../client/dist')));
 
-
 // view engine setup
 app.set('views', path.join(__dirname,'views'));
 
 app.set('view engine', 'jade');
 // Serve static files from the React app
-
-
-
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -62,12 +56,5 @@ app.listen(PORT, () =>{
   console.log(__dirname)
 
 })
-
-
-
-// __dirname = path.resolve()
-
-
-
 
 module.exports = app;
