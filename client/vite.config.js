@@ -2,15 +2,15 @@ import { defineConfig, preprocessCSS } from 'vite'
 import react from '@vitejs/plugin-react'
 const dotenv = require('dotenv');
 
-var development = process.env.development;
+var NODE_ENV = process.env.NODE_ENV;
 var URL;
 
-if (development != ""){
-  if (development == True){
-    URL = 'http://127.0.0.1:3000/orders'
+if (NODE_ENV != None){
+  if (NODE_ENV == production){
+    URL = 'https://oasispos-6173005c2083.herokuapp.com/orders'
   }
   else{
-    URL = 'https://oasispos-6173005c2083.herokuapp.com/orders'
+    URL = 'http://127.0.0.1:3000/orders'
   }
 
 }
