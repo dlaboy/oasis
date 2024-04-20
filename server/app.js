@@ -65,6 +65,8 @@ app.get('*', (req, res) => {
 
 __dirname = path.resolve()
 
+print(__dirname)
+
 
 
 module.exports = app;
