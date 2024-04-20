@@ -9,5 +9,9 @@ URL: https://oasispos-79128360d945.herokuapp.com/terminal
 - Database Engine: MongoDB
 - Deployment: Heroku
 
+# Agile Methology:
+# Kanban:
+# TDD: Test Driven Development:
+
 
 
