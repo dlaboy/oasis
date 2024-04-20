@@ -29,16 +29,16 @@ app.set('view engine', 'jade');
 app.use(express.static(path.join(__dirname, '../client/dist')));
 
 // // Handles any requests that don't match the ones above
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
-// });
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
+});
 
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 
-app.use('/', indexRouter);
+// app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/orders', ordersRouter);
 
