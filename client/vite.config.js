@@ -17,7 +17,6 @@ if (NODE_ENV != None){
 }
 
 
-dotenv.config();
 
 
 // https://vitejs.dev/config/
