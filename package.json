@@ -1,8 +1,8 @@
 {
     "scripts": {
       "start": "node server/app.js",
-      "build": "cd client && npm install && npm run build",
-      "heroku-postbuild": "npm run build"
+      "build": "cd client && npm install && npm run build && cd ../server && npm install",
+      "postinstall": "npm run build"
     },
     "devDependencies": {
         "@types/react": "^18.2.43",
