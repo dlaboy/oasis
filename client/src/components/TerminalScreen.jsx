@@ -545,6 +545,7 @@ function TerminalScreen() {
             qty:qty,
             comments:comments
         });
+        setQty(0)
        
         setComponentKey(prevKey => prevKey + 1);
     }

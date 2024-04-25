@@ -6,7 +6,6 @@ import { Nav } from 'react-bootstrap'
 import { NavLink } from 'react-router-dom'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import './OrderScreen.css'
 
 
 const LOCAL_NAME_KEY = import.meta.env.VITE_REACT_APP_LOCAL_NAME_KEY;
@@ -60,7 +59,7 @@ function OrderScreen() {
   // USEEFFECT HOOKS
   useEffect(()=>{
     axios.get('/orders').then(response=>{
-      console.log("Response", response.data)
+      // console.log("Response", response.data)
       setCurrentOrders(response.data)
     }).catch(error =>{
       console.log("Error", error)
@@ -76,33 +75,21 @@ function OrderScreen() {
     }
    
   },[order])
-
   useEffect(()=>{
     setItemCounter(itemCounter + 1)
-
-
   },[newItem])
-  // useEffect(()=>{
-  //   setNewItem({})
-
-  // },[itemCounter])
   useEffect(()=>{
     if(orderSubmitted == true){ 
       setTotalItems(0)
       setNewItem({})
       setOrder({})
       setName("")
-      orderSubmitted(false) 
+      isOrderSubmited(false) 
+      
+      localStorage.clear()
 
-      localStorage.setItem(LOCAL_CMTS_KEY,"")
-      localStorage.setItem(LOCAL_INGS_KEY,[])
-      localStorage.setItem(LOCAL_ORDER_KEY,{})
-      localStorage.setItem(LOCAL_NAME_KEY,"")
-      localStorage.setItem(LOCAL_PM_KEY,"")
-      localStorage.setItem(LOCAL_TYPE_KEY,"")
-      localStorage.setItem(LOCAL_QTY_KEY,0)
-      localStorage.setItem(LOCAL_TOPS_KEY,[])
-      localStorage.setItem(LOCAL_ITEM_KEY,{})
+
+      
     }
    
   },[orderSubmitted])
@@ -180,9 +167,9 @@ function OrderScreen() {
     }
     showMetodoModal(false)
 
-    setRenderOrdersKey(prevKey => prevKey + 1);
-
+    
     isOrderSubmited(true)
+    setRenderOrdersKey(prevKey => prevKey + 1);
     
     reloadChannel.postMessage({ action: 'reload' });
 
@@ -377,9 +364,9 @@ function OrderScreen() {
               <div className="">
               Client: {name}
               </div>
-              <div className="">
+              {/* <div className="">
               Items In Order: { totalItems }
-              </div>
+              </div> */}
             </div>
             
             <div style={order.items ? {height:'25vh'}: {height:'0vh'}} className="m-3 overflow-scroll ">
