@@ -8,14 +8,14 @@ import { ItemContext } from '../../context/ItemContext';
 
 
 const LOCAL_NAME_KEY = import.meta.env.VITE_REACT_APP_LOCAL_NAME_KEY;
-const LOCAL_TYPE_KEY = import.meta.env.VITE_REACT_APP_LOCAL_TYPE_KEY;
-const LOCAL_INGS_KEY = import.meta.env.VITE_REACT_APP_LOCAL_INGS_KEY;
-const LOCAL_TOPS_KEY = import.meta.env.VITE_REACT_APP_LOCAL_TOPS_KEY;
-const LOCAL_QTY_KEY = import.meta.env.VITE_REACT_APP_LOCAL_QTY_KEY;
-const LOCAL_CMTS_KEY = import.meta.env.VITE_REACT_APP_LOCAL_CMTS_KEY;
-const LOCAL_ITEM_KEY = import.meta.env.VITE_REACT_APP_LOCAL_ITEMS_KEY;
-const LOCAL_ORDER_KEY = import.meta.env.VITE_REACT_APP_LOCAL_ORDER_KEY
-const LOCAL_PM_KEY = import.meta.env.VITE_REACT_APP_LOCAL_PM_KEY;
+const LOCAL_TYPE_KEY =  import.meta.env.VITE_REACT_APP_LOCAL_TYPE_KEY;
+const LOCAL_INGS_KEY =  import.meta.env.VITE_REACT_APP_LOCAL_INGS_KEY;
+const LOCAL_TOPS_KEY =  import.meta.env.VITE_REACT_APP_LOCAL_TOPS_KEY;
+const LOCAL_QTY_KEY =  import.meta.env.VITE_REACT_APP_LOCAL_QTY_KEY;
+const LOCAL_CMTS_KEY =  import.meta.env.VITE_REACT_APP_LOCAL_CMTS_KEY;
+const LOCAL_ITEM_KEY =  import.meta.env.VITE_REACT_APP_LOCAL_ITEMS_KEY;
+const LOCAL_ORDER_KEY =  import.meta.env.VITE_REACT_APP_LOCAL_ORDER_KEY
+const LOCAL_PM_KEY =  import.meta.env.VITE_REACT_APP_LOCAL_PM_KEY;
 
 
 
@@ -24,44 +24,21 @@ function TerminalScreen() {
     const [ingredientsButtons, showIngredients] = useState(false);
     const [toppingsButtons, showToppings] = useState(false);
     const [metodoModal, showMetodoModal] = useState(false);
-    
-    const {name, setName} = useContext( ItemContext );
-    
     const [type , setType] = useState("");
     const [typeCounter, setTypeCounter] = useState(0);
     const [typeAlert, setTypeAlert] = useState(false)
-
     const [ings, setIngs] = useState([]);
     const [tops, setTops] = useState([]);
     const [qty, setQty] = useState(0);
     const [comments, setComments] = useState("")
-
-    const {metodo, setMetodo} = useContext( ItemContext )
-
-
-    const {newItem, setNewItem} = useContext( ItemContext );
-
     const [componentKey, setComponentKey] = useState(1);
-
-    const {renderOrdersKey, setRenderOrdersKey} = useContext( ItemContext )
-
-    
-
     const [isInputDisabled, setIsInputDisabled] = useState(true);
-
-
-
-    const {itemCounter, setItemCounter} = useContext( ItemContext );
-
-    const {order, setOrder} = useContext( ItemContext )
-
     const [typeFlags, setTypeFlags] = useState({
         rolls:false,
         shakes:false,
         banana:false,
         puppy:false
     })
-    
     const [ingsFlag, setIngsFlag] = useState({
         fresaIng:false,
         nutellaIng:false,
@@ -109,7 +86,6 @@ function TerminalScreen() {
 
         
     })
-
     const [topsFlag, setTopsFlag] = useState({
         fresaTop:false,
         nutellaTop:false,
@@ -139,6 +115,21 @@ function TerminalScreen() {
 
     })
 
+
+    
+    const {name, setName} = useContext( ItemContext );
+    const {metodo, setMetodo} = useContext( ItemContext )
+    const {newItem, setNewItem} = useContext( ItemContext );
+    const {renderOrdersKey, setRenderOrdersKey} = useContext( ItemContext )
+    const {itemCounter, setItemCounter} = useContext( ItemContext );
+    const {order, setOrder} = useContext( ItemContext )
+    const {totalItems,setTotalItems} = useContext(ItemContext)
+
+
+    
+
+  
+
     const nameMounted = useRef(false);
     const typeMounted = useRef(false);
     const ingsMounted = useRef(false);
@@ -158,7 +149,7 @@ function TerminalScreen() {
 
 
     useEffect(()=>{
-
+        
         var storeName = JSON.parse(localStorage.getItem(LOCAL_NAME_KEY));
         var storeType = JSON.parse(localStorage.getItem(LOCAL_TYPE_KEY));
         var storedIngs = JSON.parse(localStorage.getItem(LOCAL_INGS_KEY));
@@ -183,7 +174,6 @@ function TerminalScreen() {
                             if(key === ingKey){
                                 if(localStorage.getItem(ingKey) === '1'){
                                     ingsFlag[ingKey] = true
-                                    console.log('true')
                                 }
                                 else{
                                     ingsFlag[ingKey] = false
@@ -345,33 +335,67 @@ function TerminalScreen() {
     },[comments])
 
     useEffect(()=>{
-
+        
 
         if(itemMounted.current){
-            
-            localStorage.setItem(LOCAL_ITEM_KEY,JSON.stringify(newItem));
-            if(localStorage.getItem(LOCAL_ITEM_KEY) != "{}"){
-                if(order.items != undefined){
+            console.log("Current Item to be added: ", typeof(newItem))
 
-                    setOrder(previous =>({
-                        ...previous,
-                        items:[...previous.items, JSON.parse(localStorage.getItem(LOCAL_ITEM_KEY))],
-                    }));
+            if (newItem.ings != undefined){
+                console.log("Current Item to be added: ", typeof(newItem))
+                localStorage.setItem(LOCAL_ITEM_KEY,JSON.stringify(newItem))
+                var storeNewItem = JSON.parse(localStorage.getItem(LOCAL_ITEM_KEY));
+                console.log("LOCALSTORAGE:Current Item to be added: ", typeof(storeNewItem))
+                console.log("newItem is not empty")
+                if(storeNewItem != {}){
+                    console.log("storeNewItem is not empty")
+
+                    if(order.items != undefined){
+                        console.log("order.Items is not undefined")
+
+                        var exist = false
+                        order.items.map(item =>{
+                            if(item._id == storeNewItem._id){
+                                exist = true
+                            }
+
+                        })
+                        if (exist == false){
+                            console.log("Adding Item")
+
+                            setOrder(previous =>({
+                                ...previous,
+                                items:[...previous.items, storeNewItem],
+                            })); 
+                         
+
+                        }
+                        else{
+                            console.log("Wanted Item is already added")
+
+                        }
+                    }
+                    else{
+                        console.log("order.Items is undefined")
+
+                        setOrder(previous =>({
+                            ...previous,
+                            items:[JSON.parse(localStorage.getItem(LOCAL_ITEM_KEY))],
+                        }));
+
+
+                    }
+
                 }
                 else{
-                    setOrder(previous =>({
-                        ...previous,
-                        items:[JSON.parse(localStorage.getItem(LOCAL_ITEM_KEY))],
-                    }));
+                    console.log("storeNewItem is  empty")
 
                 }
 
             }
+            else{
+                console.log("newItem is empty")
 
-                
-            
-         
-       
+            }
         }
         else{
 
@@ -404,6 +428,8 @@ function TerminalScreen() {
             metodoMounted.current = true
         }
     },[metodo])
+
+    
 
     const handleName = (event) => {
         setName(event.target.value)
@@ -479,17 +505,11 @@ function TerminalScreen() {
                     setType("")
                     setTypeCounter(typeCounter - 1)
                     event.target.classList.remove('active')
-                    // localStorage.setItem("type",event.target.value)
-    
                 }
                 else {
                     setType(event.target.value)
                     setTypeCounter(typeCounter + 1)
                     event.target.classList.add('active')
-                    // localStorage.setItem("type",event.target.value)
-
-    
-                    
                 }
             }
 
@@ -516,7 +536,7 @@ function TerminalScreen() {
       }
 
     const handleNewItem = (event) =>{
-
+        console.log("EVENT")
         setNewItem({
             _id: getRandomInt(0,100000000),
             type:type,
@@ -525,76 +545,11 @@ function TerminalScreen() {
             qty:qty,
             comments:comments
         });
-
-        setItemCounter(itemCounter => itemCounter + 1)
-        setType("")
-        setIngs([])
-        setTops([])
         setQty(0)
-        setComments("")
-        setTypeCounter(0)
-
-
+       
         setComponentKey(prevKey => prevKey + 1);
-        
-  
-
-    
     }
-
-    // const handlePayment = (event) => {
-    //     if(event.target.value === "ATH"){
-    //         setMetodo("ATH")
-    //     }
-    //     else{
-    //         setMetodo("CASH")
-    //     }
-    // }
-
     const reloadChannel = new BroadcastChannel('reload-channel');
-
-
-
-
-    // const handleOrder = async (event) =>{
-    //     setOrder(previous => ({
-    //         ...previous,
-    //         name: JSON.parse(localStorage.getItem(LOCAL_NAME_KEY)),
-    //         metodo: JSON.parse(localStorage.getItem(LOCAL_PM_KEY))
-    //     }));
-
-
-    //     var storedOrder = JSON.parse(localStorage.getItem(LOCAL_ORDER_KEY));
-    //     var storedItems = storedOrder.items;
-
-    //     try{
-    //         const response = await axios.post('/orders', {
-    //             'name': JSON.parse(localStorage.getItem(LOCAL_NAME_KEY)),
-    //             'items': storedItems,
-    //             'payment_method': JSON.parse(localStorage.getItem(LOCAL_PM_KEY))
-    //         })
-
-    //         // const response = await axios.get('/orders');
-    //         console.log('Response:', response.headers);
-    //     } catch(error){
-    //         console.error('Error', error)
-    //     }
-    //     showMetodoModal(false)
-
-    //     setOrder({})
-    //     setNewItem({})
-    //     setItemCounter(0)
-
-
-    //     setRenderOrdersKey(prevKey => prevKey + 1);
-    //     // console.log(renderOrdersKey)
-
-
-
-
-    //     reloadChannel.postMessage({ action: 'reload' });
-   
-    // }
 
     const handleSave = ( ) =>{
         setIsInputDisabled(!isInputDisabled);

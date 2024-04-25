@@ -6,64 +6,95 @@ import { Nav } from 'react-bootstrap'
 import { NavLink } from 'react-router-dom'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import './OrderScreen.css'
 
 
 const LOCAL_NAME_KEY = import.meta.env.VITE_REACT_APP_LOCAL_NAME_KEY;
-const LOCAL_PM_KEY = import.meta.env.VITE_REACT_APP_LOCAL_PM_KEY;
-
-
-
+const LOCAL_TYPE_KEY =  import.meta.env.VITE_REACT_APP_LOCAL_TYPE_KEY;
+const LOCAL_INGS_KEY =  import.meta.env.VITE_REACT_APP_LOCAL_INGS_KEY;
+const LOCAL_TOPS_KEY =  import.meta.env.VITE_REACT_APP_LOCAL_TOPS_KEY;
+const LOCAL_QTY_KEY =  import.meta.env.VITE_REACT_APP_LOCAL_QTY_KEY;
+const LOCAL_CMTS_KEY =  import.meta.env.VITE_REACT_APP_LOCAL_CMTS_KEY;
+const LOCAL_ITEM_KEY =  import.meta.env.VITE_REACT_APP_LOCAL_ITEMS_KEY;
+const LOCAL_ORDER_KEY =  import.meta.env.VITE_REACT_APP_LOCAL_ORDER_KEY
+const LOCAL_PM_KEY =  import.meta.env.VITE_REACT_APP_LOCAL_PM_KEY;
 
 function OrderScreen() {
+
+
+  // RELOAD CHANNEL
+  const reloadChannel = new BroadcastChannel('reload-channel');
   
+  // USESTATE HOOKS
   const [currentOrders,setCurrentOrders] = useState(null)
-
-  const {order, setOrder} = useContext( ItemContext )
-
-  
   const [metodoModal, showMetodoModal] = useState(false);
-  
+  const [itemVisibility, setItemVisibility] = useState({});
+  const [editEnable, isEditEnable] = useState({})
+  const [orderSubmitted,isOrderSubmited] = useState(false)
+
+
+  // CONTEXT
+  const {order, setOrder} = useContext( ItemContext )
+  const {name, setName} = useContext( ItemContext );
+  const {renderOrdersKey, setRenderOrdersKey} = useContext( ItemContext );
+  const { itemCounter, setItemCounter } = useContext( ItemContext );
+  const {metodo, setMetodo} = useContext( ItemContext );
+  const {newItem, setNewItem} = useContext( ItemContext );
+  const {totalItems,setTotalItems} = useContext(ItemContext)
+
+
+  // MODAL HANDLERS
   const handleShow = () => showMetodoModal(true)
   const handleClose = () => showMetodoModal(false)
 
-  
+  // MODAL PAYMENT HANDLER 
+    const handlePayment = (event) => {
+      if(event.target.value === "ATH"){
+          setMetodo("ATH")
+      }
+      else{
+          setMetodo("CASH")
+      }
+  }
 
-  const {name, setName} = useContext( ItemContext );
-
-  const {renderOrdersKey, setRenderOrdersKey} = useContext( ItemContext );
-
-  const { itemCounter, setItemCounter } = useContext( ItemContext );
-
-  const {metodo, setMetodo} = useContext( ItemContext );
-
- 
-
-
+  // USEEFFECT HOOKS
   useEffect(()=>{
     axios.get('/orders').then(response=>{
-      console.log("Response", response.data)
+      // console.log("Response", response.data)
       setCurrentOrders(response.data)
     }).catch(error =>{
       console.log("Error", error)
-    
     })
-
-    setName("")
-
   },[renderOrdersKey])
-
-
-
-  const {newItem, setNewItem} = useContext( ItemContext );
-
-
- 
-
-  const [itemVisibility, setItemVisibility] = useState({});
-  const [editEnable, isEditEnable] = useState({})
-
+  useEffect(()=>{
+    if (typeof(order.items) != undefined ){
+      order?.items?.map(item =>{
+        setTotalItems(totalItems + item.qty)
+        console.log("Increasing Quantity")
   
+      })
+    }
+   
+  },[order])
+  useEffect(()=>{
+    setItemCounter(itemCounter + 1)
+  },[newItem])
+  useEffect(()=>{
+    if(orderSubmitted == true){ 
+      setTotalItems(0)
+      setNewItem({})
+      setOrder({})
+      setName("")
+      isOrderSubmited(false) 
+      
+      localStorage.clear()
+
+
+      
+    }
+   
+  },[orderSubmitted])
+
+  // TOGGLE EDIT 
   const toggleEdit = (itemId) => {
     isEditEnable(prevState => ({
       ...prevState,
@@ -71,17 +102,31 @@ function OrderScreen() {
     }));
   };
 
-
+  // TOGGLE VISIBILITY OF ORDER DETAILS
   const toggleVisibility = (itemId) => {
     setItemVisibility(prevState => ({
       ...prevState,
       [itemId]: !prevState[itemId],
     }));
   };
+  // DELETE ALL ORDERS IN DB
+  const handleOrderClear = async () =>{
 
-  const reloadChannel = new BroadcastChannel('reload-channel');
+    try {
+      
+      const response = axios.delete("/orders",)
+      console.log(response.data)
+    } catch (error) {
+      console.log("error:", error)
+    }
+
+    setRenderOrdersKey(prevKey => prevKey + 1)
 
 
+    reloadChannel.postMessage({ action: 'reload' });
+  }
+
+  // DELETE ITEM FROM ORDER IN DB
   const handleDelete = async (orderId) => {
     try{
       console.log(orderId)
@@ -91,66 +136,12 @@ function OrderScreen() {
     catch(error){
       console.log('error:', error)
     }
-
     setRenderOrdersKey(prevKey => prevKey + 1)
-
-
     reloadChannel.postMessage({ action: 'reload' });
-
   }
 
-  const handlePayment = (event) => {
-    if(event.target.value === "ATH"){
-        setMetodo("ATH")
-    }
-    else{
-        setMetodo("CASH")
-    }
-}
-
-
-
-  // const handleUpdate = async (orderId) =>{
-  //   try{
-  //     console.log(orderId)
-  //     const response = await axios.put('/orders',{data:{id:orderId,order:{}}})
-
-  //   }
-  //   catch(error){
-  //     console.log('error', error)
-  //   }
-  // }
-
-  const LOCAL_ITEM_KEY = import.meta.env.VITE_REACT_APP_LOCAL_ITEMS_KEY;
-  const LOCAL_ORDER_KEY = import.meta.env.VITE_REACT_APP_LOCAL_ORDER_KEY
-
-
-
-  const handleClear = () => {
-    setName("")
-    setOrder({})
-    localStorage.setItem(LOCAL_ITEM_KEY, JSON.stringify({}))
-  }
-
-  const handleDeleteItem = (id)=>{
-    console.log(order['items'])
-    order['items'].map(i=>{
-      if(i._id === id){
-        console.log('deleting item from '+ order['name'] + 'order')
-        const updatedOrder = order['items'].filter(i => i._id !== id)
-        setOrder(updatedOrder)
-        localStorage.setItem(LOCAL_ITEM_KEY, JSON.stringify({}))
-
-      }
-      else{
-        console.log('item not found')
-
-      }
-    })
-    
  
-  }
-
+  // POST ORDER TO DB
   const handleOrder = async (event) =>{
     setOrder(previous => ({
         ...previous,
@@ -176,35 +167,58 @@ function OrderScreen() {
     }
     showMetodoModal(false)
 
+    
+    isOrderSubmited(true)
+    setRenderOrdersKey(prevKey => prevKey + 1);
+    
+    reloadChannel.postMessage({ action: 'reload' });
+
+  }
+   // DELETE ITEM FROM ORDER IN LOCAL STORAGE
+   const handleDeleteItem = (id)=>{
+    console.log(order['items'])
+    order['items'].map(i=>{
+      if(i._id === id){
+        console.log('deleting item from '+ order['name'] + 'order')
+        const updatedOrder = order['items'].filter(i => i._id !== id)
+        setOrder(updatedOrder)
+        localStorage.setItem(LOCAL_ITEM_KEY, JSON.stringify({}))
+
+      }
+      else{
+        console.log('item not found')
+
+      }
+    })
+    
+ 
+  }
+  // DELETE ORDER FROM CURRENT ORDER IN LOCALSTORAGE
+  const handleClear = () => {
     setOrder({})
     setNewItem({})
     setItemCounter(0)
+    setTotalItems(0)
 
+    
+    setName("")
 
     setRenderOrdersKey(prevKey => prevKey + 1);
-    // console.log(renderOrdersKey)
-
-
-
-
-    reloadChannel.postMessage({ action: 'reload' });
-
+    
   }
-  const handleOrderClear = async () =>{
+    // const handleUpdate = async (orderId) =>{
+  //   try{
+  //     console.log(orderId)
+  //     const response = await axios.put('/orders',{data:{id:orderId,order:{}}})
 
-    try {
-      
-      const response = axios.delete("/orders",)
-      console.log(response.data)
-    } catch (error) {
-      console.log("error:", error)
-    }
+  //   }
+  //   catch(error){
+  //     console.log('error', error)
+  //   }
+  // }
+  
+  // 
 
-    setRenderOrdersKey(prevKey => prevKey + 1)
-
-
-    reloadChannel.postMessage({ action: 'reload' });
-  }
 
 
   return (
@@ -239,7 +253,7 @@ function OrderScreen() {
                     </div>
                     <div className={itemVisibility[order._id] ? 'd-flex bg-primary-subtle p-3 ':'d-none bg-primary-subtle '}>
                       <div className="d-flex flex-column w-100 ">
-                        {order.items.map(item =>(
+                        {order?.items && order.items.map(item =>(
                         <div className=" border-bottom border-dark w-100">
                           <div className="d-flex flex-row">
                             <div className='fw-bold'> Type:  </div> 
@@ -255,7 +269,7 @@ function OrderScreen() {
                               Ingredients: 
                             </div>
                             <ul className="d-flex flex-column">
-                              {item.ings.map((ing=>(  
+                              {item && item.ings.map((ing=>(  
                                 <li>{ing}
                                 {/* <div className="text-secondary">
                                 {editEnable[order._id] ? (<input className='w-75' defaultValue={ing}/>):(<div></div>)}
@@ -350,13 +364,13 @@ function OrderScreen() {
               <div className="">
               Client: {name}
               </div>
-              <div className="">
-              Items In Order: { itemCounter }
-              </div>
+              {/* <div className="">
+              Items In Order: { totalItems }
+              </div> */}
             </div>
             
             <div style={order.items ? {height:'25vh'}: {height:'0vh'}} className="m-3 overflow-scroll ">
-              { order.items ? (
+              { order ? ( order?.items &&
 
                 order.items.map(item =>  (
                   <div key={item._id} className='border-bottom border-dark d-flex flex-row m-2'>
@@ -366,7 +380,7 @@ function OrderScreen() {
                       </div>
                       Ingredients
                       <ul className="">
-                        {item.ings.map((ing=>(  
+                        {item && item.ings.map((ing=>(  
                                 <li>{ing}
                                 {/* <div className="text-secondary">
                                 {editEnable[order._id] ? (<input className='w-75' defaultValue={ing}/>):(<div></div>)}
