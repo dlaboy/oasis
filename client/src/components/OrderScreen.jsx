@@ -196,7 +196,7 @@ function OrderScreen() {
   // DELETE ORDER FROM CURRENT ORDER IN LOCALSTORAGE
   const handleClear = () => {
     setOrder({})
-    setNewItem({})
+    // setNewItem({})
     setItemCounter(0)
     setTotalItems(0)
 
@@ -222,7 +222,7 @@ function OrderScreen() {
 
 
   return (
-    <div className='m-2 bg-secondary-subtle w-25' style={{height:'95vh'}}>
+    <div className='m-2 bg-light w-25' style={{height:'95vh'}}>
         <div    className="">
           <div className="d-flex flex-column text-center">
             <Nav>
@@ -232,7 +232,7 @@ function OrderScreen() {
                 <div className="">
                 Queued Orders
                 </div>
-                <button className='btn btn-outline-dark p-2' onClick={handleOrderClear}>Clear</button>
+                <button className='rounded-3 bg-light border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-2' onClick={handleOrderClear}>Clear</button>
             </div>
 
           </div>
@@ -357,17 +357,18 @@ function OrderScreen() {
         <div className="">
           <div className="p-3 d-flex justify-content-between">
             <div>Current Order</div>
-            <button className='btn btn-outline-dark p-2' onClick={handleClear}>Clear</button>
+            <button className='rounded-3 bg-light border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-2' onClick={handleClear}>Clear</button>
           </div>
-          <div className="bg-white">
-            <div  className=" w-100 shadow p-3 d-flex flex-column">
+          <div  className=" w-100  p-3 d-flex flex-column">
               <div className="">
               Client: {name}
               </div>
               {/* <div className="">
               Items In Order: { totalItems }
               </div> */}
-            </div>
+          </div>
+          <div>
+       
             
             <div style={order.items ? {height:'25vh'}: {height:'0vh'}} className="m-3 overflow-scroll ">
               { order ? ( order?.items &&
@@ -422,8 +423,8 @@ function OrderScreen() {
             </div>
             
           </div>
-          <div className="d-flex align-items-center justify-content-center" >
-            <button type='button' onClick={handleShow} className='btn btn-primary p-3'>Send Order</button>
+          <div className="d-flex align-items-center justify-content-center w-100" >
+            <button type='button' onClick={handleShow} className='btn btn-primary p-3 w-100'>Send Order</button>
           </div>
 
           <Modal show={metodoModal} onHide={handleClose} centered>

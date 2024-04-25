@@ -4,6 +4,7 @@ import viteLogo from '/vite.svg'
 import Terminal from './pages/Terminal'
 import Queue from './pages/Queue'
 import { Routes, Route } from 'react-router-dom'
+import './App.css'
 
 import { ItemContext } from "../context/ItemContext"
 import Home from './pages/Home'
