@@ -107,7 +107,7 @@ export default function Queue() {
 
             </h6>
             </div>
-            <button className='btn btn-outline-dark p-2' onClick={handleOrderClear}>Clear</button>
+            <button className='btn btn-outline-secondary p-2' onClick={handleOrderClear}>Clear</button>
 
         </div>
          {currentOrders ? (

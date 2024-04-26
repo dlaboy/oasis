@@ -1,0 +1,10 @@
+
+  .button-text {
+    transition: opacity 0.3s ease;
+    opacity: 1;
+  }
+  
+  .button-hidden {
+    opacity: 0;
+  }
+  
