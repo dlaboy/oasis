@@ -423,8 +423,8 @@ function OrderScreen() {
             </div>
             
           </div>
-          <div className="d-flex align-items-center justify-content-center w-100" >
-            <button type='button' onClick={handleShow} className='btn btn-primary p-3 w-100'>Send Order</button>
+          <div className="d-flex align-items-center justify-content-center" >
+            <button type='button' onClick={handleShow} className='btn btn-outline-primary rounded-pill p-3'>Send Order</button>
           </div>
 
           <Modal show={metodoModal} onHide={handleClose} centered>

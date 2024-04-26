@@ -704,7 +704,7 @@ function TerminalScreen() {
                         </div>
                     </div>
                     <div className="col w-100 d-flex justify-content-center align-items-center">
-                        <button className='btn btn-primary p-3' onClick={handleNewItem}>Add Item to Order</button>
+                        <button className='btn btn-outline-primary p-3 rounded-pill' onClick={handleNewItem}>Add Item to Order</button>
                     </div>
             
                 </div>

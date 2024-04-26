@@ -16,6 +16,8 @@ dotenv.config();
 var indexRouter = require('./routes/index.js');
 var usersRouter = require('./routes/users.js');
 var ordersRouter = require('./routes/orders.js');
+var employeeRouter = require('./routes/employees.js');
+var loginRouter = require('./routes/logins.js');
 
 var app = express();
 app.use(express.static(path.join(__dirname, '../client/dist')));
@@ -33,6 +35,8 @@ app.use(express.urlencoded({ extended: false }));
 // app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/orders', ordersRouter);
+app.use('/employee', employeeRouter);
+app.use('/login', loginRouter);
 
 
 // Cors settings 
