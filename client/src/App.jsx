@@ -2,12 +2,13 @@ import { useState, useEffect, useContext } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import Terminal from './pages/Terminal'
+import Home from './pages/Home'
 import Queue from './pages/Queue'
+import Sales from './pages/Sales'
 import { Routes, Route } from 'react-router-dom'
 import './App.css'
 
 import { ItemContext } from "../context/ItemContext"
-import Home from './pages/Home'
 
 
 function App() {
@@ -28,15 +29,21 @@ function App() {
 
   const [newItem, setNewItem] = useState({});
 
-  const [totalItems, setTotalItems] = useState(0);
+  const [totalToPay,setTotalToPay] = useState(0)
+  const [type,setType] = useState(0)
+  const [typeCounter, setTypeCounter] = useState(0);
+
+
+
   
 
   return (
-    <ItemContext.Provider value={{totalItems,setTotalItems,order, setOrder, name, setName, renderOrdersKey, setRenderOrdersKey, itemCounter, setItemCounter, metodo, setMetodo, newItem, setNewItem}}>
+    <ItemContext.Provider value={{typeCounter, setTypeCounter,type,setType,totalToPay,setTotalToPay,order, setOrder, name, setName, renderOrdersKey, setRenderOrdersKey, itemCounter, setItemCounter, metodo, setMetodo, newItem, setNewItem}}>
       <Routes>
         <Route path="/" element={<Home/>}/>
         <Route path="/terminal" element={<Terminal/>}/>
         <Route path="/queue" element={<Queue/>}/>
+        <Route path="/sales" element={<Sales/>}/>
       </Routes>
     </ItemContext.Provider>
   )

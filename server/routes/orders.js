@@ -21,13 +21,8 @@ router.post('/', async function (req, res) {
     const name = req.body.name;
     const items = req.body.items;
     const payment = req.body.payment_method;
-
-    
-
-
-    let newOrder = new Order({client_name: name, items:items, payment_method: payment})
-
-    
+    const total_to_pay = req.body.total
+    let newOrder = new Order({client_name: name, items:items, payment_method: payment,total: total_to_pay})
     /**
      * This function below allows us to verify that both
      * the username and password for the user are correct. 

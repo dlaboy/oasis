@@ -14,5 +14,9 @@
         "eslint-plugin-react-hooks": "^4.6.0",
         "eslint-plugin-react-refresh": "^0.4.5",
         "vite": "^5.2.9"
+    },
+    "dependencies": {
+        "lodash": "^4.17.21",
+        "react-native": "^0.74.0"
     }
 }
