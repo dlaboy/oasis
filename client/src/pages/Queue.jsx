@@ -4,6 +4,7 @@ import axios from 'axios'
 import { NavLink } from 'react-router-dom'
 import { Nav } from 'react-bootstrap'
 import { ItemContext } from '../../context/ItemContext';
+import CurrencyFormatter from '../components/CurrencyFormatter'
 
 
 
@@ -121,7 +122,7 @@ export default function Queue() {
                         Delete
                     </button>
                     </div>
-                    <div className={itemVisibility[order._id] ? 'd-flex bg-primary-subtle p-3 w-100':'d-none bg-primary-subtle '}>
+                    <div className={itemVisibility[order._id] ? 'd-flex flex-column bg-secondary-subtle p-3 w-100':'d-none bg-secondary-subtle '}>
                     <div className="d-flex flex-column w-100 ">
                       {order.items.map(item =>(
                       <div className=" border-bottom border-dark w-100">
@@ -201,6 +202,14 @@ export default function Queue() {
                         </div>
                         <div className="fw-normal d-flex justify-content-center align-items-center">
                           {order.payment_method}
+                        </div>
+                      </div>
+                      <div className="fw-bold d-flex flex-row w-100">
+                        <div className="">
+                          Total:
+                        </div>
+                        <div className="fw-normal d-flex justify-content-center align-items-center">
+                              <CurrencyFormatter value={order.total} />
                         </div>
                       </div>
                       <div className={editEnable[order._id] ? 'd-flex justify-content-center align-items-center h-100':'d-none'}>

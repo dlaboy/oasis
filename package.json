@@ -16,6 +16,7 @@
         "vite": "^5.2.9"
     },
     "dependencies": {
+        "lodash": "^4.17.21",
         "react-native": "^0.74.0"
     }
 }

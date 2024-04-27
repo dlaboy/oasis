@@ -24,8 +24,6 @@ function TerminalScreen() {
     const [ingredientsButtons, showIngredients] = useState(false);
     const [toppingsButtons, showToppings] = useState(false);
     const [metodoModal, showMetodoModal] = useState(false);
-    const [type , setType] = useState("");
-    const [typeCounter, setTypeCounter] = useState(0);
     const [typeAlert, setTypeAlert] = useState(false)
     const [ings, setIngs] = useState([]);
     const [tops, setTops] = useState([]);
@@ -123,12 +121,13 @@ function TerminalScreen() {
     const {renderOrdersKey, setRenderOrdersKey} = useContext( ItemContext )
     const {itemCounter, setItemCounter} = useContext( ItemContext );
     const {order, setOrder} = useContext( ItemContext )
-    const {totalItems,setTotalItems} = useContext(ItemContext)
+    const {totalToPay,setTotalToPay} = useContext(ItemContext)
+    const {type , setType} = useContext( ItemContext);
+    const {typeCounter, setTypeCounter} = useContext( ItemContext );
+
 
 
     
-
-  
 
     const nameMounted = useRef(false);
     const typeMounted = useRef(false);
@@ -144,7 +143,12 @@ function TerminalScreen() {
     const checkButtons = useRef(true);
 
 
-    
+    const itemCosts = {
+        rolls : 4.00,
+        shakes : 5.00,
+        banana : 6.00,
+        puppy : 3.00
+      }
 
 
 
@@ -204,9 +208,12 @@ function TerminalScreen() {
                 })
             }
             if(storeType){
-                setType(storeType)
+                if (storeType != type){
+                    setType(storeType)
+                }
                 if (storeType === 'rolls'){
                     typeFlags['rolls'] = true;
+                    
                 } 
                 else if (storeType === 'banana'){
                     typeFlags['banana'] = true
@@ -222,22 +229,32 @@ function TerminalScreen() {
   
             }
             if(storeQty){
-                setQty(storeQty)
+                if (storeQty != qty){
+                    setQty(storeQty)
+                }
             }
             if(storeComments){
-                setComments(storeComments)
+                if (storeComments != comments){
+                    setComments(storeComments)
+                }
             }
             if(storeNewItem){
-                setNewItem(storeNewItem)
+                if (storeNewItem != newItem){
+                    setNewItem(storeNewItem)
+                }
             }
             
             if(storeOrder){
-                setOrder(storeOrder)
+                if (storeOrder != order){
+                    setOrder(storeOrder)
+                }
                 
             }
 
             if(storePM){
-                setMetodo(storePM)
+                if (storePM != metodo){
+                    setMetodo(storePM)
+                }
             }
 
             
@@ -247,6 +264,7 @@ function TerminalScreen() {
 
 
     },[])
+
 
     
 
@@ -338,14 +356,10 @@ function TerminalScreen() {
         
 
         if(itemMounted.current){
-            console.log("Current Item to be added: ", typeof(newItem))
 
             if (newItem.ings != undefined){
-                console.log("Current Item to be added: ", typeof(newItem))
                 localStorage.setItem(LOCAL_ITEM_KEY,JSON.stringify(newItem))
                 var storeNewItem = JSON.parse(localStorage.getItem(LOCAL_ITEM_KEY));
-                console.log("LOCALSTORAGE:Current Item to be added: ", typeof(storeNewItem))
-                console.log("newItem is not empty")
                 if(storeNewItem != {}){
                     console.log("storeNewItem is not empty")
 
@@ -366,16 +380,14 @@ function TerminalScreen() {
                                 ...previous,
                                 items:[...previous.items, storeNewItem],
                             })); 
+
+                            
                          
 
                         }
-                        else{
-                            console.log("Wanted Item is already added")
-
-                        }
+                   
                     }
                     else{
-                        console.log("order.Items is undefined")
 
                         setOrder(previous =>({
                             ...previous,
@@ -386,16 +398,10 @@ function TerminalScreen() {
                     }
 
                 }
-                else{
-                    console.log("storeNewItem is  empty")
-
-                }
+                
 
             }
-            else{
-                console.log("newItem is empty")
-
-            }
+           
         }
         else{
 
@@ -409,9 +415,46 @@ function TerminalScreen() {
 
 
     useEffect(()=>{
+        var same = false
         if(orderMounted.current){
+            if (JSON.parse(localStorage.getItem(LOCAL_ORDER_KEY))?.items != undefined && order?.items != undefined){
+                var compareMe = JSON.parse(localStorage.getItem(LOCAL_ORDER_KEY))
+                console.log("Are the items the same in both variables?", order?.items.length === compareMe.items.length)
+                if (order?.items.length === compareMe.items.length){
+                    same = true
+                    console.log("Same is", same)
+                }
+                console.log("Change in Order Detected")
+            }
             localStorage.setItem(LOCAL_ORDER_KEY,JSON.stringify(order))
+            var storedOrder = JSON.parse(localStorage.getItem(LOCAL_ORDER_KEY));
+            var storedItems = storedOrder.items;
+            
 
+            for (const item in storedItems) {
+                if (storedItems.hasOwnProperty(item)) {
+                    for (const key in storedItems[item]){
+                    if (storedItems[item].hasOwnProperty(key)){
+                        if (key == 'type'){
+                            var itemQty = storedItems[item]['qty']
+                            console.log("Quantity of this item: ", itemQty)
+            
+                            var sumToTotal = itemCosts[storedItems[item][key]] * itemQty
+                            console.log("Sum to total pay, please: ", sumToTotal)
+                            console.log("Same is", same,"before trying to sum")
+                            if (same == false){
+
+                                setTotalToPay(totalToPay + sumToTotal)
+                                console.log("Summed Quantity")
+                            }
+                            
+                            
+            
+                        }
+                    }
+                    }
+                }
+                }
          
         }
         else{
@@ -495,6 +538,7 @@ function TerminalScreen() {
         else if((buttonClasses.contains('type'))){
             if (typeCounter == 1 && type !== event.target.value ){
                 console.log("only one type per item");
+                console.log(typeCounter)
                 setTypeAlert(true)
 
             }
@@ -545,9 +589,17 @@ function TerminalScreen() {
             qty:qty,
             comments:comments
         });
+        setType("")
+        setTypeCounter(typeCounter -1)
+
+        setIngs([])
+        setTops([])
         setQty(0)
+        setComments("")
+
        
         setComponentKey(prevKey => prevKey + 1);
+
     }
     const reloadChannel = new BroadcastChannel('reload-channel');
 
@@ -556,7 +608,7 @@ function TerminalScreen() {
     }
 
     return (
-        <div className="m-2 bg-light w-100 ">
+        <div className="m-2 bg-light " style={{width:'70vw'}}>
             <div className='  d-flex flex-column  ' style={{height:'95vh',overflowY:'scroll', width:'75vw'}} key={componentKey}>
                 <div className=" w-100" >
                     <div className="m-2 col w-75 d-flex justify-content-evenly pt-4 ">

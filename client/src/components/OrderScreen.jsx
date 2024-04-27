@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useSyncExternalStore } from 'react'
 import axios from 'axios';
 import { useEffect, useState, useContext } from 'react';
 import { ItemContext } from '../../context/ItemContext';
@@ -6,6 +6,7 @@ import { Nav } from 'react-bootstrap'
 import { NavLink } from 'react-router-dom'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import CurrencyFormatter from './CurrencyFormatter';
 
 
 const LOCAL_NAME_KEY = import.meta.env.VITE_REACT_APP_LOCAL_NAME_KEY;
@@ -31,6 +32,13 @@ function OrderScreen() {
   const [editEnable, isEditEnable] = useState({})
   const [orderSubmitted,isOrderSubmited] = useState(false)
 
+  const itemCosts = {
+    rolls : 4.00,
+    shakes : 5.00,
+    banana : 6.00,
+    puppy : 3.00
+  }
+
 
   // CONTEXT
   const {order, setOrder} = useContext( ItemContext )
@@ -39,7 +47,16 @@ function OrderScreen() {
   const { itemCounter, setItemCounter } = useContext( ItemContext );
   const {metodo, setMetodo} = useContext( ItemContext );
   const {newItem, setNewItem} = useContext( ItemContext );
-  const {totalItems,setTotalItems} = useContext(ItemContext)
+  const {totalToPay,setTotalToPay} = useContext(ItemContext)
+  const {type , setType} = useContext( ItemContext);
+  const {typeCounter, setTypeCounter} = useContext( ItemContext );
+
+
+  
+
+
+
+
 
 
   // MODAL HANDLERS
@@ -57,6 +74,7 @@ function OrderScreen() {
   }
 
   // USEEFFECT HOOKS
+
   useEffect(()=>{
     axios.get('/orders').then(response=>{
       // console.log("Response", response.data)
@@ -65,33 +83,21 @@ function OrderScreen() {
       console.log("Error", error)
     })
   },[renderOrdersKey])
-  useEffect(()=>{
-    if (typeof(order.items) != undefined ){
-      order?.items?.map(item =>{
-        setTotalItems(totalItems + item.qty)
-        console.log("Increasing Quantity")
-  
-      })
-    }
-   
-  },[order])
+
+
+
   useEffect(()=>{
     setItemCounter(itemCounter + 1)
   },[newItem])
   useEffect(()=>{
     if(orderSubmitted == true){ 
-      setTotalItems(0)
       setNewItem({})
       setOrder({})
       setName("")
       isOrderSubmited(false) 
       
-      localStorage.clear()
-
-
-      
+      localStorage.clear()      
     }
-   
   },[orderSubmitted])
 
   // TOGGLE EDIT 
@@ -157,7 +163,8 @@ function OrderScreen() {
         const response = await axios.post('/orders', {
             'name': JSON.parse(localStorage.getItem(LOCAL_NAME_KEY)),
             'items': storedItems,
-            'payment_method': JSON.parse(localStorage.getItem(LOCAL_PM_KEY))
+            'payment_method': JSON.parse(localStorage.getItem(LOCAL_PM_KEY)),
+            'total': totalToPay
         })
 
         // const response = await axios.get('/orders');
@@ -167,7 +174,8 @@ function OrderScreen() {
     }
     showMetodoModal(false)
 
-    
+    setTotalToPay(0)
+    setTypeCounter(typeCounter -1)
     isOrderSubmited(true)
     setRenderOrdersKey(prevKey => prevKey + 1);
     
@@ -182,28 +190,37 @@ function OrderScreen() {
         console.log('deleting item from '+ order['name'] + 'order')
         const updatedOrder = order['items'].filter(i => i._id !== id)
         setOrder(updatedOrder)
+        
         localStorage.setItem(LOCAL_ITEM_KEY, JSON.stringify({}))
 
+        
+        var sumToSubstract = itemCosts[i.type] * i.qty
+        
+        setTotalToPay(totalToPay - sumToSubstract)
+        console.log("Total Updated")
+        // location.reload()
+        
       }
+      
       else{
         console.log('item not found')
-
       }
     })
-    
- 
   }
   // DELETE ORDER FROM CURRENT ORDER IN LOCALSTORAGE
   const handleClear = () => {
+    setNewItem({})
+    localStorage.setItem(LOCAL_ITEM_KEY, JSON.stringify({}))
     setOrder({})
-    // setNewItem({})
     setItemCounter(0)
-    setTotalItems(0)
-
-    
+    setTotalToPay(0)
+    setType("")
     setName("")
+    setTypeCounter(typeCounter -1)
 
     setRenderOrdersKey(prevKey => prevKey + 1);
+
+    location.reload()
     
   }
     // const handleUpdate = async (orderId) =>{
@@ -222,7 +239,7 @@ function OrderScreen() {
 
 
   return (
-    <div className='m-2 bg-light w-25' style={{height:'95vh'}}>
+    <div className='m-2 bg-light' style={{height:'95vh',width:'30vw'}}>
         <div    className="">
           <div className="d-flex flex-column text-center">
             <Nav>
@@ -251,20 +268,23 @@ function OrderScreen() {
                         <button className='btn text-secondary' onClick={() => handleDelete(order._id)}>Delete</button>
                       </div>
                     </div>
-                    <div className={itemVisibility[order._id] ? 'd-flex bg-primary-subtle p-3 ':'d-none bg-primary-subtle '}>
-                      <div className="d-flex flex-column w-100 ">
+                    <div className={itemVisibility[order._id] ? 'd-flex  p-3 flex-column':'d-none  flex-column'}>
+                      <div className="d-flex flex-column w-100 overflow-scroll bg-secondary-subtle p-3">
                         {order?.items && order.items.map(item =>(
-                        <div className=" border-bottom border-dark w-100">
-                          <div className="d-flex flex-row">
+                        <div className="border-bottom border-dark w-100">
+                          <div className="d-flex flex-column w-100 justify-content-around">
                             <div className='fw-bold'> Type:  </div> 
                             <div className="">
-                            {item.type}
+                              <ul>
+                              {item.type}
+                              </ul>
+                           
                             {/* <div className="text-secondary">
                                 {editEnable[order._id] ? (<input className='w-75' defaultValue={item.type} />):(<div></div>)}
                                 </div> */}
                               </div> 
                           </div>
-                          <div className="d-flex flex-column">
+                          <div className="d-flex flex-column w-100 justify-content-around">
                             <div className="fw-bold">
                               Ingredients: 
                             </div>
@@ -278,7 +298,7 @@ function OrderScreen() {
                               )))}
                             </ul>
                           </div>
-                          <div className="d-flex flex-column">
+                          <div className="d-flex flex-column w-100 justify-content-around">
                             <div className="fw-bold">
                               Toppings: 
                             </div>
@@ -293,38 +313,30 @@ function OrderScreen() {
                               )))}
                             </ul>
                           </div>
-                          <div className="d-flex flex-column">
-                            <div className="fw-bold">
+                          <div className="d-flex flex-column w-100 justify-content-around ">
+                            <div className="fw-bold ">
                               Quantity: 
                             </div>
-                            <ul className="col d-flex flex-row w-100 justify-content-between">
+                            <ul className="">
                               {item.qty}
-                              {/* {editEnable[order._id] ? (
-                                <input type="text" className='w-25' defaultValue={item.qty}/>
-                              ):( 
-                              <div className="col">
-                              {item.qty}
-                              </div>)
-                              } */}
-                          </ul>
+                            
+                            </ul>
                           </div>
-                          <div className="d-flex flex-column pb-2">
+                          <div className="d-flex flex-column pb-2 w-100 justify-content-around">
                             <div className="fw-bold">
                               Comments: 
                             </div>
-                            <ul className="d-flex flex-column">
+                            <ul className="">
                               
                               {item.comments}
-                              {/* <div className="text-secondary">
-                                {editEnable[order._id] ? (<input className='w-100' defaultValue={item.comments}/>):(<div></div>)}
-                                </div> */}
+                             
                             </ul>
                           </div>
                             
                         </div>
                       ))}
                       </div>
-                      <div className="d-flex flex-column">
+                      <div className="d-flex flex-column bg-light">
                         <div className="fw-bold d-flex flex-row w-100">
                           <div className="">
                             Payment Method:
@@ -333,7 +345,7 @@ function OrderScreen() {
                             {order.payment_method}
                           </div>
                         </div>
-                        <div className={editEnable[order._id] ? 'd-flex justify-content-center align-items-center h-100':'d-none'}>
+                        <div className={editEnable[order._id] ? 'd-flex justify-content-center align-items-center h-100 ':'d-none'}>
                           <div className="">
                             <button className='btn btn-primary'onClick={()=>handleUpdate(order._id, order.name, order.items, order.payment_method)} >Save</button>
                           </div>
@@ -341,6 +353,14 @@ function OrderScreen() {
                         </div>
 
                       </div>
+                      <div className="fw-bold d-flex flex-row w-100 bg-light">
+                          <div className="">
+                            Total to Pay:
+                          </div>
+                          <div className="fw-normal d-flex justify-content-center align-items-center">
+                            {<CurrencyFormatter value={order.total} />}
+                          </div>
+                        </div>
                       
                     </div>
                   </div>
@@ -363,9 +383,13 @@ function OrderScreen() {
               <div className="">
               Client: {name}
               </div>
+              <div className="">
+              Total: {<CurrencyFormatter value={totalToPay} currency='USD'/>}
+              </div>
               {/* <div className="">
               Items In Order: { totalItems }
               </div> */}
+
           </div>
           <div>
        
@@ -376,8 +400,13 @@ function OrderScreen() {
                 order.items.map(item =>  (
                   <div key={item._id} className='border-bottom border-dark d-flex flex-row m-2'>
                     <div className="w-100 p-3">
-                      <div className="">
-                        Type: {item.type}
+                      <div className="d-flex flex-column">
+                        <div className="">
+                          Type: 
+                        </div>
+                        <ul className="">
+                          {item.type}
+                        </ul>
                       </div>
                       Ingredients
                       <ul className="">
@@ -401,18 +430,28 @@ function OrderScreen() {
                               )))}
                         </ul>
                       </div>
-                      <div className="">
-                        Qty: {item.qty}
+                      <div className="d-flex flex-column">
+                        <div className="">
+                          Qty: 
+                        </div>
+                        <ul className="">
+                          {item.qty}
+                        </ul>
                       </div>
-                      <div className="">
-                        Comments: {item.comments}
+                      <div className="d-flex flex-column">
+                        <div className="">
+                          Comments: 
+                        </div>
+                        <ul className="">
+                          {item.comments}
+                        </ul>
                       </div>
                     </div>
-                    <div className="d-flex justify-content-center align-items-center w-25">
+                    {/* <div className="d-flex justify-content-center align-items-center w-25">
                       <button className="btn text-secondary" onClick={()=>handleDeleteItem(item._id)}>
                         Delete
                       </button>
-                    </div>
+                    </div> */}
                   </div>
                 ))
               ):(
