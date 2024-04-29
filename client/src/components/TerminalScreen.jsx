@@ -621,7 +621,7 @@ function TerminalScreen() {
                 </div>
                 <div className="col">
                         { typeAlert && <div className='text-danger text-center'>Only One Type per Item</div> }
-                    <div className='col d-flex flex-row m-1 p-3 w-100'>
+                    <div className='col d-flex flex-row m-1 p-3 w-75'>
                         <div className="col w-25  text-start">Type</div>
                         <div className="col d-flex flex-row w-100 ">
                             <div className="col ms-1 me-1">
