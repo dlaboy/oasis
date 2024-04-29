@@ -189,7 +189,11 @@ function OrderScreen() {
       if(i.item_id === id){
         console.log('deleting item from '+ order['name'] + 'order')
         const updatedOrder = order['items'].filter(i => i.item_id !== id)
-        setOrder(updatedOrder)
+        setOrder(previous => ({
+          ...previous,
+          items: updatedOrder,
+        }));
+  
         
         localStorage.setItem(LOCAL_ITEM_KEY, JSON.stringify({}))
 
@@ -198,7 +202,7 @@ function OrderScreen() {
         
         setTotalToPay(totalToPay - sumToSubstract)
         console.log("Total Updated")
-        // location.reload()
+        location.reload()
         
       }
       
@@ -447,11 +451,11 @@ function OrderScreen() {
                         </ul>
                       </div>
                     </div>
-                    {/* <div className="d-flex justify-content-center align-items-center w-25">
-                      <button className="btn text-secondary" onClick={()=>handleDeleteItem(item._id)}>
+                    <div className="d-flex justify-content-center align-items-center w-25">
+                      <button className="btn text-secondary" onClick={()=>handleDeleteItem(item.item_id)}>
                         Delete
                       </button>
-                    </div> */}
+                    </div>
                   </div>
                 ))
               ):(
