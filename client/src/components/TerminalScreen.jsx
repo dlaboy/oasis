@@ -124,6 +124,8 @@ function TerminalScreen() {
     const {totalToPay,setTotalToPay} = useContext(ItemContext)
     const {type , setType} = useContext( ItemContext);
     const {typeCounter, setTypeCounter} = useContext( ItemContext );
+    const {sumToSubstract,setSumtoSubstract} = useContext( ItemContext );
+
 
 
 
@@ -416,21 +418,27 @@ function TerminalScreen() {
 
     useEffect(()=>{
         var same = false
+        var deletion = false
         if(orderMounted.current){
             if (JSON.parse(localStorage.getItem(LOCAL_ORDER_KEY))?.items != undefined && order?.items != undefined){
                 var compareMe = JSON.parse(localStorage.getItem(LOCAL_ORDER_KEY))
                 console.log("Are the items the same in both variables?", order?.items.length === compareMe.items.length)
+                console.log("Order State Variable Length: ",order?.items.length)
+                console.log("Order LS Variable Length: ",compareMe.items.length)
                 if (order?.items.length === compareMe.items.length){
                     same = true
                     console.log("Same is", same)
+                }
+                if(order?.items.length < compareMe.items.length){
+                    deletion = true
+                    console.log("Deletion is", deletion)
+
                 }
                 console.log("Change in Order Detected")
             }
             localStorage.setItem(LOCAL_ORDER_KEY,JSON.stringify(order))
             var storedOrder = JSON.parse(localStorage.getItem(LOCAL_ORDER_KEY));
             var storedItems = storedOrder.items;
-            
-
             for (const item in storedItems) {
                 if (storedItems.hasOwnProperty(item)) {
                     for (const key in storedItems[item]){
@@ -442,20 +450,22 @@ function TerminalScreen() {
                             var sumToTotal = itemCosts[storedItems[item][key]] * itemQty
                             console.log("Sum to total pay, please: ", sumToTotal)
                             console.log("Same is", same,"before trying to sum")
-                            if (same == false){
+                            if (same == false && deletion == false){
 
                                 setTotalToPay(totalToPay + sumToTotal)
                                 console.log("Summed Quantity")
                             }
-                            
-                            
-            
+                            else if (same == false && deletion == true){
+                                setTotalToPay(totalToPay - sumToSubstract)
+                                console.log("Substracted Quantity", sumToSubstract)
+
+
+                            }
                         }
                     }
                     }
                 }
                 }
-         
         }
         else{
             orderMounted.current = true

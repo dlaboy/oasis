@@ -50,6 +50,7 @@ function OrderScreen() {
   const {totalToPay,setTotalToPay} = useContext(ItemContext)
   const {type , setType} = useContext( ItemContext);
   const {typeCounter, setTypeCounter} = useContext( ItemContext );
+  const {sumToSubstract,setSumtoSubstract} = useContext( ItemContext );
 
 
   
@@ -193,18 +194,10 @@ function OrderScreen() {
           ...previous,
           items: updatedOrder,
         }));
-  
-        
         localStorage.setItem(LOCAL_ITEM_KEY, JSON.stringify({}))
-
-        
-        var sumToSubstract = itemCosts[i.type] * i.qty
-        
-        setTotalToPay(totalToPay - sumToSubstract)
+        setSumtoSubstract(itemCosts[i.type] * i.qty)
         console.log("Total Updated")
-        
       }
-      
       else{
         console.log('item not found')
       }
