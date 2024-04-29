@@ -186,9 +186,9 @@ function OrderScreen() {
    const handleDeleteItem = (id)=>{
     console.log(order['items'])
     order['items'].map(i=>{
-      if(i._id === id){
+      if(i.item_id === id){
         console.log('deleting item from '+ order['name'] + 'order')
-        const updatedOrder = order['items'].filter(i => i._id !== id)
+        const updatedOrder = order['items'].filter(i => i.item_id !== id)
         setOrder(updatedOrder)
         
         localStorage.setItem(LOCAL_ITEM_KEY, JSON.stringify({}))
@@ -398,7 +398,7 @@ function OrderScreen() {
               { order ? ( order?.items &&
 
                 order.items.map(item =>  (
-                  <div key={item._id} className='border-bottom border-dark d-flex flex-row m-2'>
+                  <div key={item.item_id} className='border-bottom border-dark d-flex flex-row m-2'>
                     <div className="w-100 p-3">
                       <div className="d-flex flex-column">
                         <div className="">

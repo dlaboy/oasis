@@ -368,7 +368,7 @@ function TerminalScreen() {
 
                         var exist = false
                         order.items.map(item =>{
-                            if(item._id == storeNewItem._id){
+                            if(item.item_id == storeNewItem.item_id){
                                 exist = true
                             }
 
@@ -582,7 +582,7 @@ function TerminalScreen() {
     const handleNewItem = (event) =>{
         console.log("EVENT")
         setNewItem({
-            _id: getRandomInt(0,100000000),
+            item_id: getRandomInt(0,100000000),
             type:type,
             ings:ings,
             tops:tops,

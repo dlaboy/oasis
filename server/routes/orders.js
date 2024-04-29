@@ -75,12 +75,30 @@ router.get('/salesCASH',async function(req, res, next){
         console.error('Error calculating total sales for CASH:', err);
     });
 })
-
+router.get('/count', async function(req,res, next){
+    Order.aggregate([
+        { $unwind: "$items" },  // Flatten the items array to process each item
+        { $group: {
+            _id: "$items.type",  // Group by item type
+            totalQuantity: { $sum: "$items.qty" }  // Sum the quantity for each type
+        }},
+        { $sort: { _id: 1 } }  // Optional: sort by item type alphabetically
+    ]).then(results => {
+        res.send(results)
+        console.log("Total Quantity by Item Type:", results);
+    }).catch(err => {
+        console.error("Error during aggregation:", err);
+    });
+    
+})
 router.post('/', async function (req, res) {
     const name = req.body.name;
     const items = req.body.items;
     const payment = req.body.payment_method;
     const total_to_pay = req.body.total
+
+    console.log(items)
+
     let newOrder = new Order({client_name: name, items:items, payment_method: payment,total: total_to_pay})
     /**
      * This function below allows us to verify that both
