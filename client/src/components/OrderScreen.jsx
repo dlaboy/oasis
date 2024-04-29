@@ -97,7 +97,20 @@ function OrderScreen() {
       setName("")
       isOrderSubmited(false) 
       
-      localStorage.clear()      
+      
+      // Define the key(s) you want to keep
+      const keysToKeep = ['username', 'password'];
+
+      // Iterate over all keys in localStorage
+      for (let i = localStorage.length - 1; i >= 0; i--) {
+          const key = localStorage.key(i);
+          // Check if the current key is not in the list of keys to keep
+          if (!keysToKeep.includes(key)) {
+              // Remove the key from localStorage
+              localStorage.removeItem(key);
+          }
+      }
+
     }
   },[orderSubmitted])
 
