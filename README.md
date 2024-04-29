@@ -1,7 +1,7 @@
 # OASIS Project
 Project consists on a simple POS system for Oasis Ice Cream Shop. 
 
-URL: https://oasispos-79128360d945.herokuapp.com/terminal
+URL: https://oasispos-79128360d945.herokuapp.com
 
 # Tech Stack: MERN
 - Front End: Vite + ReactJS
