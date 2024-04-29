@@ -202,7 +202,6 @@ function OrderScreen() {
         
         setTotalToPay(totalToPay - sumToSubstract)
         console.log("Total Updated")
-        location.reload()
         
       }
       
