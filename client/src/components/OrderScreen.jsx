@@ -394,7 +394,7 @@ function OrderScreen() {
           <div>
        
             
-            <div style={order.items ? {height:'25vh'}: {height:'0vh'}} className="m-3 overflow-scroll ">
+            <div style={order.items ? {height:'20vh'}: {height:'0vh'}} className="m-3 overflow-scroll ">
               { order ? ( order?.items &&
 
                 order.items.map(item =>  (

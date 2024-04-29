@@ -643,7 +643,7 @@ function TerminalScreen() {
                             </div>
                         </div>
                     </div>
-                    <div style={{height:'47vh'}} className="overflow-scroll">
+                    <div style={{height:'40vh'}} className="overflow-scroll">
                         <div className='col m-2'>
                             <button className="rounded-3 col d-flex flex-row w-100 text-start border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light"  onClick={handleIngredients}>
                                 Ingredients

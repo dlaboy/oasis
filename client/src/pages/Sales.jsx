@@ -1,7 +1,39 @@
 import { NavLink } from 'react-router-dom'
 import { Nav } from 'react-bootstrap'
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import CurrencyFormatter from '../components/CurrencyFormatter';
+import moment from 'moment';
+import Table from 'react-bootstrap/Table';
+
+
 
 function Sales(){
+    const [ATHsales,setATHsales] = useState(0)
+    const [CASHsales,setCASHsales] = useState(0)
+    const [generate,generateReport] = useState(false)
+    const timestamp = moment().format('YYYY-MM-DD hh:mm:ss'); // Gets current time in ISO format
+    
+    
+    const handleReport = event => {
+        axios.get('/orders/salesATH').then(response=>{
+            console.log("Response", typeof(response.data))
+            setATHsales(response.data.totalSalesATH)
+          }).catch(error =>{
+            console.log("Error", error)
+          })
+        axios.get('/orders/salesCASH').then(response=>{
+            console.log("Response", typeof(response.data))
+            setCASHsales(response.data.totalSalesCASH)
+
+            }).catch(error =>{
+            console.log("Error", error)
+        })
+        generateReport(true)
+        
+
+    };
+
     return (
         <div>
         <div className="w-100 d-flex flex-row justify-content-between" style={{height:"10vh"}}>
@@ -16,10 +48,26 @@ function Sales(){
             <div className="pt-3 pb-3 d-flex w-25 text-center"></div>
 
         </div>
-        <div className='bg-light d-flex justify-content-center align-items-center' style={{height:"90vh"}}>
-                <button className='btn btn-outline-primary rounded-pill p-3'> Generate Today's Report</button>
-
-
+        <div className='bg-light d-flex justify-content-start align-items-center flex-column' style={{height:"90vh"}}>
+                <button className='btn btn-outline-primary rounded-pill p-3 m-2' onClick={handleReport}> Generate Today's Report</button>
+                {generate && <Table className='w-75' striped bordered hover>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>ATH</th>
+                            <th>CASH</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{timestamp}</td>
+                            <td>{<CurrencyFormatter value={ATHsales}/>}</td>
+                            <td>{<CurrencyFormatter value={CASHsales}/>}</td>
+                            <td>{<CurrencyFormatter value={ATHsales + CASHsales}/>}</td>
+                        </tr>
+                    </tbody>
+                </Table>}
         </div>
         </div>
     )

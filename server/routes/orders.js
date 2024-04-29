@@ -16,6 +16,65 @@ router.get('/', async function (req, res, next) {
     
     res.send(orders);
 });
+// GET all totalATHs sales
+// Use the aggregate function to calculate the sum
+router.get('/salesATH',async function(req, res, next){
+    Order.aggregate([
+        {
+            $match: {
+                payment_method: "ATH"  // Filter to only include orders with payment method "ATH"
+            }
+        },
+        {
+            $group: {
+                _id: null,  // Group all filtered documents into one group
+                totalSalesATH: { $sum: "$total" }  // Sum the 'total' field
+            }
+        }
+    ]).then(result => {
+        if (result.length > 0) {
+            if (result.length > 0) {
+                res.send({ totalSalesATH: result[0].totalSalesATH });
+            } else {
+                res.status(404).send('No sales for ATH payment method found.');
+            }
+        } else {
+            console.log('No sales for ATH payment method found.');
+        }
+    }).catch(err => {
+        console.error('Error calculating total sales for ATH:', err);
+    });
+
+
+})
+
+router.get('/salesCASH',async function(req, res, next){
+    Order.aggregate([
+        {
+            $match: {
+                payment_method: "CASH"  // Filter to only include orders with payment method "ATH"
+            }
+        },
+        {
+            $group: {
+                _id: null,  // Group all filtered documents into one group
+                totalSalesCASH: { $sum: "$total" }  // Sum the 'total' field
+            }
+        }
+    ]).then(result => {
+        if (result.length > 0) {
+            if (result.length > 0) {
+                res.send({ totalSalesCASH: result[0].totalSalesCASH });
+            } else {
+                res.status(404).send('No sales for CASH payment method found.');
+            }
+        } else {
+            console.log('No sales for CASH payment method found.');
+        }
+    }).catch(err => {
+        console.error('Error calculating total sales for CASH:', err);
+    });
+})
 
 router.post('/', async function (req, res) {
     const name = req.body.name;
