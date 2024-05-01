@@ -1,8 +1,18 @@
 const mongoose = require("mongoose");
 
+const ItemSchema = new mongoose.Schema({
+    item_id:Number,
+    type: String,
+    ings: Array,
+    tops: Array,
+    qty: Number,
+    comments: String
+});
+
+
 const OrderSchema = new mongoose.Schema({
     client_name : String,
-    items: Array,
+    items: [ItemSchema],
     payment_method: String,
     total: Number
 })

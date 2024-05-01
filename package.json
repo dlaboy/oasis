@@ -16,7 +16,13 @@
         "vite": "^5.2.9"
     },
     "dependencies": {
+        "chart.js": "^4.4.2",
+        "jspdf": "^2.5.1",
+        "jspdf-autotable": "^3.8.2",
         "lodash": "^4.17.21",
+        "moment": "^2.30.1",
+        "moment-timezone": "^0.5.45",
+        "react-chartjs-2": "^5.2.0",
         "react-native": "^0.74.0"
     }
 }

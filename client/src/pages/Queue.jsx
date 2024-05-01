@@ -4,7 +4,7 @@ import axios from 'axios'
 import { NavLink } from 'react-router-dom'
 import { Nav } from 'react-bootstrap'
 import { ItemContext } from '../../context/ItemContext';
-import CurrencyFormatter from '../components/CurrencyFormatter'
+import CurrencyFormatter from '../tools/CurrencyFormatter'
 
 
 

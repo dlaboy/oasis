@@ -6,7 +6,7 @@ import { Nav } from 'react-bootstrap'
 import { NavLink } from 'react-router-dom'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import CurrencyFormatter from './CurrencyFormatter';
+import CurrencyFormatter from '../tools/CurrencyFormatter';
 
 
 const LOCAL_NAME_KEY = import.meta.env.VITE_REACT_APP_LOCAL_NAME_KEY;
@@ -50,6 +50,7 @@ function OrderScreen() {
   const {totalToPay,setTotalToPay} = useContext(ItemContext)
   const {type , setType} = useContext( ItemContext);
   const {typeCounter, setTypeCounter} = useContext( ItemContext );
+  const {sumToSubstract,setSumtoSubstract} = useContext( ItemContext );
 
 
   
@@ -96,7 +97,20 @@ function OrderScreen() {
       setName("")
       isOrderSubmited(false) 
       
-      localStorage.clear()      
+      
+      // Define the key(s) you want to keep
+      const keysToKeep = ['username', 'password'];
+
+      // Iterate over all keys in localStorage
+      for (let i = localStorage.length - 1; i >= 0; i--) {
+          const key = localStorage.key(i);
+          // Check if the current key is not in the list of keys to keep
+          if (!keysToKeep.includes(key)) {
+              // Remove the key from localStorage
+              localStorage.removeItem(key);
+          }
+      }
+
     }
   },[orderSubmitted])
 
@@ -186,22 +200,17 @@ function OrderScreen() {
    const handleDeleteItem = (id)=>{
     console.log(order['items'])
     order['items'].map(i=>{
-      if(i._id === id){
+      if(i.item_id === id){
         console.log('deleting item from '+ order['name'] + 'order')
-        const updatedOrder = order['items'].filter(i => i._id !== id)
-        setOrder(updatedOrder)
-        
+        const updatedOrder = order['items'].filter(i => i.item_id !== id)
+        setOrder(previous => ({
+          ...previous,
+          items: updatedOrder,
+        }));
         localStorage.setItem(LOCAL_ITEM_KEY, JSON.stringify({}))
-
-        
-        var sumToSubstract = itemCosts[i.type] * i.qty
-        
-        setTotalToPay(totalToPay - sumToSubstract)
+        setSumtoSubstract(itemCosts[i.type] * i.qty)
         console.log("Total Updated")
-        // location.reload()
-        
       }
-      
       else{
         console.log('item not found')
       }
@@ -394,11 +403,11 @@ function OrderScreen() {
           <div>
        
             
-            <div style={order.items ? {height:'25vh'}: {height:'0vh'}} className="m-3 overflow-scroll ">
+            <div style={order.items ? {height:'20vh'}: {height:'0vh'}} className="m-3 overflow-scroll ">
               { order ? ( order?.items &&
 
                 order.items.map(item =>  (
-                  <div key={item._id} className='border-bottom border-dark d-flex flex-row m-2'>
+                  <div key={item.item_id} className='border-bottom border-dark d-flex flex-row m-2'>
                     <div className="w-100 p-3">
                       <div className="d-flex flex-column">
                         <div className="">
@@ -447,11 +456,11 @@ function OrderScreen() {
                         </ul>
                       </div>
                     </div>
-                    {/* <div className="d-flex justify-content-center align-items-center w-25">
-                      <button className="btn text-secondary" onClick={()=>handleDeleteItem(item._id)}>
+                    <div className="d-flex justify-content-center align-items-center w-25">
+                      <button className="btn text-secondary" onClick={()=>handleDeleteItem(item.item_id)}>
                         Delete
                       </button>
-                    </div> */}
+                    </div>
                   </div>
                 ))
               ):(

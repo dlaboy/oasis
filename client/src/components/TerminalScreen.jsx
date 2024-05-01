@@ -16,6 +16,7 @@ const LOCAL_CMTS_KEY =  import.meta.env.VITE_REACT_APP_LOCAL_CMTS_KEY;
 const LOCAL_ITEM_KEY =  import.meta.env.VITE_REACT_APP_LOCAL_ITEMS_KEY;
 const LOCAL_ORDER_KEY =  import.meta.env.VITE_REACT_APP_LOCAL_ORDER_KEY
 const LOCAL_PM_KEY =  import.meta.env.VITE_REACT_APP_LOCAL_PM_KEY;
+const LOCAL_TOTAL_KEY = import.meta.env.VITE_REACT_APP_LOCAL_TOTAL_KEY;
 
 
 
@@ -124,6 +125,8 @@ function TerminalScreen() {
     const {totalToPay,setTotalToPay} = useContext(ItemContext)
     const {type , setType} = useContext( ItemContext);
     const {typeCounter, setTypeCounter} = useContext( ItemContext );
+    const {sumToSubstract,setSumtoSubstract} = useContext( ItemContext );
+
 
 
 
@@ -368,7 +371,7 @@ function TerminalScreen() {
 
                         var exist = false
                         order.items.map(item =>{
-                            if(item._id == storeNewItem._id){
+                            if(item.item_id == storeNewItem.item_id){
                                 exist = true
                             }
 
@@ -416,21 +419,30 @@ function TerminalScreen() {
 
     useEffect(()=>{
         var same = false
+        var deletion = false
+        if (localStorage.getItem(LOCAL_TOTAL_KEY) == undefined){
+            localStorage.setItem(LOCAL_TOTAL_KEY,0)
+        }
         if(orderMounted.current){
             if (JSON.parse(localStorage.getItem(LOCAL_ORDER_KEY))?.items != undefined && order?.items != undefined){
                 var compareMe = JSON.parse(localStorage.getItem(LOCAL_ORDER_KEY))
                 console.log("Are the items the same in both variables?", order?.items.length === compareMe.items.length)
+                console.log("Order State Variable Length: ",order?.items.length)
+                console.log("Order LS Variable Length: ",compareMe.items.length)
                 if (order?.items.length === compareMe.items.length){
                     same = true
                     console.log("Same is", same)
+                }
+                if(order?.items.length < compareMe.items.length){
+                    deletion = true
+                    console.log("Deletion is", deletion)
+
                 }
                 console.log("Change in Order Detected")
             }
             localStorage.setItem(LOCAL_ORDER_KEY,JSON.stringify(order))
             var storedOrder = JSON.parse(localStorage.getItem(LOCAL_ORDER_KEY));
             var storedItems = storedOrder.items;
-            
-
             for (const item in storedItems) {
                 if (storedItems.hasOwnProperty(item)) {
                     for (const key in storedItems[item]){
@@ -442,20 +454,28 @@ function TerminalScreen() {
                             var sumToTotal = itemCosts[storedItems[item][key]] * itemQty
                             console.log("Sum to total pay, please: ", sumToTotal)
                             console.log("Same is", same,"before trying to sum")
-                            if (same == false){
+                            if (same == false && deletion == false){
 
                                 setTotalToPay(totalToPay + sumToTotal)
+                                localStorage.setItem(LOCAL_TOTAL_KEY,totalToPay + sumToTotal)
+
                                 console.log("Summed Quantity")
                             }
-                            
-                            
-            
+                            else if (same == false && deletion == true){
+                                setTotalToPay(totalToPay - sumToSubstract)
+                                localStorage.setItem(LOCAL_TOTAL_KEY,totalToPay - sumToSubstract)
+                                console.log("Substracted Quantity", sumToSubstract)
+                            }
+                            else if (same == true){
+                                console.log("SAMMMEEEEEE")
+                                console.log("TOTAL to Pay in LS", localStorage.getItem(LOCAL_TOTAL_KEY))
+                                setTotalToPay(localStorage.getItem(LOCAL_TOTAL_KEY))
+                            }
                         }
                     }
                     }
                 }
                 }
-         
         }
         else{
             orderMounted.current = true
@@ -582,7 +602,7 @@ function TerminalScreen() {
     const handleNewItem = (event) =>{
         console.log("EVENT")
         setNewItem({
-            _id: getRandomInt(0,100000000),
+            item_id: getRandomInt(0,100000000),
             type:type,
             ings:ings,
             tops:tops,
@@ -621,7 +641,7 @@ function TerminalScreen() {
                 </div>
                 <div className="col">
                         { typeAlert && <div className='text-danger text-center'>Only One Type per Item</div> }
-                    <div className='col d-flex flex-row m-1 p-3 w-100'>
+                    <div className='col d-flex flex-row m-1 p-3 w-75'>
                         <div className="col w-25  text-start">Type</div>
                         <div className="col d-flex flex-row w-100 ">
                             <div className="col ms-1 me-1">
@@ -643,7 +663,7 @@ function TerminalScreen() {
                             </div>
                         </div>
                     </div>
-                    <div style={{height:'47vh'}} className="overflow-scroll">
+                    <div style={{height:'40vh'}} className="overflow-scroll">
                         <div className='col m-2'>
                             <button className="rounded-3 col d-flex flex-row w-100 text-start border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light"  onClick={handleIngredients}>
                                 Ingredients

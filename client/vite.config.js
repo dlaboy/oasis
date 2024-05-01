@@ -8,10 +8,10 @@ var URL;
 
 if (typeof NODE_ENV != "undefined"){
   if (NODE_ENV == 'production'){
-    URL = 'https://oasispos-6173005c2083.herokuapp.com/orders'
+    URL = 'https://oasispos-6173005c2083.herokuapp.com/'
   }
   else{
-    URL = 'http://127.0.0.1:3000/orders'
+    URL = 'http://127.0.0.1:3000/'
   }
 
 }
@@ -23,10 +23,10 @@ if (typeof NODE_ENV != "undefined"){
 export default defineConfig({
   server: {
     proxy: {
-      '/orders': {
+      '/': {
         target: URL, // Your API server address
         changeOrigin: true,
-        rewrite: (path) => path.replace('/orders', ''),
+        rewrite: (path) => path.replace('/', ''),
       },
     },
   },
