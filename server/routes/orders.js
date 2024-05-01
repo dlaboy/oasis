@@ -91,6 +91,46 @@ router.get('/count', async function(req,res, next){
     });
     
 })
+router.get('/countIngredients',async function(req,res, next){
+    Order.aggregate([
+        { $unwind: "$items" },  // Unwind the items array
+        { $unwind: "$items.ings" },  // Unwind the ingredients array within each item
+        { $group: {
+            _id: "$items.ings",  // Group by ingredient
+            totalQuantity: { $sum: "$items.qty" }  // Sum the quantities
+        }},
+        { $sort: { totalQuantity: -1 } },  // Sort by totalQuantity in descending order
+        { $limit: 5 }  // Limit to top 5 results
+    ]).then(results => {
+        console.log("Total Quantity by Ingredient:", results);
+        res.send(results)
+        // If you need to save these into variables:
+       
+    }).catch(err => {
+        console.error("Error during aggregation:", err);
+    });
+    
+})
+router.get('/countToppings',async function(req,res, next){
+    Order.aggregate([
+        { $unwind: "$items" },  // Unwind the items array
+        { $unwind: "$items.tops" },  // Unwind the ingredients array within each item
+        { $group: {
+            _id: "$items.tops",  // Group by ingredient
+            totalQuantity: { $sum: "$items.qty" }  // Sum the quantities
+        }},
+        { $sort: { totalQuantity: -1 } },  // Sort by totalQuantity in descending order
+        { $limit: 5 }  // Limit to top 5 results
+    ]).then(results => {
+        console.log("Total Quantity by Toppings:", results);
+        res.send(results)
+        // If you need to save these into variables:
+       
+    }).catch(err => {
+        console.error("Error during aggregation:", err);
+    });
+    
+})
 router.post('/', async function (req, res) {
     const name = req.body.name;
     const items = req.body.items;

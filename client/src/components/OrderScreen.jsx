@@ -6,7 +6,7 @@ import { Nav } from 'react-bootstrap'
 import { NavLink } from 'react-router-dom'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import CurrencyFormatter from './CurrencyFormatter';
+import CurrencyFormatter from '../tools/CurrencyFormatter';
 
 
 const LOCAL_NAME_KEY = import.meta.env.VITE_REACT_APP_LOCAL_NAME_KEY;

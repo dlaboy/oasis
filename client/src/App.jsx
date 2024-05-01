@@ -44,7 +44,7 @@ function App() {
         <Route path="/" element={<Home/>}/>
         <Route path="/terminal" element={<Terminal/>}/>
         <Route path="/queue" element={<Queue/>}/>
-        <Route path="/sales" element={<Sales/>}/>
+        <Route path="/ventas" element={<Sales/>}/>
       </Routes>
     </ItemContext.Provider>
   )

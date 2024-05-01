@@ -85,7 +85,7 @@ function Home() {
           <Nav>
             <Nav.Link to='/terminal' as={NavLink} className='btn  p-3 '>Terminal</Nav.Link>
             <Nav.Link to='/queue' as={NavLink} className='btn p-3'>Queue</Nav.Link>
-            { admin && <Nav.Link to='/sales' as={NavLink} className='btn p-3'>Sales</Nav.Link>}
+            { admin && <Nav.Link to='/ventas' as={NavLink} className='btn p-3'>Sales</Nav.Link>}
         </Nav>
         <button className='btn rounded-pill btn-outline-secondary' onClick={handleSignOut}>Sign Out</button>
         </div> : 
