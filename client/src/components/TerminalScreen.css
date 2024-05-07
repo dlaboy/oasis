@@ -1,7 +1,7 @@
 .btn-outline-secondary.active,.btn-outline-secondary:active{
     background-color: rgb(0, 76, 255) !important;
 }
-.btn-outline-secondary:hover{
+.btn-outline-secondary:hover, .btn-outline-secondary:focus{
     background-color: rgba(0, 76, 255, 0) !important;
     color:grey !important;
 }
