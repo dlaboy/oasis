@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
 import { ItemContext } from '../../context/ItemContext';
+import './TerminalScreen.css'
 
 
 
@@ -21,7 +22,7 @@ const LOCAL_TOTAL_KEY = import.meta.env.VITE_REACT_APP_LOCAL_TOTAL_KEY;
 
 
 function TerminalScreen() {
-    
+    const [required,setRequired] = useState(false)
     const [ingredientsButtons, showIngredients] = useState(false);
     const [toppingsButtons, showToppings] = useState(false);
     const [metodoModal, showMetodoModal] = useState(false);
@@ -600,25 +601,33 @@ function TerminalScreen() {
       }
 
     const handleNewItem = (event) =>{
-        console.log("EVENT")
-        setNewItem({
-            item_id: getRandomInt(0,100000000),
-            type:type,
-            ings:ings,
-            tops:tops,
-            qty:qty,
-            comments:comments
-        });
-        setType("")
-        setTypeCounter(typeCounter -1)
+        if (type == ""){
+            setRequired(true)   
+        }
+        else if(qty == 0){
+            setRequired(true)   
 
-        setIngs([])
-        setTops([])
-        setQty(0)
-        setComments("")
-
-       
-        setComponentKey(prevKey => prevKey + 1);
+        }
+        else{
+            console.log("EVENT")
+            setNewItem({
+                item_id: getRandomInt(0,100000000),
+                type:type,
+                ings:ings,
+                tops:tops,
+                qty:qty,
+                comments:comments
+            });
+            setType("")
+            setTypeCounter(typeCounter -1)
+            setIngs([])
+            setTops([])
+            setRequired(false)   
+            setQty(0)
+            setComments("")
+            setComponentKey(prevKey => prevKey + 1);
+        }
+        
 
     }
     const reloadChannel = new BroadcastChannel('reload-channel');
@@ -634,8 +643,8 @@ function TerminalScreen() {
                     <div className="m-2 col w-75 d-flex justify-content-evenly pt-4 ">
                         <label htmlFor="cliente">Nombre</label>
                         <div className="w-25  d-flex justify-content-between">
-                            <input type="text" name='cliente' className=' rounded-3 border-0 rounded-end-0'  disabled={isInputDisabled} value={name} onChange={handleName} />
-                            <button type='button' className='btn btn-primary rounded-start-0 p-2 ' onClick={handleSave}>  {isInputDisabled ? 'Change' : 'Save '}</button>
+                            <input type="text" name='cliente' className=' rounded-3 border-0 p-1'  value={name} onChange={handleName} />
+                            {/* <button type='button' className='btn btn-primary rounded-start-0 p-2 ' onClick={handleSave}>  {isInputDisabled ? 'Change' : 'Save '}</button> */}
                         </div>
                     </div>
                 </div>
@@ -775,6 +784,8 @@ function TerminalScreen() {
                             <textarea name="" id="" cols="30" rows="2" defaultValue={comments} onChange={handleComments}></textarea>
                         </div>
                     </div>
+                    { required && <div className='text-danger text-center'>Missing fields</div> }
+
                     <div className="col w-100 d-flex justify-content-center align-items-center">
                         <button className='btn btn-outline-primary p-3 rounded-pill' onClick={handleNewItem}>Add Item to Order</button>
                     </div>
