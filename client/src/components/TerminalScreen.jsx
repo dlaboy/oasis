@@ -652,9 +652,9 @@ function TerminalScreen() {
                         { typeAlert && <div className='text-danger text-center'>Only One Type per Item</div> }
                     <div className='col d-flex flex-row m-1 p-3 w-75'>
                         <div className="col w-25  text-start">Type</div>
-                        <div className="col d-flex flex-row w-100 ">
+                        <div className="col d-flex flex-row w-100 "  style={{pointerEvents : 'none'}}>
                             <div className="col ms-1 me-1">
-                                <button className={typeFlags.rolls ? 'btn btn-outline-secondary type active p-3' : 'btn btn-outline-secondary type p-3'} value={'rolls'} onClick={add}>Rolls</button>
+                                <button style={{pointerEvents : 'auto'}} className={typeFlags.rolls ? 'btn btn-outline-secondary type active p-3' : 'btn btn-outline-secondary type p-3'} value={'rolls'} onClick={add}>Rolls</button>
                             </div>
                             <div className="col ms-1 me-1">
                                 <button className= {typeFlags.shakes ? 'btn btn-outline-secondary type active p-3':'btn btn-outline-secondary type p-3'}  value={'shakes'} onClick={add}>Shakes</button>
