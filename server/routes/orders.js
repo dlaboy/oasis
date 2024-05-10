@@ -173,12 +173,16 @@ router.delete('/', async function (req, res){
 
 router.put('/', async function (req, res){
     try{
-        console.log(req.body.id)
-        const updatedOrder = await Order.findByIdAndUpdate(req.body.id, req.body.data, { new: true })
+        console.log("ID of record to update: ",req.body.id)
+        const updatedOrder = await Order.findByIdAndUpdate(req.body.id, req.body.updated_record, { new: true })
 
         if (!updatedOrder) {
             return res.status(404).json({ message: 'Item not found' });
           }
+        else{
+            return res.status(200).json({ message: 'Item found' });
+
+        }
     } catch (error) {
         console.error('Error updating item:', error);
         res.status(500).json({ message: 'Internal Server Error' });

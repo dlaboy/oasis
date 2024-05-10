@@ -14,7 +14,11 @@ const OrderSchema = new mongoose.Schema({
     client_name : String,
     items: [ItemSchema],
     payment_method: String,
-    total: Number
+    total: Number,
+    status:  {
+        type: String,
+        default: 'in progress'
+    },
 })
 
 const Order = mongoose.model('Order', OrderSchema);

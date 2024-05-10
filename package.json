@@ -3,7 +3,7 @@
         "app": "node server/app.js",
         "build": "cd client && npm install && npm run build && cd ../server && npm install",
         "backend": "cd server && node app.js",
-        "frontend": "cd client && vite"
+        "frontend": "cd client && npm run dev"
     },
     "devDependencies": {
         "@types/react": "^18.2.43",

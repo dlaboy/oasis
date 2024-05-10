@@ -268,7 +268,7 @@ function OrderScreen() {
               <div className='list-group h-100 '> 
                 {currentOrders.map(order =>(
                   <div key={order._id} >
-                    <div className='list-group-item list-group-item-action p-3 d-flex flex-row justify-content-between'>
+                    <div className={order.status == 'done' ? 'bg-success-subtle list-group-item list-group-item-action p-3 d-flex flex-row justify-content-between': 'list-group-item list-group-item-action p-3 d-flex flex-row justify-content-between'} >
                       <button className='btn' onClick={() => toggleVisibility(order._id)}>
                         {order.client_name} 
                       </button>

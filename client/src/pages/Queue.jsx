@@ -56,6 +56,41 @@ export default function Queue() {
     
       }
 
+      const handleDone = async (order) => {
+        var request_data;
+        if (order.status == 'done'){
+          request_data = {
+            id:order._id,
+            updated_record: {
+              client_name: order.client_name,
+              items: order.items,
+              payment_method: order.payment_method,
+              total: order.total,
+              status: 'in progress'
+            }
+          }
+        }
+        else if (order.status == 'in progress'){
+          var request_data = {
+            id:order._id,
+            updated_record: {
+              client_name: order.client_name,
+              items: order.items,
+              payment_method: order.payment_method,
+              total: order.total,
+              status: 'done'
+            }
+          }
+        }
+        try {
+          const response = await axios.put(`/orders/`,request_data);
+          console.log('Order status updated successfully:', response.data);
+          location.reload()
+        } catch (error) {
+          console.error('Failed to update order status:', error);
+        }
+      }
+
       const handleOrderClear = async () =>{
 
         try {
@@ -114,12 +149,15 @@ export default function Queue() {
          {currentOrders ? (
         <div className='list-group h-100'> 
             {currentOrders.map(order =>(
-                <div className="d-flex justify-content-between align-items-center flex-column list-group-item list-group-item-action p-3">
+                <div className={order.status == 'done' ? "d-flex bg-success-subtle  justify-content-between align-items-center flex-column list-group-item list-group-item-action p-3":"d-flex justify-content-between align-items-center flex-column list-group-item list-group-item-action p-3"}>
                     <div className="d-flex flex-row w-100 justify-content-between align-items-center">
 
                     <button key={order._id} className='btn' onClick={() => toggleVisibility(order._id)}>{order.client_name}</button>
                     <button className="btn text-secondary" onClick={()=>handleDelete(order._id)}>
                         Delete
+                    </button>
+                    <button className="btn text-secondary" onClick={()=>handleDone(order)}>
+                        Toggle Status
                     </button>
                     </div>
                     <div className={itemVisibility[order._id] ? 'd-flex flex-column bg-secondary-subtle p-3 w-100':'d-none bg-secondary-subtle '}>
@@ -210,6 +248,14 @@ export default function Queue() {
                         </div>
                         <div className="fw-normal d-flex justify-content-center align-items-center">
                               <CurrencyFormatter value={order.total} />
+                        </div>
+                      </div>
+                      <div className="fw-bold d-flex flex-row w-100">
+                        <div className="">
+                          Status:
+                        </div>
+                        <div className="fw-normal d-flex justify-content-center align-items-center">
+                          {order.status}
                         </div>
                       </div>
                       <div className={editEnable[order._id] ? 'd-flex justify-content-center align-items-center h-100':'d-none'}>
