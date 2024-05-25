@@ -2,7 +2,7 @@ import React from 'react'
 import { useEffect, useState , useContext} from 'react'
 import axios from 'axios'
 import { NavLink } from 'react-router-dom'
-import { Nav } from 'react-bootstrap'
+import { Nav, Button, Modal } from 'react-bootstrap'
 import { ItemContext } from '../../context/ItemContext';
 import CurrencyFormatter from '../tools/CurrencyFormatter'
 
@@ -51,6 +51,7 @@ export default function Queue() {
         setRenderOrdersKey(prevKey => prevKey + 1)
     
     
+        setDeleteShow(false)
         location.reload()
         // reloadChannel.postMessage({ action: 'reload' });
     
@@ -89,6 +90,7 @@ export default function Queue() {
         } catch (error) {
           console.error('Failed to update order status:', error);
         }
+        location.reload()
       }
 
       const handleOrderClear = async () =>{
@@ -127,11 +129,34 @@ export default function Queue() {
       [itemId]: !prevState[itemId],
     }));
   };
+  const [idToDelete,setIDtoDelete] = useState(0);
+  const [deleteShow, setDeleteShow] = useState(false);
+  const handleDeleteClose = () => setDeleteShow(false);
+  const handleDeleteShow = (orderId) => {
+    setDeleteShow(true);
+    setIDtoDelete(orderId)
+  }
+
+
 
 
 
     return (
     <div> 
+        <Modal show={deleteShow} onHide={handleDeleteClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Deleting Order</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Warning, you're about to delete an order!</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleDeleteClose}>
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={()=>handleDelete(idToDelete)}>
+              Delete
+            </Button>
+          </Modal.Footer>
+        </Modal>
         <div className="w-100 d-flex flex-row justify-content-between">
             <Nav>
             <Nav.Link to='/' as={NavLink} className='btn  p-3 w-25  text-center'>Home</Nav.Link>
@@ -143,7 +168,8 @@ export default function Queue() {
 
             </h6>
             </div>
-            <button className='btn btn-outline-secondary p-2' onClick={handleOrderClear}>Clear</button>
+            <div className=""><img src="" alt="" /></div>
+            {/* <button className='btn btn-outline-secondary p-2' onClick={handleOrderClear}>Clear</button> */}
 
         </div>
          {currentOrders ? (
@@ -153,9 +179,11 @@ export default function Queue() {
                     <div className="d-flex flex-row w-100 justify-content-between align-items-center">
 
                     <button key={order._id} className='btn' onClick={() => toggleVisibility(order._id)}>{order.client_name}</button>
-                    <button className="btn text-secondary" onClick={()=>handleDelete(order._id)}>
+                    <button  className="btn text-secondary" onClick={()=>handleDeleteShow(order._id)}>Delete</button>
+                    
+                    {/* <button className="btn text-secondary" onClick={()=>handleDelete(order._id)}>
                         Delete
-                    </button>
+                    </button> */}
                     <button className="btn text-secondary" onClick={()=>handleDone(order)}>
                         Toggle Status
                     </button>

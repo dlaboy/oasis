@@ -40,6 +40,7 @@ function TerminalScreen() {
         puppy:false
     })
     const [ingsFlag, setIngsFlag] = useState({
+        vainillaIng:false,
         fresaIng:false,
         nutellaIng:false,
         oreoIng:false,
@@ -678,6 +679,7 @@ function TerminalScreen() {
                                 Ingredients
                             </button>
                             {ingredientsButtons && <div className="col " >
+                                <button className={ingsFlag.vainillaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3 ' : 'btn btn-outline-secondary m-1 ingredients p-3' }value={'vainilla'} onClick={add}  >Vainilla</button>
                                 <button className={ingsFlag.fresaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3 ' : 'btn btn-outline-secondary m-1 ingredients p-3' }value={'fresa'} onClick={add}  >Fresa</button>
                                 <button className={ingsFlag.nutellaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'nutella'} onClick={add} >Nutella</button>
                                 <button className={ingsFlag.oreoIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'oreo'} onClick={add} >Oreo</button>
@@ -770,10 +772,10 @@ function TerminalScreen() {
                             {qty}
                             </div>
                             <div className="col">
-                                <button className='btn btn-primary rounded-circle' onClick={handleIncrement}>+</button>
+                                <button className='btn btn-primary rounded-circle' onClick={handleDecrement}>-</button>
                             </div>
                             <div className="col">
-                                <button className='btn btn-primary rounded-circle' onClick={handleDecrement}>-</button>
+                                <button className='btn btn-primary rounded-circle' onClick={handleIncrement}>+</button>
                             </div>
                         </div>
         

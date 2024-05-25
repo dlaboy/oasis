@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { Nav } from 'react-bootstrap'
+import { Nav, Modal, Button } from 'react-bootstrap'
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import CurrencyFormatter from '../tools/CurrencyFormatter';
@@ -36,7 +36,7 @@ function Sales(){
     const [itemsPerType,setItemsPerType] = useState(false)
     const [top5Ings,setTop5Ings] = useState(false)
     const [top5Tops,setTop5Tops] = useState(false)
-    const [today,setToday] = useState(false)
+    const [today,setToday] = useState(true)
     const [allSales,setAllSales] = useState([])
     const [day,setDay] = useState("")
     const [month,setMonth] = useState("")
@@ -145,7 +145,20 @@ function Sales(){
 
         doc.save(`${timestamp}.pdf`);
 
-        console.log("Report generated")
+        try {
+          
+            const response = axios.delete("/orders",)
+            
+            console.log(response.data)
+            location.reload()
+            setRenderOrdersKey(prevKey => prevKey + 1)
+      
+            console.log("Report generated")
+          } catch (error) {
+            console.log("error:", error)
+          }
+          
+      
     }
 
     
@@ -277,6 +290,8 @@ function Sales(){
         catch(error){
           console.log('error:', error)
         }
+        setDeleteShow(false)
+
       }
     const handleSearchReport = event =>{
         console.log("Sales to be reported", allSales)
@@ -323,9 +338,31 @@ function Sales(){
  
          console.log("Report generated")
     }
+    const [idToDelete,setIDtoDelete] = useState(0);
+    const [deleteShow, setDeleteShow] = useState(false);
+    const handleDeleteClose = () => setDeleteShow(false);
+    const handleDeleteShow = (saleId) => {
+      setDeleteShow(true);
+      setIDtoDelete(saleId)
+    }
+  
 
     return (
         <div>
+        <Modal show={deleteShow} onHide={handleDeleteClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Deleting Sale</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Warning, you're about to delete a sale!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleDeleteClose}>
+            Cancel
+          </Button>
+          <button className='btn btn-primary' onClick={()=>handleDelete(idToDelete)}>
+            Delete
+          </button>
+        </Modal.Footer>
+      </Modal>
         <div className="w-100 d-flex flex-row justify-content-between" style={{height:"10vh"}}>
             <div className="d-flex pt-3 w-25 pb-3 text-center">
             <Nav>
@@ -447,7 +484,7 @@ function Sales(){
                                 <td>{<CurrencyFormatter value={sale.ATH}/>}</td>
                                 <td>{<CurrencyFormatter value={sale.CASH}/>}</td>
                                 <td>{<CurrencyFormatter value={sale.Total}/>}</td>
-                                <td><button className='btn text-secondary' onClick={() => handleDelete(sale._id)}>Delete</button></td>
+                                <td><button className='btn text-secondary' onClick={() => handleDeleteShow(sale._id)}>Delete</button></td>
                             </tr>
                             </>
                         ))}

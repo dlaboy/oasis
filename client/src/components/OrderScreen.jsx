@@ -150,12 +150,13 @@ function OrderScreen() {
   const handleDelete = async (orderId) => {
     try{
       console.log(orderId)
-      const response = await axios.delete('/orders',{data:{ id: orderId }})
+      const response = await axios.delete('/orders',{data:{ id: orderId}})
       console.log('Item deleted:', response.data);
     }
     catch(error){
       console.log('error:', error)
     }
+    setDeleteShow(false)
     setRenderOrdersKey(prevKey => prevKey + 1)
     reloadChannel.postMessage({ action: 'reload' });
   }
@@ -232,6 +233,14 @@ function OrderScreen() {
     location.reload()
     
   }
+  const [idToDelete,setIDtoDelete] = useState(0);
+  const [deleteShow, setDeleteShow] = useState(false);
+  const handleDeleteClose = () => setDeleteShow(false);
+  const handleDeleteShow = (orderId) => {
+    setDeleteShow(true);
+    setIDtoDelete(orderId)
+  }
+
     // const handleUpdate = async (orderId) =>{
   //   try{
   //     console.log(orderId)
@@ -247,8 +256,24 @@ function OrderScreen() {
 
 
 
+
+
   return (
     <div className='m-2 bg-light' style={{height:'95vh',width:'30vw'}}>
+      <Modal show={deleteShow} onHide={handleDeleteClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Deleting Order</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Warning, you're about to delete an order!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleDeleteClose}>
+            Cancel
+          </Button>
+          <button className='btn btn-primary' onClick={()=>handleDelete(idToDelete)}>
+            Delete
+          </button>
+        </Modal.Footer>
+      </Modal>
         <div    className="">
           <div className="d-flex flex-column text-center">
             <Nav>
@@ -258,7 +283,7 @@ function OrderScreen() {
                 <div className="">
                 Queued Orders
                 </div>
-                <button className='rounded-3 bg-light border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-2' onClick={handleOrderClear}>Clear</button>
+                {/* <button className='rounded-3 bg-light border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-2' onClick={handleOrderClear}>Clear</button> */}
             </div>
 
           </div>
@@ -274,7 +299,8 @@ function OrderScreen() {
                       </button>
                       <div className="">
                         {/* <button className='btn text-secondary' onClick={()=>toggleEdit(order._id)}>Edit</button> */}
-                        <button className='btn text-secondary' onClick={() => handleDelete(order._id)}>Delete</button>
+                        <button  className="btn text-secondary" onClick={()=>handleDeleteShow(order._id)}>Delete</button>
+                        
                       </div>
                     </div>
                     <div className={itemVisibility[order._id] ? 'd-flex  p-3 flex-column':'d-none  flex-column'}>
