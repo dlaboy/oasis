@@ -7,6 +7,7 @@ import { NavLink } from 'react-router-dom'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import CurrencyFormatter from '../tools/CurrencyFormatter';
+import './OrderScreen.css'
 
 
 const LOCAL_NAME_KEY = import.meta.env.VITE_REACT_APP_LOCAL_NAME_KEY;
@@ -240,26 +241,158 @@ function OrderScreen() {
     setDeleteShow(true);
     setIDtoDelete(orderId)
   }
+  const [charge,setCharge] = useState(0)
+  const [chargeShow, setChargeShow] = useState(false)
+  const handleChargeShow = () => setChargeShow(true)
+  const handleChargeHide = () => setChargeShow(false)
 
-    // const handleUpdate = async (orderId) =>{
-  //   try{
-  //     console.log(orderId)
-  //     const response = await axios.put('/orders',{data:{id:orderId,order:{}}})
+  const handleCharge = (event) => {
+    setCharge(event.target.value)
+  }
+  const handleIncrement = () => {
+    setCharge(charge + .25);
+  };
 
-  //   }
-  //   catch(error){
-  //     console.log('error', error)
-  //   }
-  // }
-  
-  // 
+  const handleDecrement = () => {
+    if (charge > 0){
+        setCharge(charge - .25);
+    }
+  };
+
+  const añadirCargo = () =>{
+    console.log("Type of totalToPay", typeof(totalToPay))
+    console.log("Parsed totalToPay", typeof(parseInt(totalToPay,10)))
+    console.log("Type of charge", typeof(charge))
+    setTotalToPay(parseInt(totalToPay,10) + charge)
+    setChargeShow(false)
+  }
+  const [detailShow, setDetailShow] = useState(false)
+  const [orderToShow, setOrderToShow] = useState({})
+  const handleDetailShow = (orden) => {
+    setDetailShow(true)
+    setOrderToShow(orden)
+  }
+
+  const handleDetailClose = () => setDetailShow(false)
+
 
 
 
 
 
   return (
-    <div className='m-2 bg-light' style={{height:'95vh',width:'30vw'}}>
+    // <div className='m-2 bg-light' style={{height:'95vh',width:'30vw'}}>
+    <div className=' bg-light' style={{height:'95vh',width:'32vw'}}>
+      <Modal show={detailShow} onHide={handleDetailClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Detalles de la Orden</Modal.Title>
+          </Modal.Header>
+          <Modal.Body className='overflow-scroll detalles-body'>
+          <div className={itemVisibility[orderToShow._id] ? 'detalle-de-orden d-flex flex-column bg-primary-subtle p-2':'d-flex bg-danger flex-column'}>
+            <div className="d-flex flex-column overflow-scroll bg-secondary-subtle">
+              {orderToShow?.items && orderToShow.items.map(item =>(
+              <div className="border-bottom border-dark">
+                <div className="d-flex flex-column justify-content-around">
+                  <div className='fw-bold'> Type:  </div> 
+                  <div className="">
+                    <ul>
+                    {item.type}
+                    </ul>
+                  
+                  {/* <div className="text-secondary">
+                      {editEnable[order._id] ? (<input className='w-75' defaultValue={item.type} />):(<div></div>)}
+                      </div> */}
+                    </div> 
+                </div>
+                <div className="d-flex flex-column justify-content-around">
+                  <div className="fw-bold">
+                    Ingredients: 
+                  </div>
+                  <ul className="d-flex flex-column">
+                    {item && item.ings.map((ing=>(  
+                      <li>{ing}
+                      {/* <div className="text-secondary">
+                      {editEnable[order._id] ? (<input className='w-75' defaultValue={ing}/>):(<div></div>)}
+                      </div> */}
+                      </li>
+                    )))}
+                  </ul>
+                </div>
+                <div className="d-flex flex-column  justify-content-around">
+                  <div className="fw-bold">
+                    Toppings: 
+                  </div>
+                  <ul className="d-flex flex-column">
+
+                    {item.tops.map((top=>(
+                      <li className=''>{top}
+                        {/* <div className="text-secondary">
+                        {editEnable[order._id] ? (<input  className='w-75' defaultValue={top}/>):(<div></div>)}
+                        </div> */}
+                      </li>
+                    )))}
+                  </ul>
+                </div>
+                <div className="d-flex flex-column justify-content-around ">
+                  <div className="fw-bold ">
+                    Quantity: 
+                  </div>
+                  <ul className="">
+                    {item.qty}
+                  
+                  </ul>
+                </div>
+                <div className="d-flex flex-column pb-2 justify-content-around">
+                  <div className="fw-bold">
+                    Comments: 
+                  </div>
+                  <ul className="">
+                    
+                    {item.comments}
+                    
+                  </ul>
+                </div>
+                  
+              </div>
+            ))}
+            </div>
+            <div className="d-flex flex-column bg-light">
+              <div className="fw-bold d-flex flex-row">
+                <div className="">
+                  Payment Method:
+                </div>
+                <div className="fw-normal d-flex justify-content-center align-items-center">
+                  {orderToShow.payment_method}
+                </div>
+              </div>
+              {/* <div className={editEnable[order._id] ? 'd-flex justify-content-center align-items-center':'d-none'}>
+                <div className="">
+                  <button className='btn btn-primary'onClick={()=>handleUpdate(order._id, order.name, order.items, order.payment_method)} >Save</button>
+                </div>
+
+              </div> */}
+
+            </div>
+            <div className="fw-bold d-flex flex-row bg-light">
+                <div className="">
+                  Total to Pay:
+                </div>
+                <div className="fw-normal d-flex justify-content-center align-items-center">
+                  {<CurrencyFormatter value={orderToShow.total} />}
+                </div>
+              </div>
+            
+          </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleDetailClose}>
+              Close
+            </Button>
+            {/* <button className='btn btn-primary' onClick={()=>handleDelete(idToDelete)}>
+              Delete
+            </button> */}
+          </Modal.Footer>
+      </Modal>
       <Modal show={deleteShow} onHide={handleDeleteClose}>
         <Modal.Header closeButton>
           <Modal.Title>Deleting Order</Modal.Title>
@@ -274,8 +407,9 @@ function OrderScreen() {
           </button>
         </Modal.Footer>
       </Modal>
-        <div    className="">
-          <div className="d-flex flex-column text-center">
+        {/* <div  className=""  style={{height:'95vh',width:'30vw'}}> */}
+        <div  className="" >
+          <div className="d-flex flex-column text-center" style={{height:'15vh'}}>
             <Nav>
               <Nav.Link to='/' as={NavLink} className='btn b p-3   w-100  text-center'>Home</Nav.Link>
             </Nav>
@@ -283,18 +417,16 @@ function OrderScreen() {
                 <div className="">
                 Queued Orders
                 </div>
-                {/* <button className='rounded-3 bg-light border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-2' onClick={handleOrderClear}>Clear</button> */}
             </div>
-
           </div>
-          <div style={{height:'25vh'}} className="overflow-scroll">
-
+          <div  className="ordenes-esperando overflow-scroll">
             {currentOrders ? (
-              <div className='list-group h-100 '> 
+              <div className='list-group'> 
                 {currentOrders.map(order =>(
                   <div key={order._id} >
                     <div className={order.status == 'done' ? 'bg-success-subtle list-group-item list-group-item-action p-3 d-flex flex-row justify-content-between': 'list-group-item list-group-item-action p-3 d-flex flex-row justify-content-between'} >
-                      <button className='btn' onClick={() => toggleVisibility(order._id)}>
+                      {/* <button className='btn' onClick={() => toggleVisibility(order._id)}> */}
+                      <button className='btn' onClick={() => handleDetailShow(order)}>
                         {order.client_name} 
                       </button>
                       <div className="">
@@ -303,101 +435,8 @@ function OrderScreen() {
                         
                       </div>
                     </div>
-                    <div className={itemVisibility[order._id] ? 'd-flex  p-3 flex-column':'d-none  flex-column'}>
-                      <div className="d-flex flex-column w-100 overflow-scroll bg-secondary-subtle p-3">
-                        {order?.items && order.items.map(item =>(
-                        <div className="border-bottom border-dark w-100">
-                          <div className="d-flex flex-column w-100 justify-content-around">
-                            <div className='fw-bold'> Type:  </div> 
-                            <div className="">
-                              <ul>
-                              {item.type}
-                              </ul>
-                           
-                            {/* <div className="text-secondary">
-                                {editEnable[order._id] ? (<input className='w-75' defaultValue={item.type} />):(<div></div>)}
-                                </div> */}
-                              </div> 
-                          </div>
-                          <div className="d-flex flex-column w-100 justify-content-around">
-                            <div className="fw-bold">
-                              Ingredients: 
-                            </div>
-                            <ul className="d-flex flex-column">
-                              {item && item.ings.map((ing=>(  
-                                <li>{ing}
-                                {/* <div className="text-secondary">
-                                {editEnable[order._id] ? (<input className='w-75' defaultValue={ing}/>):(<div></div>)}
-                                </div> */}
-                                </li>
-                              )))}
-                            </ul>
-                          </div>
-                          <div className="d-flex flex-column w-100 justify-content-around">
-                            <div className="fw-bold">
-                              Toppings: 
-                            </div>
-                            <ul className="d-flex flex-column">
-
-                              {item.tops.map((top=>(
-                                <li className=''>{top}
-                                  {/* <div className="text-secondary">
-                                  {editEnable[order._id] ? (<input  className='w-75' defaultValue={top}/>):(<div></div>)}
-                                  </div> */}
-                                </li>
-                              )))}
-                            </ul>
-                          </div>
-                          <div className="d-flex flex-column w-100 justify-content-around ">
-                            <div className="fw-bold ">
-                              Quantity: 
-                            </div>
-                            <ul className="">
-                              {item.qty}
-                            
-                            </ul>
-                          </div>
-                          <div className="d-flex flex-column pb-2 w-100 justify-content-around">
-                            <div className="fw-bold">
-                              Comments: 
-                            </div>
-                            <ul className="">
-                              
-                              {item.comments}
-                             
-                            </ul>
-                          </div>
-                            
-                        </div>
-                      ))}
-                      </div>
-                      <div className="d-flex flex-column bg-light">
-                        <div className="fw-bold d-flex flex-row w-100">
-                          <div className="">
-                            Payment Method:
-                          </div>
-                          <div className="fw-normal d-flex justify-content-center align-items-center">
-                            {order.payment_method}
-                          </div>
-                        </div>
-                        <div className={editEnable[order._id] ? 'd-flex justify-content-center align-items-center h-100 ':'d-none'}>
-                          <div className="">
-                            <button className='btn btn-primary'onClick={()=>handleUpdate(order._id, order.name, order.items, order.payment_method)} >Save</button>
-                          </div>
-
-                        </div>
-
-                      </div>
-                      <div className="fw-bold d-flex flex-row w-100 bg-light">
-                          <div className="">
-                            Total to Pay:
-                          </div>
-                          <div className="fw-normal d-flex justify-content-center align-items-center">
-                            {<CurrencyFormatter value={order.total} />}
-                          </div>
-                        </div>
-                      
-                    </div>
+                    
+          
                   </div>
             
                 )
@@ -409,7 +448,7 @@ function OrderScreen() {
             }
           </div>
         </div>
-        <div className="">
+        <div className="d-flex flex-column" >
           <div className="p-3 d-flex justify-content-between">
             <div>Current Order</div>
             <button className='rounded-3 bg-light border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-2' onClick={handleClear}>Clear</button>
@@ -429,7 +468,8 @@ function OrderScreen() {
           <div>
        
             
-            <div style={order.items ? {height:'20vh'}: {height:'0vh'}} className="m-3 overflow-scroll ">
+          {/* <div style={order.items ? {height:'20vh'}: {height:'0vh'}} className="m-3 overflow-scroll "> */}
+          <div style={order.items ? {height:'20vh'}: {height:'0vh'}} className="orden-de-ahora bg-secondary-subtle overflow-scroll">
               { order ? ( order?.items &&
 
                 order.items.map(item =>  (
@@ -497,28 +537,54 @@ function OrderScreen() {
             </div>
             
           </div>
-          <div className="d-flex align-items-center justify-content-center" >
+          <div className="botones-actiones d-flex align-items-center justify-content-around flex-column">
             <button type='button' onClick={handleShow} className='btn btn-outline-primary rounded-pill p-3'>Send Order</button>
+            <button type='button' onClick={handleChargeShow} className='btn btn-outline-primary rounded-pill p-3'> Additional Charge</button>
           </div>
 
-          <Modal show={metodoModal} onHide={handleClose} centered>
-                        <Modal.Header closeButton>
-                        <Modal.Title>Método de Pago</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body className='w-100'>
-                            <button className="btn btn-warning w-50" onClick={handlePayment} value={"ATH"}>ATH Móvil</button>
-                            <button className="btn btn-success w-50" onClick={handlePayment} value={"CASH"}>CASH</button>
-                        </Modal.Body>
-                        <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
-                            Close
-                        </Button>
-                        <Button variant="primary" onClick={handleOrder}>
-                            Send Order
-                        </Button>
-                        </Modal.Footer>
-                    </Modal>
         </div>
+          <Modal show={metodoModal} onHide={handleClose} centered>
+            <Modal.Header closeButton>
+              <Modal.Title>Método de Pago</Modal.Title>
+              </Modal.Header>
+              <Modal.Body className='w-100'>
+                  <button className="btn btn-warning w-50" onClick={handlePayment} value={"ATH"}>ATH Móvil</button>
+                  <button className="btn btn-success w-50" onClick={handlePayment} value={"CASH"}>CASH</button>
+              </Modal.Body>
+              <Modal.Footer>
+              <Button variant="secondary" onClick={handleClose}>
+                  Close
+              </Button>
+              <Button variant="primary" onClick={handleOrder}>
+                  Send Order
+              </Button>
+            </Modal.Footer>
+          </Modal>
+            <Modal show={chargeShow} onHide={handleChargeHide} centered>
+            <Modal.Header closeButton>
+              <Modal.Title>Cargo Adicional</Modal.Title>
+              </Modal.Header>
+              <Modal.Body className='w-100 d-flex flex-row justify-content-between'>
+                  <div className="">
+                      <button className='btn btn-outline-primary rounded-pill p-3' onClick={handleDecrement}>-</button>
+                  </div>
+                  <div className=" d-flex flex-row justify-content-center align-items-center">
+                    <span class="p-3">$</span>
+                    <input type="number"  min={0} onChange={handleCharge} id='charge' value={charge} className='increment-charge bg-secondary-subtle rounded-3 p-3 border-0'/>
+                  </div>
+                  <div className="">
+                      <button className='btn btn-outline-primary rounded-pill p-3' onClick={handleIncrement}>+</button>
+                  </div>
+              </Modal.Body>
+              <Modal.Footer>
+              <Button variant="secondary" onClick={handleChargeHide}>
+                  Cerrar
+              </Button>
+              <Button variant="primary" onClick={añadirCargo}>
+                  Añadir Cargo
+              </Button>
+            </Modal.Footer>
+            </Modal>
 
     </div>
   )

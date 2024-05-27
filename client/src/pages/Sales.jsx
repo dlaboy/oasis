@@ -36,7 +36,7 @@ function Sales(){
     const [itemsPerType,setItemsPerType] = useState(false)
     const [top5Ings,setTop5Ings] = useState(false)
     const [top5Tops,setTop5Tops] = useState(false)
-    const [today,setToday] = useState(true)
+    const [today,setToday] = useState(true )
     const [allSales,setAllSales] = useState([])
     const [day,setDay] = useState("")
     const [month,setMonth] = useState("")

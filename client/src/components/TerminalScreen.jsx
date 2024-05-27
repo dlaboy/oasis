@@ -772,10 +772,10 @@ function TerminalScreen() {
                             {qty}
                             </div>
                             <div className="col">
-                                <button className='btn btn-primary rounded-circle' onClick={handleDecrement}>-</button>
+                                <button className='btn btn-outline-primary rounded-pill' onClick={handleDecrement}>-</button>
                             </div>
                             <div className="col">
-                                <button className='btn btn-primary rounded-circle' onClick={handleIncrement}>+</button>
+                                <button className='btn btn-outline-primary rounded-pill' onClick={handleIncrement}>+</button>
                             </div>
                         </div>
         
