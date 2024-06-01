@@ -41,6 +41,7 @@ function TerminalScreen() {
     })
     const [ingsFlag, setIngsFlag] = useState({
         vainillaIng:false,
+        chocolateIng:false,
         fresaIng:false,
         nutellaIng:false,
         oreoIng:false,
@@ -658,17 +659,17 @@ function TerminalScreen() {
                                 <button style={{pointerEvents : 'auto'}} className={typeFlags.rolls ? 'btn btn-outline-secondary type active p-3' : 'btn btn-outline-secondary type p-3'} value={'rolls'} onClick={add}>Rolls</button>
                             </div>
                             <div className="col ms-1 me-1">
-                                <button className= {typeFlags.shakes ? 'btn btn-outline-secondary type active p-3':'btn btn-outline-secondary type p-3'}  value={'shakes'} onClick={add}>Shakes</button>
+                                <button style={{pointerEvents : 'auto'}} className= {typeFlags.shakes ? 'btn btn-outline-secondary type active p-3':'btn btn-outline-secondary type p-3'}  value={'shakes'} onClick={add}>Shakes</button>
         
         
                             </div>
                             <div className="col ms-1 me-1">
-                                <button className={typeFlags.banana ? 'btn btn-outline-secondary type active p-3':'btn btn-outline-secondary type p-3'} value={'banana'} onClick={add}>Banana</button>
+                                <button style={{pointerEvents : 'auto'}} className={typeFlags.banana ? 'btn btn-outline-secondary type active p-3':'btn btn-outline-secondary type p-3'} value={'banana'} onClick={add}>Banana</button>
         
                                 
                             </div>
                             <div className="col ms-1 me-1">
-                                <button className={typeFlags.puppy ? 'btn btn-outline-secondary type active p-3':'btn btn-outline-secondary type p-3'} value={'puppy'} onClick={add}>Puppy</button>
+                                <button style={{pointerEvents : 'auto'}} className={typeFlags.puppy ? 'btn btn-outline-secondary type active p-3':'btn btn-outline-secondary type p-3'} value={'puppy'} onClick={add}>Puppy</button>
         
                             </div>
                         </div>
@@ -680,6 +681,7 @@ function TerminalScreen() {
                             </button>
                             {ingredientsButtons && <div className="col " >
                                 <button className={ingsFlag.vainillaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3 ' : 'btn btn-outline-secondary m-1 ingredients p-3' }value={'vainilla'} onClick={add}  >Vainilla</button>
+                                <button className={ingsFlag.chocolateIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3 ' : 'btn btn-outline-secondary m-1 ingredients p-3' }value={'chocolate'} onClick={add}  >Chocolate</button>
                                 <button className={ingsFlag.fresaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3 ' : 'btn btn-outline-secondary m-1 ingredients p-3' }value={'fresa'} onClick={add}  >Fresa</button>
                                 <button className={ingsFlag.nutellaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'nutella'} onClick={add} >Nutella</button>
                                 <button className={ingsFlag.oreoIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'oreo'} onClick={add} >Oreo</button>

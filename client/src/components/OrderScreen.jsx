@@ -552,6 +552,9 @@ function OrderScreen() {
                   <button className="btn btn-success w-50" onClick={handlePayment} value={"CASH"}>CASH</button>
               </Modal.Body>
               <Modal.Footer>
+              <div className="">
+                  Método de pago: {metodo}
+              </div>
               <Button variant="secondary" onClick={handleClose}>
                   Close
               </Button>
@@ -577,6 +580,7 @@ function OrderScreen() {
                   </div>
               </Modal.Body>
               <Modal.Footer>
+                
               <Button variant="secondary" onClick={handleChargeHide}>
                   Cerrar
               </Button>
