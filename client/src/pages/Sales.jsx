@@ -323,19 +323,13 @@ function Sales(){
             return `https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(chartConfig))}`;
           };
       
-          const chartUrls = [
-            generateChartUrl(ingredientData.map(ing=>ing), ingredientLabels,"Top 5 Ingredients"),
-            generateChartUrl(toppingData.map(top=>top), toppingLabels,"Top 5 Toppings"),
-            generateChartUrl([rolls,shakes,banana,perro], ['Rolls','Shakes','Banana','Puppy'],"Items by type")
-          ];
+        const chartUrls = [
+        generateChartUrl(ingredientData.map(ing=>ing), ingredientLabels,"Top 5 Ingredients"),
+        generateChartUrl(toppingData.map(top=>top), toppingLabels,"Top 5 Toppings"),
+        generateChartUrl([rolls,shakes,banana,perro], ['Rolls','Shakes','Banana','Puppy'],"Items by type")
+        ];
 
-          let currentY = doc.previousAutoTable.finalY + 20;
-
-
-       // Generate the chart
-        
-    //    const ingredientsTitle = "Stats";    
-    //    doc.text(ingredientsTitle, 20,  finalY2 + 10); 
+        let currentY = doc.previousAutoTable.finalY + 20;
 
        const addChartToPDF = (url, yOffset) => {
         return new Promise((resolve) => {
@@ -354,23 +348,28 @@ function Sales(){
         }
         doc.save(`${timestamp}.pdf`);
 
-        try {
-            
-            const response = axios.delete("/orders",)
-            
-            console.log(response.data)
-            // setRenderOrdersKey(prevKey => prevKey + 1)
-            location.reload()
-            
-            console.log("Report generated")
-        } catch (error) {
-            console.log("error:", error)
-        }
         
-        setSubmitShow(false)
-        };
-
-      addChartsSequentially();
+        console.log("Report generated")
+        
+        
+        
+    }
+    
+    
+    addChartsSequentially();
+    
+    setSubmitShow(false)
+      axios.delete("/orders",).then(response=>{
+        console.log(response.data)
+        setRenderOrdersKey(prevKey => prevKey + 1)
+        location.reload()
+        
+        
+    }).catch(error =>{
+        console.log("Error", error)
+    })
+        
+ 
 
 
       
