@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import { Nav, Modal, Button } from 'react-bootstrap'
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import CurrencyFormatter from '../tools/CurrencyFormatter';
 import moment from 'moment';
 import Table from 'react-bootstrap/Table';
@@ -9,6 +9,9 @@ import BarChart from '../tools/BarChart';
 import React from 'react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import Chart from 'chart.js/auto';
+import { ItemContext } from '../../context/ItemContext';
+
 
 const formatCurrency = (value) => {
     return new Intl.NumberFormat('en-US', {
@@ -32,6 +35,8 @@ function Sales(){
     const [toppingLabels , setToppingLabels] = useState([])
     const [toppingData , setToppingData] = useState([])
     const timestamp = moment().format('YYYY-MM-DD hh:mm:ss'); // Gets current time in ISO format
+    const {renderOrdersKey, setRenderOrdersKey} = useContext( ItemContext )
+
     const [selectedItem, setSelectedItem] = useState('');
     const [itemsPerType,setItemsPerType] = useState(false)
     const [top5Ings,setTop5Ings] = useState(false)
@@ -106,6 +111,7 @@ function Sales(){
     // };
 
     const handleSubmit = async (event) =>{
+        setSubmission(true)
         try{
             const response = await axios.post('/sales', {
                 'items': rolls + shakes + banana + perro,
@@ -121,44 +127,256 @@ function Sales(){
         }
         // Add a title, centered
         const pageTitle = "Daily Report";
+        const pageHeight = doc.internal.pageSize.getHeight();
         const pageWidth = doc.internal.pageSize.getWidth();
+        const chartHeight = 100; // Set the height for each chart
+
         const textSize = doc.getStringUnitWidth(pageTitle) * doc.internal.getFontSize() / doc.internal.scaleFactor;
         const textOffset = (pageWidth - textSize) / 2; // Calculate text's x coordinate to center it
         doc.text(pageTitle, textOffset, 10); // Adjust y coordinate as needed
+
+        const addPageIfNeeded = (currentY,requiredHeight) => {
+            if (currentY + requiredHeight > pageHeight - 20) { // 20 is a buffer to avoid adding content too close to the bottom
+                doc.addPage();
+                return 20; // Reset Y position for the new page
+              }
+              return currentY;
+          };
 
         // Draw a horizontal line under the title
         doc.setDrawColor(0);
         doc.setLineWidth(0.5);
         doc.line(20, 15, pageWidth - 20, 15); // Adjust line position as needed
 
+        // Add a title, centered
+        const orderTitle = "Orders";    
+        doc.text(orderTitle, 20, 25); // Adjust y coordinate as needed
+
+        let orders = [];
+        try {
+            const ordersResponse = await axios.get('/orders');
+            orders = ordersResponse.data;
+
+        } catch (error) {
+            console.error('Error fetching orders:', error);
+        }
+    
+
+        const orderColumns = ["Order ID","Client Name","Payment Method","Total"]
+
+        const orderRows = orders.map(order => [
+            order._id,
+            order.client_name,
+            order.payment_method,
+            formatCurrency(order.total)
+
+        ])
+        console.error("Order Rows: ",orderRows);
+
+
+        autoTable(doc, {
+            head: [orderColumns],
+            body: orderRows,
+            startY: 30,
+            theme: 'grid'
+        });
+
+        // Calculate the position for the second table to start
+        let finalY = doc.lastAutoTable.finalY || 40; // Use doc.lastAutoTable.finalY to get the end position of the last table
+
+        const totalTitle = "Total Sale";    
+        doc.text(totalTitle, 20, finalY + 20); // Adjust y coordinate as needed
+
         const tableColumn = ["Date","Items", "Ath", "Cash","Total"];
         console.log("Timestamp", timestamp)
         const tableRows = [[timestamp,rolls + shakes + banana + perro,formatCurrency(ATHsales),formatCurrency(CASHsales),formatCurrency(ATHsales + CASHsales)]]
         
-          // Add a table to the PDF
+        // Add a table to the PDF
         autoTable(doc, {
             head: [tableColumn],
             body: tableRows,
-            startY: 20,
-            theme: 'grid'
+            startY: finalY + 25,
+            theme: 'grid',
+            headStyles: {
+                fillColor: [255, 165, 0] // Red color, you can change to any color
+            }
         });
 
+        axios.get('/orders/count').then(response=>{
+            console.log("Count Response", response.data)
+            var map = response.data
+            console.log("Map", map)
+            map.forEach(object => {
+                console.log("iterating calculations")
+                console.log("object to look: ", object)
+
+                if (object._id == 'rolls'){
+                    console.log("There are rolls")
+
+                    setRolls(object.totalQuantity)
+                }
+                else if (object._id == 'shakes'){
+                    console.log("There are shakes")
+
+                    setShakes(object.totalQuantity)
+                }
+                else if (object._id == 'banana'){
+                    setBanana(object.totalQuantity)
+                }
+                else if (object._id == 'puppy'){
+                    setPerro(object.totalQuantity)
+                    
+
+                }
+                else{
+                    console.log("Types not found")
+
+                }
+            })
+
+
+            }).catch(error =>{
+            console.log("Error", error)
+        })
+        axios.get('/orders/countIngredients').then(response=>{
+            // console.log("Ingredients: ", response.data.length)
+            var labels=[]
+            var data=[]
+            response.data.forEach(object =>{
+                labels.push(object._id)
+                data.push(object.totalQuantity)
+            })
+            console.log("Labels: ",labels)
+            console.log("Data: ", data)
+            setIngredientLabels(labels)
+            setIngredientData(data)
+            
+        }).catch(error =>{
+            console.log("Error", error)
+        })
+        axios.get('/orders/countToppings').then(response=>{
+            // console.log("Ingredients: ", response.data.length)
+            var labels=[]
+            var data=[]
+            response.data.forEach(object =>{
+                labels.push(object._id)
+                data.push(object.totalQuantity)
+            })
+            console.log("Labels: ",labels)
+            console.log("Data: ", data)
+            setToppingLabels(labels)
+            setToppingData(data)
+            
+        }).catch(error =>{
+            console.log("Error", error)
+        })
+
+        let finalY2 = doc.lastAutoTable.finalY|| 40;
+
+        const getRandomColor = () => {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+              color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+          };
+
+        const generateChartUrl = (data,label,title) => {
+            const backgroundColor = getRandomColor();
+            const borderColor = getRandomColor();
+            const chartConfig = {
+              type: 'bar',
+              data: {
+                labels: label.map(lab=>lab),
+                datasets: [{
+                  label: label,
+                  data: data,
+                  backgroundColor: backgroundColor,
+                  borderColor: borderColor,      
+                  borderWidth: 1
+                }]
+              },
+              options: {
+                responsive: false,
+                maintainAspectRatio: false,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }],
+
+                },
+                legend: {
+                    display: false, // Remove legend
+                },
+                title: {
+                    display: true,
+                    text: title,
+                    font: {
+                      size: 16
+                    }
+                  },
+              }
+            };
+            return `https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(chartConfig))}`;
+          };
+      
+          const chartUrls = [
+            generateChartUrl(ingredientData.map(ing=>ing), ingredientLabels,"Top 5 Ingredients"),
+            generateChartUrl(toppingData.map(top=>top), toppingLabels,"Top 5 Toppings"),
+            generateChartUrl([rolls,shakes,banana,perro], ['Rolls','Shakes','Banana','Puppy'],"Items by type")
+          ];
+
+          let currentY = doc.previousAutoTable.finalY + 20;
+
+
+       // Generate the chart
+        
+    //    const ingredientsTitle = "Stats";    
+    //    doc.text(ingredientsTitle, 20,  finalY2 + 10); 
+
+       const addChartToPDF = (url, yOffset) => {
+        return new Promise((resolve) => {
+          const chartImage = new Image();
+          chartImage.src = url;
+          chartImage.onload = () => {
+            yOffset = addPageIfNeeded(yOffset, chartHeight);
+            doc.addImage(chartImage, 'PNG', 10, yOffset, pageWidth - 20, chartHeight);
+            resolve(yOffset + chartHeight + 10); // Adjust height for next chart
+          };
+        });
+      };
+      const addChartsSequentially = async () => {
+        for (const url of chartUrls) {
+          currentY = await addChartToPDF(url, currentY);
+        }
         doc.save(`${timestamp}.pdf`);
 
         try {
-          
+            
             const response = axios.delete("/orders",)
             
             console.log(response.data)
+            // setRenderOrdersKey(prevKey => prevKey + 1)
             location.reload()
-            setRenderOrdersKey(prevKey => prevKey + 1)
-      
+            
             console.log("Report generated")
-          } catch (error) {
+        } catch (error) {
             console.log("error:", error)
-          }
-          
+        }
+        
+        setSubmitShow(false)
+        };
+
+      addChartsSequentially();
+
+
       
+  
+
+   
     }
 
     
@@ -345,10 +563,34 @@ function Sales(){
       setDeleteShow(true);
       setIDtoDelete(saleId)
     }
+    const [submitShow, setSubmitShow] = useState(false);
+    const handleSubmitClose = () => setSubmitShow(false);
+    const handleSubmitShow = () => setSubmitShow(true);
+
+    const [isSubmitted, setSubmission] = useState(false);
+
+    
   
 
     return (
         <div>
+        
+        <Modal show={submitShow} onHide={handleSubmitClose}>
+        {isSubmitted?<Modal.Body>Submiting Report</Modal.Body> :<>
+            <Modal.Header closeButton>
+          <Modal.Title>Submmiting Sale</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Warning, you're about to submit a sale!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleSubmitClose}>
+            Cancel
+          </Button>
+          <button className='btn btn-primary' onClick={handleSubmit}>
+            Submit
+          </button>
+        </Modal.Footer>
+        </>}
+        </Modal>
         <Modal show={deleteShow} onHide={handleDeleteClose}>
         <Modal.Header closeButton>
           <Modal.Title>Deleting Sale</Modal.Title>
@@ -383,7 +625,7 @@ function Sales(){
                 <div className="d-flex justify-content-around align-items-center flex-row">
                     <button className='btn btn-outline-primary rounded-pill p-3 m-2' onClick={handleReport}> Generate Today's Report</button>
                     {generate && 
-                        <button className='btn btn-outline-dark rounded-pill p-3 m-2' onClick={handleSubmit}> Submit Today's Report</button>
+                        <button className='btn btn-outline-dark rounded-pill p-3 m-2' onClick={handleSubmitShow}> Submit Today's Report</button>
                     }
                 </div>
             

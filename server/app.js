@@ -1,5 +1,7 @@
+
 var createError = require('http-errors');
 var express = require('express');
+
 
 var cors = require('cors');
 var path = require('path');
@@ -57,9 +59,16 @@ app.get('*', (req, res) => {
 });
 
 
-app.listen(PORT, () =>{
+app.listen(PORT, async () =>{
   console.log("server started")
   console.log("127.0.0.1:3000")
+  if (PORT == 3000){
+    const open = await import('open');
+
+    open.default(`http://127.0.0.1:${PORT}`);
+
+  }
+
 
 })
 
