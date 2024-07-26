@@ -10,3 +10,15 @@
     background-color: rgb(0, 76, 255) !important;
     color: white !important;
 }
+.terminal-screen,.terminal-screen-2{
+    width: 70vw;
+}
+@media (max-width: 768px) {
+    .order-screen-container{
+     display: none;
+    }
+    .terminal-screen,.terminal-screen-2{
+        width: 100vw;
+    }
+   
+   }

@@ -282,7 +282,7 @@ function OrderScreen() {
 
   return (
     // <div className='m-2 bg-light' style={{height:'95vh',width:'30vw'}}>
-    <div className=' bg-light' style={{height:'95vh',width:'32vw'}}>
+    <div className=' bg-light order-screen-container' style={{height:'95vh',width:'32vw'}}>
       <Modal show={detailShow} onHide={handleDetailClose}>
           <Modal.Header closeButton>
             <Modal.Title>Detalles de la Orden</Modal.Title>

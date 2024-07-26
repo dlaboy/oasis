@@ -39,6 +39,31 @@ input[type="number"] {
     height: 40vh;
 }
   
+
+
+/* MEDIA QUERIES */
+
+/* Smaller devices (phones, less than 768px) */
+@media (max-width: 768px) {
+ .order-screen-container{
+  display: none;
+ }
+
+}
+/* @media (min-width:769px) and (max-width: 991px) {
+  .order-screen-container{
+    display: none;
+   }
+
+} */
+
+/* Larger devices (desktops, more than 992px) */
+/* @media (min-width: 992px) {
+ 
+
+} */
+
+
 /*
   .number-input {
     border: 2px solid #ddd;

@@ -639,8 +639,8 @@ function TerminalScreen() {
     }
 
     return (
-        <div className="m-2 bg-light " style={{width:'70vw'}}>
-            <div className='  d-flex flex-column  ' style={{height:'95vh',overflowY:'scroll', width:'75vw'}} key={componentKey}>
+        <div className=" bg-light terminal-screen" >
+            <div className='  d-flex flex-column terminal-screen-2' style={{height:'95vh',overflowY:'scroll'}} key={componentKey}>
                 <div className=" w-100" >
                     <div className="m-2 col w-75 d-flex justify-content-evenly pt-4 ">
                         <label htmlFor="cliente">Nombre</label>
@@ -650,7 +650,7 @@ function TerminalScreen() {
                         </div>
                     </div>
                 </div>
-                <div className="col">
+                <div className="">
                         { typeAlert && <div className='text-danger text-center'>Only One Type per Item</div> }
                     <div className='col d-flex flex-row m-1 p-3 w-75'>
                         <div className="col w-25  text-start">Type</div>
@@ -674,9 +674,9 @@ function TerminalScreen() {
                             </div>
                         </div>
                     </div>
-                    <div style={{height:'40vh'}} className="overflow-scroll">
-                        <div className='col m-2'>
-                            <button className="rounded-3 col d-flex flex-row w-100 text-start border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light"  onClick={handleIngredients}>
+                    <div style={{height:'40vh'}} className="overflow-scroll ">
+                        <div className=' m-2'>
+                            <button className="rounded-3 m-2 w-100 col d-flex flex-row text-start border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light"  onClick={handleIngredients}>
                                 Ingredients
                             </button>
                             {ingredientsButtons && <div className="col " >
@@ -730,8 +730,8 @@ function TerminalScreen() {
 
                             </div>}
                         </div>
-                        <div className='col m-2'> 
-                            <button className="rounded-3 col w-100 text-start border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light" onClick={handleToppings}>
+                        <div className=' m-2 '> 
+                            <button className="rounded-3 m-2 w-100 col text-start border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light" onClick={handleToppings}>
                                 Toppings
                             </button>
                             {toppingsButtons && <div className="col " >
