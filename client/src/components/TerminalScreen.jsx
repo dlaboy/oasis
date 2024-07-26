@@ -640,7 +640,7 @@ function TerminalScreen() {
 
     return (
         <div className=" bg-light terminal-screen" >
-            <div className='  d-flex flex-column terminal-screen-2' style={{height:'95vh',overflowY:'scroll'}} key={componentKey}>
+            <div className=' d-flex flex-column terminal-screen-2' style={{height:'95vh',overflowY:'scroll'}} key={componentKey}>
                 <div className=" w-100" >
                     <div className="m-2 col w-75 d-flex justify-content-evenly pt-4 ">
                         <label htmlFor="cliente">Nombre</label>
@@ -650,9 +650,9 @@ function TerminalScreen() {
                         </div>
                     </div>
                 </div>
-                <div className="">
+                <div className=" ">
                         { typeAlert && <div className='text-danger text-center'>Only One Type per Item</div> }
-                    <div className=' d-flex flex-row  w-100 justify-content-center align-items-center '>
+                    <div className='mt-3 mb-3 d-flex flex-row  w-100 justify-content-center align-items-center '>
                         <div className="col w-25 type-text text-start">Type</div>
                         <div className=" d-flex flex-row w-100 justify-content-around align-items-center "  style={{pointerEvents : 'none'}}>
                             <div className=" ms-1 me-1">
