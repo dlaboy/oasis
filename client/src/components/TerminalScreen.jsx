@@ -782,7 +782,7 @@ function TerminalScreen() {
                         </div>
         
                     </div>
-                    <div className='col m-2 d-flex flex-row ps-3'>
+                    <div className='col m-2 d-flex flex-column ps-3'>
                         <div className="col">Comments</div>
                         <div className="col">
                             <textarea name="" id="" cols="30" rows="2" defaultValue={comments} onChange={handleComments}></textarea>
