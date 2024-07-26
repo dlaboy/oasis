@@ -14,7 +14,7 @@
     width: 70vw;
 }
 @media (max-width: 768px) {
-    .order-screen-container{
+    .order-screen-container,.type-text{
      display: none;
     }
     .terminal-screen,.terminal-screen-2{

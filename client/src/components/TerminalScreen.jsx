@@ -652,34 +652,34 @@ function TerminalScreen() {
                 </div>
                 <div className="">
                         { typeAlert && <div className='text-danger text-center'>Only One Type per Item</div> }
-                    <div className='col d-flex flex-row m-1 p-3 w-75'>
-                        <div className="col w-25  text-start">Type</div>
-                        <div className="col d-flex flex-row w-100 "  style={{pointerEvents : 'none'}}>
-                            <div className="col ms-1 me-1">
+                    <div className=' d-flex flex-row  w-100 justify-content-center align-items-center '>
+                        <div className="col w-25 type-text text-start">Type</div>
+                        <div className=" d-flex flex-row w-100 justify-content-around align-items-center "  style={{pointerEvents : 'none'}}>
+                            <div className=" ms-1 me-1">
                                 <button style={{pointerEvents : 'auto'}} className={typeFlags.rolls ? 'btn btn-outline-secondary type active p-3' : 'btn btn-outline-secondary type p-3'} value={'rolls'} onClick={add}>Rolls</button>
                             </div>
-                            <div className="col ms-1 me-1">
+                            <div className=" ms-1 me-1">
                                 <button style={{pointerEvents : 'auto'}} className= {typeFlags.shakes ? 'btn btn-outline-secondary type active p-3':'btn btn-outline-secondary type p-3'}  value={'shakes'} onClick={add}>Shakes</button>
         
         
                             </div>
-                            <div className="col ms-1 me-1">
+                            <div className=" ms-1 me-1">
                                 <button style={{pointerEvents : 'auto'}} className={typeFlags.banana ? 'btn btn-outline-secondary type active p-3':'btn btn-outline-secondary type p-3'} value={'banana'} onClick={add}>Banana</button>
         
                                 
                             </div>
-                            <div className="col ms-1 me-1">
+                            <div className=" ms-1 me-1">
                                 <button style={{pointerEvents : 'auto'}} className={typeFlags.puppy ? 'btn btn-outline-secondary type active p-3':'btn btn-outline-secondary type p-3'} value={'puppy'} onClick={add}>Puppy</button>
         
                             </div>
                         </div>
                     </div>
-                    <div style={{height:'40vh'}} className="overflow-scroll ">
-                        <div className=' m-2'>
-                            <button className="rounded-3 m-2 w-100 col d-flex flex-row text-start border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light"  onClick={handleIngredients}>
+                    <div style={{height:'40vh'}} className="overflow-scroll">
+                        <div className=''>
+                            <button className="rounded-3 w-100 col d-flex flex-row text-start border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light"  onClick={handleIngredients}>
                                 Ingredients
                             </button>
-                            {ingredientsButtons && <div className="col " >
+                            {ingredientsButtons && <div className=" " >
                                 <button className={ingsFlag.vainillaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3 ' : 'btn btn-outline-secondary m-1 ingredients p-3' }value={'vainilla'} onClick={add}  >Vainilla</button>
                                 <button className={ingsFlag.chocolateIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3 ' : 'btn btn-outline-secondary m-1 ingredients p-3' }value={'chocolate'} onClick={add}  >Chocolate</button>
                                 <button className={ingsFlag.fresaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3 ' : 'btn btn-outline-secondary m-1 ingredients p-3' }value={'fresa'} onClick={add}  >Fresa</button>
@@ -730,11 +730,11 @@ function TerminalScreen() {
 
                             </div>}
                         </div>
-                        <div className=' m-2 '> 
-                            <button className="rounded-3 m-2 w-100 col text-start border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light" onClick={handleToppings}>
+                        <div className='mt-3 '> 
+                            <button className="rounded-3 w-100 col text-start border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light" onClick={handleToppings}>
                                 Toppings
                             </button>
-                            {toppingsButtons && <div className="col " >
+                            {toppingsButtons && <div className=" " >
                                 <button className={topsFlag.whippedTop ? 'btn btn-outline-secondary m-1 toppings active p-3':'btn btn-outline-secondary m-1 toppings p-3'} value={'whipped cream'} onClick={add}>Whipped Cream</button>
                                 <button className={topsFlag.fresaTop ? 'btn btn-outline-secondary m-1 toppings active p-3':'btn btn-outline-secondary m-1 toppings p-3'} value={'fresa'} onClick={add}>Fresa</button>
                                 <button className={topsFlag.nutellaTop ? 'btn btn-outline-secondary m-1 toppings active p-3':'btn btn-outline-secondary m-1 toppings p-3'} value={'nutella'} onClick={add}>Nutella</button>
