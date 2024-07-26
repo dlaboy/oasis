@@ -312,7 +312,6 @@ function OrderScreen() {
   return (
     // <div className='m-2 bg-light' style={{height:'95vh',width:'30vw'}}>
     <div className={hideOrders ? 'bg-light order-container':'d-none bg-light order-container'} >
-      <div className="" onClick={handleShowOrders}>Close</div>
       <Modal show={detailShow} onHide={handleDetailClose}>
           <Modal.Header closeButton>
             <Modal.Title>Detalles de la Orden</Modal.Title>
@@ -440,9 +439,13 @@ function OrderScreen() {
         {/* <div  className=""  style={{height:'95vh',width:'30vw'}}> */}
         <div  className="" >
           <div className="d-flex flex-column text-center" style={{height:'15vh'}}>
-            <Nav>
-              <Nav.Link to='/' as={NavLink} className='btn b p-3   w-100  text-center'>Home</Nav.Link>
-            </Nav>
+            <div className="d-flex flex-row justify-content-around">
+              <Nav>
+                <Nav.Link to='/' as={NavLink} className='btn  p-3    text-center'>Home</Nav.Link>
+              </Nav>
+              <div className=" p-3 " onClick={handleShowOrders}>X</div>
+
+            </div>
             <div className='d-flex flex-row w-100 justify-content-between p-3 text-start'>
                 <div className="">
                 Queued Orders
