@@ -275,14 +275,44 @@ function OrderScreen() {
 
   const handleDetailClose = () => setDetailShow(false)
 
+  const {hideOrders,toggleHideOrders} = useContext(ItemContext)
 
+
+  const handleShowOrders = () =>{
+    toggleHideOrders(prev => !prev)
+  }
+  const [isMobile,setIsMobile]= useState(false)
+
+  useEffect(()=>{
+    // Example: Check if the viewport is at most 768px wide
+  const mediaQuery = window.matchMedia('(max-width: 768px)');
+
+  function handleMediaQueryChange(event) {
+    if (event.matches) {
+      // The viewport is at most 768 pixels wide
+      console.log('The viewport is at most 768 pixels wide');
+      setIsMobile(true)
+      toggleHideOrders(true)
+      // Add your logic here for viewports at most 768px wide
+    } else {
+      // The viewport is wider than 768 pixels
+      console.log('The viewport is wider than 768 pixels');
+      setIsMobile(false)
+      toggleHideOrders(false)
+
+
+      // Add your logic here for viewports wider than 768px
+    }
+  }
+  },[])
 
 
 
 
   return (
     // <div className='m-2 bg-light' style={{height:'95vh',width:'30vw'}}>
-    <div className=' bg-light order-screen-container' style={{height:'95vh',width:'32vw'}}>
+    <div className={hideOrders ? 'bg-light order-container':'d-none bg-light order-container'} >
+      <div className="" onClick={handleShowOrders}>Close</div>
       <Modal show={detailShow} onHide={handleDetailClose}>
           <Modal.Header closeButton>
             <Modal.Title>Detalles de la Orden</Modal.Title>
@@ -424,7 +454,7 @@ function OrderScreen() {
               <div className='list-group'> 
                 {currentOrders.map(order =>(
                   <div key={order._id} >
-                    <div className={order.status == 'done' ? 'bg-success-subtle list-group-item list-group-item-action p-3 d-flex flex-row justify-content-between': 'list-group-item list-group-item-action p-3 d-flex flex-row justify-content-between'} >
+                    <div className={order.status == 'done' ? 'bg-success-subtle list-group-item list-group-item-action p-3 d-flex flex-row justify-content-between': ' list-group-item list-group-item-action p-3 d-flex flex-row justify-content-between'} >
                       {/* <button className='btn' onClick={() => toggleVisibility(order._id)}> */}
                       <button className='btn' onClick={() => handleDetailShow(order)}>
                         {order.client_name} 

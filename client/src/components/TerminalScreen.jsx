@@ -637,9 +637,18 @@ function TerminalScreen() {
     const handleSave = ( ) =>{
         setIsInputDisabled(!isInputDisabled);
     }
+    
+   const {hideOrders,toggleHideOrders} = useContext(ItemContext)
+   
+   const handleShowOrders = () =>{
+    toggleHideOrders(prev => !prev)
+  }
+
+
 
     return (
         <div className=" bg-light terminal-screen" >
+            <div className="" onClick={handleShowOrders}>Orders Screen</div>
             <div className=' d-flex flex-column terminal-screen-2' style={{height:'95vh',overflowY:'scroll'}} key={componentKey}>
                 <div className=" w-100" >
                     <div className="m-2 col w-75 d-flex justify-content-evenly pt-4 ">
@@ -653,7 +662,7 @@ function TerminalScreen() {
                 <div className=" ">
                         { typeAlert && <div className='text-danger text-center'>Only One Type per Item</div> }
                     <div className='mt-3 mb-3 d-flex flex-row  w-100 justify-content-center align-items-center '>
-                        <div className="col w-25 type-text text-start">Type</div>
+                        {/* <div className="col w-25 type-text text-start">Type</div> */}
                         <div className=" d-flex flex-row w-100 justify-content-around align-items-center "  style={{pointerEvents : 'none'}}>
                             <div className=" ms-1 me-1">
                                 <button style={{pointerEvents : 'auto'}} className={typeFlags.rolls ? 'btn btn-outline-secondary type active p-3' : 'btn btn-outline-secondary type p-3'} value={'rolls'} onClick={add}>Rolls</button>

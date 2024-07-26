@@ -11,14 +11,35 @@
     color: white !important;
 }
 .terminal-screen,.terminal-screen-2{
-    width: 70vw;
+    width: 100vw;
 }
+.order-screen-toggler{
+    display: none;
+  }
 @media (max-width: 768px) {
-    .order-screen-container,.type-text{
+    .type-text{
      display: none;
     }
-    .terminal-screen,.terminal-screen-2{
+    /* .terminal-screen,.terminal-screen-2{
         width: 100vw;
-    }
-   
+    } */
+    /* .order-screen-toggler{
+        display: flex;
+      }
+    */
    }
+   /* @media (min-width:769px) and (max-width: 991px) {
+    .order-screen-toggler{
+        display: none;
+      }
+
+
+} */
+
+/* Larger devices (desktops, more than 992px) */
+/* @media (min-width: 992px) {
+    .order-screen-toggler{
+        display: none;
+      }
+ 
+} */

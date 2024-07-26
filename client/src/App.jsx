@@ -34,12 +34,14 @@ function App() {
   const [typeCounter, setTypeCounter] = useState(0);
   const [sumToSubstract,setSumtoSubstract] = useState(0)
 
+  const [hideOrders,toggleHideOrders] = useState(false)
+
 
 
   
 
   return (
-    <ItemContext.Provider value={{sumToSubstract,setSumtoSubstract,typeCounter, setTypeCounter,type,setType,totalToPay,setTotalToPay,order, setOrder, name, setName, renderOrdersKey, setRenderOrdersKey, itemCounter, setItemCounter, metodo, setMetodo, newItem, setNewItem}}>
+    <ItemContext.Provider value={{hideOrders,toggleHideOrders,sumToSubstract,setSumtoSubstract,typeCounter, setTypeCounter,type,setType,totalToPay,setTotalToPay,order, setOrder, name, setName, renderOrdersKey, setRenderOrdersKey, itemCounter, setItemCounter, metodo, setMetodo, newItem, setNewItem}}>
       <Routes>
         <Route path="/" element={<Home/>}/>
         <Route path="/terminal" element={<Terminal/>}/>
