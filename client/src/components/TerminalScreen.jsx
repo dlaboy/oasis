@@ -649,12 +649,12 @@ function TerminalScreen() {
     return (
         <div className=" bg-light terminal-screen" >
             <div className=' d-flex flex-column terminal-screen-2' style={{height:'95vh',overflowY:'scroll'}} key={componentKey}>
-                <div className=" w-100 d-flex flex-row justify-content-around align-items-center" >
-                    <div className="w-50 d-flex  align-items-center justify-content-center btn  border-0 rounded-pill p-3" onClick={handleShowOrders}>Orders Screen</div>
-                    <div className="  d-flex justify-content-evenly pt-4 ">
+                <div className=" w-100 d-flex flex-row justify-content-around align-items-center" style={{width:'90vw'}}>
+                    <div className=" d-flex  align-items-center justify-content-center btn  border-0 rounded-pill " onClick={handleShowOrders}>Orders Screen</div>
+                    <div className="  pt-4 ">
                         {/* <label htmlFor="cliente">Nombre</label> */}
-                        <div className="w-25  d-flex justify-content-between">
-                            <input type="text" name='cliente' className=' rounded-3 border-1 p-1' placeholder='Nombre del Ciente' value={name} onChange={handleName} />
+                        <div className=" ">
+                            <input type="text" name='cliente' className=' rounded-3 border-0 p-2' placeholder='Nombre del Ciente' value={name} onChange={handleName} />
                             {/* <button type='button' className='btn btn-primary rounded-start-0 p-2 ' onClick={handleSave}>  {isInputDisabled ? 'Change' : 'Save '}</button> */}
                         </div>
                     </div>
