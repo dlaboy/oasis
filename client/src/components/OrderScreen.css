@@ -58,7 +58,7 @@ input[type="number"] {
  .order-screen-toggler{
   display: flex;
 }
-.order-container{
+.order-container,.botones-actiones,.ordenes-esperando{
 
   width:100vw
 }
