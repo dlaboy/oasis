@@ -443,7 +443,7 @@ function OrderScreen() {
               <Nav>
                 <Nav.Link to='/' as={NavLink} className='btn  p-3    text-center'>Home</Nav.Link>
               </Nav>
-              <div className=" p-3 " onClick={handleShowOrders}>X</div>
+              <div className=" p-3 btn" onClick={handleShowOrders}>X</div>
 
             </div>
             <div className='d-flex flex-row w-100 justify-content-between p-3 text-start'>

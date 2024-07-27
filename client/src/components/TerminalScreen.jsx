@@ -648,10 +648,10 @@ function TerminalScreen() {
 
     return (
         <div className=" bg-light terminal-screen" >
-            <div className="" onClick={handleShowOrders}>Orders Screen</div>
             <div className=' d-flex flex-column terminal-screen-2' style={{height:'95vh',overflowY:'scroll'}} key={componentKey}>
-                <div className=" w-100" >
-                    <div className="m-2 col w-75 d-flex justify-content-evenly pt-4 ">
+                <div className=" w-100 d-flex flex-row justify-content-around align-items-center" >
+                    <div className="w-50 d-flex  align-items-center justify-content-center btn  border-0 rounded-pill p-3" onClick={handleShowOrders}>Orders Screen</div>
+                    <div className="w-100  d-flex justify-content-evenly pt-4 ">
                         <label htmlFor="cliente">Nombre</label>
                         <div className="w-25  d-flex justify-content-between">
                             <input type="text" name='cliente' className=' rounded-3 border-0 p-1'  value={name} onChange={handleName} />
@@ -659,7 +659,7 @@ function TerminalScreen() {
                         </div>
                     </div>
                 </div>
-                <div className=" ">
+                <div className="d-flex flex-column align-items-center " >
                         { typeAlert && <div className='text-danger text-center'>Only One Type per Item</div> }
                     <div className='mt-3 mb-3 d-flex flex-row  w-100 justify-content-center align-items-center '>
                         {/* <div className="col w-25 type-text text-start">Type</div> */}
@@ -683,8 +683,8 @@ function TerminalScreen() {
                             </div>
                         </div>
                     </div>
-                    <div style={{height:'40vh'}} className="overflow-scroll">
-                        <div className=''>
+                    <div style={{height:'40vh'}} className="overflow-scroll d-flex justify-content-center flex-column">
+                        <div className='' style={{width:'90vw'}}>
                             <button className="rounded-3 w-100 col d-flex flex-row text-start border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light"  onClick={handleIngredients}>
                                 Ingredients
                             </button>
@@ -739,7 +739,7 @@ function TerminalScreen() {
 
                             </div>}
                         </div>
-                        <div className='mt-3 '> 
+                        <div className='mt-3 ' style={{width:'90vw'}}> 
                             <button className="rounded-3 w-100 col text-start border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light" onClick={handleToppings}>
                                 Toppings
                             </button>
@@ -776,7 +776,7 @@ function TerminalScreen() {
 
                     </div>
           
-                    <div className='col d-flex flex-row m-2 p-3 '>
+                    <div className='col d-flex flex-row m-2 p-3 ' style={{width:'90vw'}}>
                         <div className="col">Quantity</div>
                         <div className="col d-flex flex-row w-100 justify-content-between">
                             <div className="col">
@@ -791,7 +791,7 @@ function TerminalScreen() {
                         </div>
         
                     </div>
-                    <div className='col m-2 d-flex flex-column ps-3'>
+                    <div className='col m-2 d-flex flex-column ps-3' style={{width:'90vw'}}>
                         <div className="col">Comments</div>
                         <div className="col">
                             <textarea name="" id="" cols="30" rows="2" defaultValue={comments} onChange={handleComments}></textarea>
