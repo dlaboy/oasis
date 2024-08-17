@@ -29,6 +29,7 @@ function Sales(){
     const [shakes,setShakes] = useState(0)
     const [banana,setBanana] = useState(0)
     const [perro,setPerro] = useState(0)
+    const [drinks,setDrinks] = useState(0)
     const [generate,generateReport] = useState(false)
     const [ingredientLabels , setIngredientLabels] = useState([])
     const [ingredientData , setIngredientData] = useState([])
@@ -51,7 +52,7 @@ function Sales(){
     
 
     useEffect(()=>{
-        if (selectedItem == 'Items per type'){
+        if (selectedItem == 'Ice Creams per type'){
             setItemsPerType(true)
             if (top5Ings == true){
                 setTop5Ings(false)
@@ -114,7 +115,8 @@ function Sales(){
         setSubmission(true)
         try{
             const response = await axios.post('/sales', {
-                'items': rolls + shakes + banana + perro,
+                'ice_creams': rolls + shakes + banana + perro,
+                'drinks': drinks,
                 'ath': ATHsales,
                 'cash': CASHsales,
                 'total': ATHsales + CASHsales
@@ -187,9 +189,9 @@ function Sales(){
         const totalTitle = "Total Sale";    
         doc.text(totalTitle, 20, finalY + 20); // Adjust y coordinate as needed
 
-        const tableColumn = ["Date","Items", "Ath", "Cash","Total"];
+        const tableColumn = ["Date","Ice Creams","Drinks", "Ath", "Cash","Total"];
         console.log("Timestamp", timestamp)
-        const tableRows = [[timestamp,rolls + shakes + banana + perro,formatCurrency(ATHsales),formatCurrency(CASHsales),formatCurrency(ATHsales + CASHsales)]]
+        const tableRows = [[timestamp,rolls + shakes + banana + perro,drinks,formatCurrency(ATHsales),formatCurrency(CASHsales),formatCurrency(ATHsales + CASHsales)]]
         
         // Add a table to the PDF
         autoTable(doc, {
@@ -225,6 +227,11 @@ function Sales(){
                 }
                 else if (object._id == 'puppy'){
                     setPerro(object.totalQuantity)
+                    
+
+                }
+                else if (object._id == 'drinks'){
+                    setDrinks(object.totalQuantity)
                     
 
                 }
@@ -326,7 +333,7 @@ function Sales(){
         const chartUrls = [
         generateChartUrl(ingredientData.map(ing=>ing), ingredientLabels,"Top 5 Ingredients"),
         generateChartUrl(toppingData.map(top=>top), toppingLabels,"Top 5 Toppings"),
-        generateChartUrl([rolls,shakes,banana,perro], ['Rolls','Shakes','Banana','Puppy'],"Items by type")
+        generateChartUrl([rolls,shakes,banana,perro], ['Rolls','Shakes','Banana','Puppy'],"Ice Creams by type")
         ];
 
         let currentY = doc.previousAutoTable.finalY + 20;
@@ -416,6 +423,11 @@ function Sales(){
                 }
                 else if (object._id == 'puppy'){
                     setPerro(object.totalQuantity)
+                    
+
+                }
+                else if (object._id == 'drinks'){
+                    setDrinks(object.totalQuantity)
                     
 
                 }
@@ -526,7 +538,7 @@ function Sales(){
          doc.setLineWidth(0.5);
          doc.line(20, 15, pageWidth - 20, 15); // Adjust line position as needed
  
-         const tableColumn = ["Date","Items", "Ath", "Cash","Total"];
+         const tableColumn = ["Date","Ice Creams","Drinks", "Ath", "Cash","Total"];
          console.log("Timestamp", timestamp)
 
          const tableRows = []
@@ -536,7 +548,8 @@ function Sales(){
         allSales.forEach(item => {
             const rowData = [
             item.Date,
-            item.Items,
+            item.IceCreams,
+            item.Drinks,
             formatCurrency(item.ATH),
             formatCurrency(item.CASH),
             formatCurrency(item.Total),
@@ -637,7 +650,8 @@ function Sales(){
                             <th>Shakes</th>
                             <th>Banana</th>
                             <th>Puppy</th> */}
-                            <th>Items</th>
+                            <th>ICs</th>
+                            <th>Drinks</th>
                             <th>ATH</th>
                             <th>CASH</th>
                             <th>Total</th>
@@ -651,6 +665,7 @@ function Sales(){
                             <td>{banana}</td>
                             <td>{perro}</td> */}
                             <td>{rolls + shakes + banana + perro}</td>
+                            <td>{drinks}</td>
                             <td>{<CurrencyFormatter value={ATHsales}/>}</td>
                             <td>{<CurrencyFormatter value={CASHsales}/>}</td>
                             <td>{<CurrencyFormatter value={ATHsales + CASHsales}/>}</td>
@@ -661,7 +676,7 @@ function Sales(){
                     <h6>Statistic Chart</h6>
                     <select value={selectedItem} onChange={handleSelectChange} className='p-2'>
                         <option value="">Choose Chart</option>
-                        <option value="Items per type">Items per type</option>
+                        <option value="Ice Creams per type">Ice Creams per type</option>
                         <option value="Top 5 Ingredients">Top 5 Ingredients</option>
                         <option value="Top 5 Toppings">Top 5 Toppings</option>
                     </select>
@@ -709,7 +724,8 @@ function Sales(){
                     <thead>
                         <tr className='text-center'>
                             <th>Date</th>
-                            <th>Items</th>
+                            <th>Ice Creams</th>
+                            <th>Drinks</th>
                             <th>ATH</th>
                             <th>CASH</th>
                             <th>Total</th>
@@ -721,7 +737,8 @@ function Sales(){
                             <>
                             <tr className='text-center'>
                                 <td>{sale.Date}</td>
-                                <td>{sale.Items}</td>
+                                <td>{sale.IceCreams}</td>
+                                <td>{sale.Drinks}</td>
                                 <td>{<CurrencyFormatter value={sale.ATH}/>}</td>
                                 <td>{<CurrencyFormatter value={sale.CASH}/>}</td>
                                 <td>{<CurrencyFormatter value={sale.Total}/>}</td>

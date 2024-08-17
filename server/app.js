@@ -21,6 +21,9 @@ var ordersRouter = require('./routes/orders.js');
 var employeeRouter = require('./routes/employees.js');
 var loginRouter = require('./routes/logins.js');
 var salesRouter = require('./routes/sales.js');
+var ingredienteRouter = require('./routes/ingredientes.js')
+var toppingRouter = require('./routes/toppings.js')
+var favoritesRouter = require('./routes/favorites.js')
 
 var app = express();
 app.use(express.static(path.join(__dirname, '../client/dist')));
@@ -41,6 +44,10 @@ app.use('/orders', ordersRouter);
 app.use('/employee', employeeRouter);
 app.use('/login', loginRouter);
 app.use('/sales', salesRouter);
+app.use('/ingrediente',ingredienteRouter);
+app.use('/topping',toppingRouter);
+app.use('/favorite',favoritesRouter);
+
 
 
 // Cors settings 

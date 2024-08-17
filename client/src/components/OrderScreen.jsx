@@ -37,7 +37,8 @@ function OrderScreen() {
     rolls : 4.00,
     shakes : 5.00,
     banana : 6.00,
-    puppy : 3.00
+    puppy : 3.00,
+    drinks : 1.00,
   }
 
 
@@ -51,6 +52,7 @@ function OrderScreen() {
   const {totalToPay,setTotalToPay} = useContext(ItemContext)
   const {type , setType} = useContext( ItemContext);
   const {typeCounter, setTypeCounter} = useContext( ItemContext );
+  const {favCounter, setFavCounter} = useContext( ItemContext );
   const {sumToSubstract,setSumtoSubstract} = useContext( ItemContext );
 
 
@@ -162,6 +164,7 @@ function OrderScreen() {
     reloadChannel.postMessage({ action: 'reload' });
   }
 
+  const [adviceMessage, setAdviceMessage] = useState("")
  
   // POST ORDER TO DB
   const handleOrder = async (event) =>{
@@ -175,7 +178,14 @@ function OrderScreen() {
     var storedOrder = JSON.parse(localStorage.getItem(LOCAL_ORDER_KEY));
     var storedItems = storedOrder.items;
 
-    try{
+    if (JSON.parse(localStorage.getItem(LOCAL_NAME_KEY)) == null || JSON.parse(localStorage.getItem(LOCAL_NAME_KEY)) == ""){
+      console.log("Order needs to be under a name")
+      setAdviceMessage("Orden debe estar bajo un nombre")
+    }
+    else{
+      setAdviceMessage("")
+
+      try{
         const response = await axios.post('/orders', {
             'name': JSON.parse(localStorage.getItem(LOCAL_NAME_KEY)),
             'items': storedItems,
@@ -192,10 +202,16 @@ function OrderScreen() {
 
     setTotalToPay(0)
     setTypeCounter(typeCounter -1)
+    setFavCounter(favCounter -1)
     isOrderSubmited(true)
     setRenderOrdersKey(prevKey => prevKey + 1);
     
     reloadChannel.postMessage({ action: 'reload' });
+      console.log("Client Name",JSON.parse(localStorage.getItem(LOCAL_NAME_KEY)))
+
+    }
+
+  
 
   }
    // DELETE ITEM FROM ORDER IN LOCAL STORAGE
@@ -228,6 +244,7 @@ function OrderScreen() {
     setType("")
     setName("")
     setTypeCounter(typeCounter -1)
+    setFavCounter(favCounter -1)
 
     setRenderOrdersKey(prevKey => prevKey + 1);
 
@@ -334,11 +351,13 @@ function OrderScreen() {
                     </div> 
                 </div>
                 <div className="d-flex flex-column justify-content-around">
-                  <div className="fw-bold">
-                    Ingredients: 
-                  </div>
+                {item && item.type !== 'drinks' && (
+                            <div className="fw-bold">
+                              Ingredients:
+                            </div>
+                          )}
                   <ul className="d-flex flex-column">
-                    {item && item.ings.map((ing=>(  
+                    {item && item.type !== 'drinks'&& item.ings.map((ing=>(  
                       <li>{ing}
                       {/* <div className="text-secondary">
                       {editEnable[order._id] ? (<input className='w-75' defaultValue={ing}/>):(<div></div>)}
@@ -348,12 +367,14 @@ function OrderScreen() {
                   </ul>
                 </div>
                 <div className="d-flex flex-column  justify-content-around">
-                  <div className="fw-bold">
-                    Toppings: 
-                  </div>
+                {item && item.type !== 'drinks' && (
+                            <div className="fw-bold">
+                              Ingredients:
+                            </div>
+                          )}
                   <ul className="d-flex flex-column">
 
-                    {item.tops.map((top=>(
+                    { item.type !== 'drinks'&& item.tops.map((top=>(
                       <li className=''>{top}
                         {/* <div className="text-secondary">
                         {editEnable[order._id] ? (<input  className='w-75' defaultValue={top}/>):(<div></div>)}
@@ -516,9 +537,13 @@ function OrderScreen() {
                           {item.type}
                         </ul>
                       </div>
-                      Ingredients
+                      {item && item.type !== 'drinks' && (
+                            <div className="">
+                              Ingredients:
+                            </div>
+                          )}
                       <ul className="">
-                        {item && item.ings.map((ing=>(  
+                        {item && item.type !== 'drinks' && item.ings.map((ing=>(  
                                 <li>{ing}
                                 {/* <div className="text-secondary">
                                 {editEnable[order._id] ? (<input className='w-75' defaultValue={ing}/>):(<div></div>)}
@@ -527,9 +552,12 @@ function OrderScreen() {
                               )))}
                       </ul>
                       <div className="">
-                        Tops: 
-                        <ul>
-                            {item.tops.map((top=>(
+                      {item && item.type !== 'drinks' && (
+                            <div className="">
+                              Toppings:
+                            </div>
+                          )}                        <ul>
+                            {item && item.type !== 'drinks' && item.tops.map((top=>(
                                 <li className=''>{top}
                                   {/* <div className="text-secondary">
                                   {editEnable[order._id] ? (<input  className='w-75' defaultValue={top}/>):(<div></div>)}
@@ -571,6 +599,8 @@ function OrderScreen() {
             
           </div>
           <div className="botones-actiones d-flex align-items-center justify-content-around flex-column">
+            <div className="text-danger">{adviceMessage}</div>
+
             <button type='button' onClick={handleShow} className='btn btn-outline-primary rounded-pill p-3'>Send Order</button>
             <button type='button' onClick={handleChargeShow} className='btn btn-outline-primary rounded-pill p-3'> Additional Charge</button>
           </div>
@@ -579,6 +609,7 @@ function OrderScreen() {
           <Modal show={metodoModal} onHide={handleClose} centered>
             <Modal.Header closeButton>
               <Modal.Title>Método de Pago</Modal.Title>
+                <div className="text-danger">{adviceMessage}</div>
               </Modal.Header>
               <Modal.Body className='w-100'>
                   <button className="btn btn-warning w-50" onClick={handlePayment} value={"ATH"}>ATH Móvil</button>
@@ -588,6 +619,7 @@ function OrderScreen() {
               <div className="">
                   Método de pago: {metodo}
               </div>
+
               <Button variant="secondary" onClick={handleClose}>
                   Close
               </Button>

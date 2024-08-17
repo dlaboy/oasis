@@ -25,11 +25,15 @@ function TerminalScreen() {
     const [required,setRequired] = useState(false)
     const [ingredientsButtons, showIngredients] = useState(false);
     const [toppingsButtons, showToppings] = useState(false);
+    const [favoritesButtons, showFavorites] = useState(false);
     const [metodoModal, showMetodoModal] = useState(false);
     const [typeAlert, setTypeAlert] = useState(false)
+    const [favAlert, setFavAlert] = useState(false)
     const [ings, setIngs] = useState([]);
     const [tops, setTops] = useState([]);
     const [qty, setQty] = useState(0);
+    const [agua, setAgua] = useState(0);
+
     const [comments, setComments] = useState("")
     const [componentKey, setComponentKey] = useState(1);
     const [isInputDisabled, setIsInputDisabled] = useState(true);
@@ -37,83 +41,92 @@ function TerminalScreen() {
         rolls:false,
         shakes:false,
         banana:false,
-        puppy:false
+        puppy:false,
+        drinks:false
+    })
+    const [favoriteFlag , setFavFlag] = useState({
+        CookiesAndCream:false,
+        CocoNut:false,
+        ILoveCoffee:false,
+        Smores:false,
+        CinnamonAndCarrot:false,
+        StrawberryShortcake:false
     })
     const [ingsFlag, setIngsFlag] = useState({
-        vainillaIng:false,
-        chocolateIng:false,
-        fresaIng:false,
-        nutellaIng:false,
-        oreoIng:false,
-        maniIng:false,
-        almendraIng:false,
-        cocoIng:false,
-        bizvainillaIng:false,
-        pisIng:false,
-        amaIng:false,
-        granIng:false,
-        parchaIng:false,
-        mangoIng:false,
-        canelaIng:false,
-        anisIng:false,
-        limonIng:false,
-        cafeIng:false,
-        brownieIng:false,
-        guineoIng:false,
-        cameoIng:false,
-        tronkyIng:false,
-        chipsIng:false,
-        cheesecakeIng:false,
-        chocblancoIng:false,
-        fruityIng:false,
-        cocoaIng:false,
-        quesoIng:false,
-        uvaIng:false,
-        chinaIng:false,
-        guanabanaIng:false,
-        chipsahoyIng:false,
-        kitkatIng:false,
-        blueIng:false,
-        redvelvettIng:false,
-        nuecesIng:false,
-        carameloIng:false,
-        cherryIng:false,
-        brandyIng:false,
-        pinaIng:false,
-        pinacoladaIng:false,
-        manzanaIng:false,
-        guayabaIng:false,
-        zanahoriaIng:false,
-        ferreroIng:false,
+        VainillaIng:false,
+        ChocolateIng:false,
+        FresaIng:false,
+        NutellaIng:false,
+        OreoIng:false,
+        ManíIng:false,
+        AlmendraIng:false,
+        CocoIng:false,
+        BizcochoDeVainillaIng:false,
+        PistachioIng:false,
+        AmaretoIng:false,
+        GranolaIng:false,
+        ParchaIng:false,
+        MangoIng:false,
+        CanelaIng:false,
+        AnísIng:false,
+        LimónIng:false,
+        CaféIng:false,
+        BrownieIng:false,
+        GuineoIng:false,
+        CameoIng:false,
+        TronkyIng:false,
+        ChipsIng:false,
+        CheesecakeIng:false,
+        ChocolateBlancoIng:false,
+        FruityPebblesIng:false,
+        CocoaPebblesIng:false,
+        QuesoIng:false,
+        UvaIng:false,
+        ChinaIng:false,
+        GuanabanaIng:false,
+        ChipsAhoyIng:false,
+        KitKatIng:false,
+        BlueberryIng:false,
+        RedVelvettIng:false,
+        NuecesIng:false,
+        CarameloIng:false,
+        CherryIng:false,
+        BrandyIng:false,
+        PinaIng:false,
+        PinaColadaIng:false,
+        ManzanaIng:false,
+        GuayabaIng:false,
+        BizcochoDeZanahoriaIng:false,
+        FerreroIng:false,
 
         
     })
     const [topsFlag, setTopsFlag] = useState({
-        fresaTop:false,
-        nutellaTop:false,
-        oreoTop:false,
-        whippedTop:false,
-        maniTop:false,
-        almendraTop:false,
-        cherryTop:false,
-        carameloTop:false,
-        canelaTop:false,
-        nuecesTop:false,
-        cocorayadoTop:false,
-        pinaTop:false,
-        cafeTop:false,
-        chipsTop:false,
-        sprinkesdecoloresTop:false,
-        sprinkesdechocTop:false,
-        chocolateTop:false,
-        gummiesTop:false,
-        granoTop:false,
-        mielTop:false,
-        guineoTop:false,
-        cocoaTop:false,
-        fruityTop:false,
-        mymTop:false,
-        marshTop:false,
+        WhippedCreamTop:false,
+        FresaTop:false,
+        NutellaTop:false,
+        OreoTop:false,
+        ManíTop:false,
+        AlmendraTop:false,
+        CherryTop:false,
+        CarameloTop:false,
+        CanelaTop:false,
+        NuecesTop:false,
+        CocoRayadoTop:false,
+        PiñaTop:false,
+        CaféTop:false,
+        ChipsTop:false,
+        SprinkesDeColoresTop:false,
+        SprinkesDeChocolateTop:false,
+        ChocolateTop:false,
+        GummiesTop:false,
+        GranolaTop:false,
+        MielTop:false,
+        GuineoTop:false,
+        CocoaPebblesTop:false,
+        FruityPebblesTop:false,
+        MyMTop:false,
+        MarshmellowTop:false,
 
     })
 
@@ -122,12 +135,14 @@ function TerminalScreen() {
     const {name, setName} = useContext( ItemContext );
     const {metodo, setMetodo} = useContext( ItemContext )
     const {newItem, setNewItem} = useContext( ItemContext );
+    const {newDrinkItem, setNewDrinkItem} = useContext( ItemContext );
     const {renderOrdersKey, setRenderOrdersKey} = useContext( ItemContext )
     const {itemCounter, setItemCounter} = useContext( ItemContext );
     const {order, setOrder} = useContext( ItemContext )
     const {totalToPay,setTotalToPay} = useContext(ItemContext)
     const {type , setType} = useContext( ItemContext);
     const {typeCounter, setTypeCounter} = useContext( ItemContext );
+    const {favCounter, setFavCounter} = useContext( ItemContext );
     const {sumToSubstract,setSumtoSubstract} = useContext( ItemContext );
 
 
@@ -149,11 +164,27 @@ function TerminalScreen() {
     const checkButtons = useRef(true);
 
 
+    const [listaDeIngredientes,actualizarIngredientes] = useState([])
+
+    const [ingrediente_a_buscar,buscar_ingrediente] = useState("")
+
+
+    const [listaDeToppings,actualizarToppings] = useState([])
+
+    const [topping_a_buscar,buscar_topping] = useState("")
+
+
+
+    const [listaDeFavoritos,actualizarFavoritos] = useState([])
+
+    const [favorito_a_buscar,buscar_favorito] = useState("")
+
     const itemCosts = {
         rolls : 4.00,
         shakes : 5.00,
         banana : 6.00,
-        puppy : 3.00
+        puppy : 3.00,
+        drinks :  1.00
       }
 
 
@@ -231,6 +262,9 @@ function TerminalScreen() {
                 else if (storeType === 'puppy'){
                     typeFlags['puppy']= true
                 }
+                else if (storeType === 'drinks'){
+                    typeFlags['drinks']= true
+                }
       
   
             }
@@ -246,7 +280,13 @@ function TerminalScreen() {
             }
             if(storeNewItem){
                 if (storeNewItem != newItem){
+                    console.log("Item Type", storeNewItem.type)
                     setNewItem(storeNewItem)
+                    // if (storeNewItem.type != 'drinks'){
+                    // }
+                    // else if (storeNewItem.type == 'drinks') {
+                    //     setNewDrinkItem(storeNewItem)
+                    // }
                 }
             }
             
@@ -266,10 +306,147 @@ function TerminalScreen() {
             
         }
 
+        axios.get('/ingrediente').then(response=>{
+            const respuesta_ingredientes = response.data 
+            actualizarIngredientes(respuesta_ingredientes)
+            
+        }).catch(error =>{
+            console.log("Error", error)
+        })
+
+        axios.get('/topping').then(response=>{
+            const respuesta_topping = response.data 
+            actualizarToppings(respuesta_topping)
+            
+        }).catch(error =>{
+            console.log("Error", error)
+        })
+
+
+        axios.get('/favorite').then(response=>{
+            const respuesta_favorite = response.data 
+            actualizarFavoritos(respuesta_favorite)
+            
+        }).catch(error =>{
+            console.log("Error", error)
+        })
+
+
+
+        
+
         // 
 
 
     },[])
+
+    const handleIngredientSearch = (event) =>{
+
+        buscar_ingrediente(event.target.value)
+
+    }
+    const handleToppingSearch = (event) =>{
+
+        buscar_topping(event.target.value)
+
+    }
+    const handleFavoritesSearch = (event) =>{
+
+        buscar_favorito(event.target.value)
+
+    }
+
+
+    useEffect(()=>{
+
+        if (ingrediente_a_buscar !== ""){
+            console.log("Ingrediente a Buscar", ingrediente_a_buscar)
+    
+            const params = { nombre: ingrediente_a_buscar}
+            axios.get('/ingrediente',{params}).then(response=>{
+              console.log('Ingredientes encontrados', response.data)
+    
+            actualizarIngredientes(response.data)
+                
+            }).catch(error =>{
+                console.log("Error", error)
+            })
+    
+           
+        }
+        else if(ingrediente_a_buscar === ""){
+            console.log("Ingrediente a Buscar", ingrediente_a_buscar)
+    
+            axios.get('/ingrediente').then(response=>{
+              console.log('Ingredientes encontrados', response.data)
+    
+            actualizarIngredientes(response.data)
+                
+            }).catch(error =>{
+                console.log("Error", error)
+            })
+        }
+        
+       
+    },[ingrediente_a_buscar])
+
+    useEffect(()=>{
+
+        if (topping_a_buscar !== ""){
+    
+            const params = { nombre: topping_a_buscar}
+            axios.get('/topping',{params}).then(response=>{
+    
+            actualizarToppings(response.data)
+                
+            }).catch(error =>{
+                console.log("Error", error)
+            })
+    
+           
+        }
+        else if(topping_a_buscar === ""){
+    
+            axios.get('/topping').then(response=>{
+    
+            actualizarToppings(response.data)
+                
+            }).catch(error =>{
+                console.log("Error", error)
+            })
+        }
+        
+       
+    },[topping_a_buscar])
+
+
+    useEffect(()=>{
+
+        if (favorito_a_buscar !== ""){
+    
+            const params = { nombre: favorito_a_buscar}
+            axios.get('/favorite',{params}).then(response=>{
+    
+            actualizarFavoritos(response.data)
+                
+            }).catch(error =>{
+                console.log("Error", error)
+            })
+    
+           
+        }
+        else if(favorito_a_buscar === ""){
+            axios.get('/favorite').then(response=>{
+    
+            actualizarFavoritos(response.data)
+                
+            }).catch(error =>{
+                console.log("Error", error)
+            })
+        }
+        
+       
+    },[favorito_a_buscar])
 
 
     
@@ -363,7 +540,7 @@ function TerminalScreen() {
 
         if(itemMounted.current){
 
-            if (newItem.ings != undefined){
+            if (newItem.ings != undefined || newItem.type == 'drinks'){
                 localStorage.setItem(LOCAL_ITEM_KEY,JSON.stringify(newItem))
                 var storeNewItem = JSON.parse(localStorage.getItem(LOCAL_ITEM_KEY));
                 if(storeNewItem != {}){
@@ -512,6 +689,13 @@ function TerminalScreen() {
         showToppings(current => !current);
     };
 
+    const handleFavorites = event => {
+
+        showFavorites(current => !current);
+
+    };
+
+
     const handleShow = () => showMetodoModal(true)
     const handleClose = () => showMetodoModal(false)
 
@@ -520,22 +704,197 @@ function TerminalScreen() {
         var buttonClasses = event.target.classList;
 
         if(buttonClasses.contains('ingredients')){
-            if (ings.includes(event.target.value)){
-                const updatedIngs = ings.filter(ing => ing !== event.target.value)
-                setIngs(updatedIngs)
-                console.log('removed '+ event.target.value + ' from ingredient')
-                event.target.classList.remove('active')
-                var key = event.target.value + 'Ing'
-                localStorage.setItem(key,'0')
-                
-            }
-            else {
-                setIngs(prevIngs =>[...prevIngs,event.target.value])
-                console.log('added '+ event.target.value + ' to ingredient')
-                event.target.classList.add('active')
-                var key = event.target.value + 'Ing'
-                localStorage.setItem(key,'1')
+            if (buttonClasses.contains('favorite')){
+                // if (favCounter == 1){
+                //     console.log("only one type per item");
+                //     console.log(favCounter)
+                //     setFavAlert(true)
+    
+                // }
+                // else{
+                    setFavAlert(false)
 
+                    if (event.target.value == "CookiesAndCream"){
+                        const ingre = ["Oreo","Chips","Queso"]
+    
+                        ingre.map(ingredient=>{
+                            if (ings.includes(ingredient)){
+                                const updatedIngs = ings.filter(ing => ing !== ingredient)
+                                setIngs(updatedIngs)
+                                console.log('removed '+ ingredient + ' from ingredient')
+                                event.target.classList.remove('active')
+                                var key = ingredient + 'Ing'
+                                localStorage.setItem(key,'0')
+                                
+                            }
+                            else {
+                                setIngs(prevIngs =>[...prevIngs,ingredient])
+                                console.log('added '+ ingredient + ' to ingredient')
+                                event.target.classList.add('active')
+                                var key = ingredient + 'Ing'
+                                localStorage.setItem(key,'1')
+                
+                            }
+                        })
+                        // setFavCounter(favCounter + 1)
+                 
+    
+                    }
+                    else if (event.target.value == "CocoNut"){
+                        const ingre = ["Coco","Nutella","Almendra"]
+    
+                        ingre.map(ingredient=>{
+                            if (ings.includes(ingredient)){
+                                const updatedIngs = ings.filter(ing => ing !== ingredient)
+                                setIngs(updatedIngs)
+                                console.log('removed '+ ingredient + ' from ingredient')
+                                event.target.classList.remove('active')
+                                var key = ingredient + 'Ing'
+                                localStorage.setItem(key,'0')
+                                
+                            }
+                            else {
+                                setIngs(prevIngs =>[...prevIngs,ingredient])
+                                console.log('added '+ ingredient + ' to ingredient')
+                                event.target.classList.add('active')
+                                var key = ingredient + 'Ing'
+                                localStorage.setItem(key,'1')
+                
+                            }
+                        })
+                        // setFavCounter(favCounter + 1)
+                        
+    
+                    }
+                    else if (event.target.value == "CinnamonAndCarrot"){
+                        const ingre = ["BizcochoDeZanahoria","Canela","Nueces"]
+    
+                        ingre.map(ingredient=>{
+                            if (ings.includes(ingredient)){
+                                const updatedIngs = ings.filter(ing => ing !== ingredient)
+                                setIngs(updatedIngs)
+                                console.log('removed '+ ingredient + ' from ingredient')
+                                event.target.classList.remove('active')
+                                var key = ingredient + 'Ing'
+                                localStorage.setItem(key,'0')
+                                
+                            }
+                            else {
+                                setIngs(prevIngs =>[...prevIngs,ingredient])
+                                console.log('added '+ ingredient + ' to ingredient')
+                                event.target.classList.add('active')
+                                var key = ingredient + 'Ing'
+                                localStorage.setItem(key,'1')
+                
+                            }
+                        })
+                        // setFavCounter(favCounter + 1)
+
+                 
+    
+                    }
+                    else if (event.target.value == "ILoveCoffee"){
+                        const ingre = ["Caramelo","Café","Almendra"]
+    
+                        ingre.map(ingredient=>{
+                            if (ings.includes(ingredient)){
+                                const updatedIngs = ings.filter(ing => ing !== ingredient)
+                                setIngs(updatedIngs)
+                                console.log('removed '+ ingredient + ' from ingredient')
+                                event.target.classList.remove('active')
+                                var key = ingredient + 'Ing'
+                                localStorage.setItem(key,'0')
+                                
+                            }
+                            else {
+                                setIngs(prevIngs =>[...prevIngs,ingredient])
+                                console.log('added '+ ingredient + ' to ingredient')
+                                event.target.classList.add('active')
+                                var key = ingredient + 'Ing'
+                                localStorage.setItem(key,'1')
+                
+                            }
+                        })
+                        // setFavCounter(favCounter + 1)
+
+                 
+    
+                    }
+                    else if (event.target.value == "Smores"){
+                        const ingre = ["Marshemellow","BizcochoDeVainilla","Chocolate"]
+    
+                        ingre.map(ingredient=>{
+                            if (ings.includes(ingredient)){
+                                const updatedIngs = ings.filter(ing => ing !== ingredient)
+                                setIngs(updatedIngs)
+                                console.log('removed '+ ingredient + ' from ingredient')
+                                event.target.classList.remove('active')
+                                var key = ingredient + 'Ing'
+                                localStorage.setItem(key,'0')
+                                
+                            }
+                            else {
+                                setIngs(prevIngs =>[...prevIngs,ingredient])
+                                console.log('added '+ ingredient + ' to ingredient')
+                                event.target.classList.add('active')
+                                var key = ingredient + 'Ing'
+                                localStorage.setItem(key,'1')
+                
+                            }
+                        })
+                        // setFavCounter(favCounter + 1)
+
+                 
+    
+                    }
+                    else if (event.target.value == "StrawberryShortcake"){
+                        const ingre = ["Fresa","BizcochoDeVainilla","Queso"]
+    
+                        ingre.map(ingredient=>{
+                            if (ings.includes(ingredient)){
+                                const updatedIngs = ings.filter(ing => ing !== ingredient)
+                                setIngs(updatedIngs)
+                                console.log('removed '+ ingredient + ' from ingredient')
+                                event.target.classList.remove('active')
+                                var key = ingredient + 'Ing'
+                                localStorage.setItem(key,'0')
+                                
+                            }
+                            else {
+                                setIngs(prevIngs =>[...prevIngs,ingredient])
+                                console.log('added '+ ingredient + ' to ingredient')
+                                event.target.classList.add('active')
+                                var key = ingredient + 'Ing'
+                                localStorage.setItem(key,'1')
+                
+                            }
+                        })
+                        // setFavCounter(favCounter + 1)
+                        
+                 
+    
+                    }
+                // }
+               
+            }
+            else{
+                if (ings.includes(event.target.value)){
+                    const updatedIngs = ings.filter(ing => ing !== event.target.value)
+                    setIngs(updatedIngs)
+                    console.log('removed '+ event.target.value + ' from ingredient')
+                    event.target.classList.remove('active')
+                    var key = event.target.value + 'Ing'
+                    localStorage.setItem(key,'0')
+                    
+                }
+                else {
+                    setIngs(prevIngs =>[...prevIngs,event.target.value])
+                    console.log('added '+ event.target.value + ' to ingredient')
+                    event.target.classList.add('active')
+                    var key = event.target.value + 'Ing'
+                    localStorage.setItem(key,'1')
+    
+                }
             }
 
         }
@@ -592,6 +951,15 @@ function TerminalScreen() {
             setQty(qty - 1);
         }
     };
+    const handleIncrementAgua = () => {
+        setAgua(agua + 1);
+      };
+    
+    const handleDecrementAgua = () => {
+        if (agua > 0){
+            setAgua(agua - 1);
+        }
+    };
     const handleComments= (event) => {
         setComments(event.target.value)
     }
@@ -606,28 +974,49 @@ function TerminalScreen() {
         if (type == ""){
             setRequired(true)   
         }
-        else if(qty == 0){
+        else if(qty == 0 && type != 'drinks'){
             setRequired(true)   
 
         }
         else{
-            console.log("EVENT")
-            setNewItem({
-                item_id: getRandomInt(0,100000000),
-                type:type,
-                ings:ings,
-                tops:tops,
-                qty:qty,
-                comments:comments
-            });
-            setType("")
-            setTypeCounter(typeCounter -1)
-            setIngs([])
-            setTops([])
-            setRequired(false)   
-            setQty(0)
-            setComments("")
-            setComponentKey(prevKey => prevKey + 1);
+            if (type == 'drinks'){
+                console.log("Different Item")
+                setNewItem({
+                    item_id: getRandomInt(0,100000000),
+                    type:type,
+                    nombre:"Agua",
+                    qty:agua
+
+                })
+                setAgua(0)
+                setType("")
+                setTypeCounter(typeCounter -1)
+                setIngs([])
+                setTops([])
+                setRequired(false)   
+                setQty(0)
+                setComments("")
+                setComponentKey(prevKey => prevKey + 1);
+            }
+            else{
+                console.log("EVENT")
+                setNewItem({
+                    item_id: getRandomInt(0,100000000),
+                    type:type,
+                    ings:ings,
+                    tops:tops,
+                    qty:qty,
+                    comments:comments
+                });
+                setType("")
+                setTypeCounter(typeCounter -1)
+                setIngs([])
+                setTops([])
+                setRequired(false)   
+                setQty(0)
+                setComments("")
+                setComponentKey(prevKey => prevKey + 1);
+            }
         }
         
 
@@ -681,15 +1070,29 @@ function TerminalScreen() {
                                 <button style={{pointerEvents : 'auto'}} className={typeFlags.puppy ? 'btn btn-outline-secondary type active p-3':'btn btn-outline-secondary type p-3'} value={'puppy'} onClick={add}>Puppy</button>
         
                             </div>
+                            <div className=" ms-1 me-1">
+                                <button style={{pointerEvents : 'auto'}} className={typeFlags.drinks ? 'btn btn-outline-secondary type active p-3':'btn btn-outline-secondary type p-3'} value={'drinks'} onClick={add}>Drinks</button>
+        
+                            </div>
                         </div>
                     </div>
                     <div style={{height:'40vh'}} className="overflow-scroll d-flex justify-content-center flex-column">
-                        <div className='' style={{width:'90vw'}}>
-                            <button className="rounded-3 w-100 col d-flex flex-row text-start border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light"  onClick={handleIngredients}>
-                                Ingredients
+                    <div className='' style={{width:'90vw'}}>
+                            <button className="rounded-3 w-100 col d-flex flex-row text-start justify-content-between border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light"  >
+                                { favAlert && <div className='text-danger text-center'>Only One Favorite combination can be chosen</div> }
+                                
+                                <div className="" onClick={handleFavorites}>
+                                    Favorites
+                                </div>
+                                <div className="">
+                                    <input type="text" className='p-1' onChange={handleFavoritesSearch}/>
+                                </div>
                             </button>
-                            {ingredientsButtons && <div className=" " >
-                                <button className={ingsFlag.vainillaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3 ' : 'btn btn-outline-secondary m-1 ingredients p-3' }value={'vainilla'} onClick={add}  >Vainilla</button>
+                            {favoritesButtons && <div className=" " >
+                                {listaDeFavoritos.map(fav=>(
+                                    <button className={favoriteFlag[`${fav.nombre}`]  ? 'btn btn-outline-secondary m-1 ingredients favorite active p-3 ' : 'btn btn-outline-secondary m-1 favorite ingredients p-3' }value={fav.nombre} onClick={add}  >{fav.nombre}</button>
+                                ))}
+                                {/* <button className={ingsFlag.vainillaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3 ' : 'btn btn-outline-secondary m-1 ingredients p-3' }value={'vainilla'} onClick={add}  >Vainilla</button>
                                 <button className={ingsFlag.chocolateIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3 ' : 'btn btn-outline-secondary m-1 ingredients p-3' }value={'chocolate'} onClick={add}  >Chocolate</button>
                                 <button className={ingsFlag.fresaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3 ' : 'btn btn-outline-secondary m-1 ingredients p-3' }value={'fresa'} onClick={add}  >Fresa</button>
                                 <button className={ingsFlag.nutellaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'nutella'} onClick={add} >Nutella</button>
@@ -733,18 +1136,90 @@ function TerminalScreen() {
                                 <button className={ingsFlag.manzanaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'manzana'} onClick={add} >Manzana</button>
                                 <button className={ingsFlag.guayabaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'guayaba'} onClick={add} >Guayaba</button>
                                 <button className={ingsFlag.zanahoriaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'bizcocho de zanahoria'} onClick={add} >Bizcocho de Zanahoria</button>
-                                <button className={ingsFlag.ferreroIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'ferrero'} onClick={add} >Ferrero</button>
+                                <button className={ingsFlag.ferreroIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'ferrero'} onClick={add} >Ferrero</button> */}
+
+
+
+                            </div>}
+                        </div>
+
+                        <div className='' style={{width:'90vw'}}>
+                            <button className="rounded-3 w-100 col d-flex flex-row text-start justify-content-between border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light"  >
+                                <div className="" onClick={handleIngredients}>
+                                    Ingredients
+                                </div>
+                                <div className="">
+                                    <input type="text" className='p-1' onChange={handleIngredientSearch}/>
+                                </div>
+                            </button>
+                            {ingredientsButtons && <div className=" " >
+                                {listaDeIngredientes.map(ing=>(
+                                    <button className={ingsFlag[`${ing.nombre}Ing`]  ? 'btn btn-outline-secondary m-1 ingredients active p-3 ' : 'btn btn-outline-secondary m-1 ingredients p-3' }value={ing.nombre} onClick={add}  >{ing.nombre}</button>
+                                ))}
+                                {/* <button className={ingsFlag.vainillaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3 ' : 'btn btn-outline-secondary m-1 ingredients p-3' }value={'vainilla'} onClick={add}  >Vainilla</button>
+                                <button className={ingsFlag.chocolateIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3 ' : 'btn btn-outline-secondary m-1 ingredients p-3' }value={'chocolate'} onClick={add}  >Chocolate</button>
+                                <button className={ingsFlag.fresaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3 ' : 'btn btn-outline-secondary m-1 ingredients p-3' }value={'fresa'} onClick={add}  >Fresa</button>
+                                <button className={ingsFlag.nutellaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'nutella'} onClick={add} >Nutella</button>
+                                <button className={ingsFlag.oreoIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'oreo'} onClick={add} >Oreo</button>
+                                <button className={ingsFlag.maniIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'mani'} onClick={add} >Mani</button>
+                                <button className={ingsFlag.almendraIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'almendra'} onClick={add} >Almendra</button>
+                                <button className={ingsFlag.cocoIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'coco'} onClick={add} >Coco</button>
+                                <button className={ingsFlag.bizvainillaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'bizcocho de vainilla'} onClick={add} >Biz. de Vainilla</button>
+                                <button className={ingsFlag.pisIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'pistachio'} onClick={add} >Pistachio</button>
+                                <button className={ingsFlag.amaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'amaretto'} onClick={add} >Amaretto</button>
+                                <button className={ingsFlag.granIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'granola'} onClick={add} >Granola</button>
+                                <button className={ingsFlag.parchaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'parcha'} onClick={add} >Parcha</button>
+                                <button className={ingsFlag.mangoIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'mango'} onClick={add} >Mangó</button>
+                                <button className={ingsFlag.canelaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'canela'} onClick={add} >Canela</button>
+                                <button className={ingsFlag.anisIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'anis'} onClick={add} >Anís</button>
+                                <button className={ingsFlag.limonIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'limon'} onClick={add} >Limón</button>
+                                <button className={ingsFlag.cafeIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'cafe'} onClick={add} >Café</button>
+                                <button className={ingsFlag.brownieIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'brownie'} onClick={add} >Brownie</button>
+                                <button className={ingsFlag.guineoIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'guineo'} onClick={add} >Guineo</button>
+                                <button className={ingsFlag.cameoIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'cameo'} onClick={add} >Cameo</button>
+                                <button className={ingsFlag.tronkyIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'tronky'} onClick={add} >Tronky</button>
+                                <button className={ingsFlag.chipsIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'chocolate chips'} onClick={add} >Chocolate Chips</button>
+                                <button className={ingsFlag.cheesecakeIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'cheesecake'} onClick={add} >Cheese Cake</button>
+                                <button className={ingsFlag.chocblancoIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'chocolate blanco'} onClick={add} >Chocolate Blanco</button>
+                                <button className={ingsFlag.fruityIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'fruity pebbles'} onClick={add} >Fruity Pebbles</button>
+                                <button className={ingsFlag.cocoaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'cocoa pebbles'} onClick={add} >Cocoa Pebbles</button>
+                                <button className={ingsFlag.quesoIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'queso crema'} onClick={add} >Queso Crema</button>
+                                <button className={ingsFlag.uvaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'uva'} onClick={add} >Uva</button>
+                                <button className={ingsFlag.chinaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'china'} onClick={add} >China</button>
+                                <button className={ingsFlag.guanabanaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'guanábana'} onClick={add} >Guanábana</button>
+                                <button className={ingsFlag.chipsahoyIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'chips ahoy'} onClick={add} >Chips Ahoy</button>
+                                <button className={ingsFlag.kitkatIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'kit-kat'} onClick={add} >Kit-Kat</button>
+                                <button className={ingsFlag.blueIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'blueberry'} onClick={add} >Blueberry</button>
+                                <button className={ingsFlag.redvelvettIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'red velvet'} onClick={add} >Red Velvet</button>
+                                <button className={ingsFlag.nuecesIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'nueces'} onClick={add} >Nueces</button>
+                                <button className={ingsFlag.carameloIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'caramelo'} onClick={add} >Caramelo</button>
+                                <button className={ingsFlag.cherryIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'cherry'} onClick={add} >Cherry</button>
+                                <button className={ingsFlag.brandyIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'brandy'} onClick={add} >Brandy</button>
+                                <button className={ingsFlag.pinaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'piña'} onClick={add} >Piña</button>
+                                <button className={ingsFlag.pinacoladaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'piña colada'} onClick={add} >Piña Colada</button>
+                                <button className={ingsFlag.manzanaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'manzana'} onClick={add} >Manzana</button>
+                                <button className={ingsFlag.guayabaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'guayaba'} onClick={add} >Guayaba</button>
+                                <button className={ingsFlag.zanahoriaIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'bizcocho de zanahoria'} onClick={add} >Bizcocho de Zanahoria</button>
+                                <button className={ingsFlag.ferreroIng  ? 'btn btn-outline-secondary m-1 ingredients active p-3' : 'btn btn-outline-secondary m-1 ingredients p-3' } value={'ferrero'} onClick={add} >Ferrero</button> */}
 
 
 
                             </div>}
                         </div>
                         <div className='mt-3 ' style={{width:'90vw'}}> 
-                            <button className="rounded-3 w-100 col text-start border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light" onClick={handleToppings}>
-                                Toppings
+                            <button className="rounded-3 w-100 col text-start d-flex flex-row justify-content-between border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light" >
+                                <div className="" onClick={handleToppings}>
+                                    Toppings
+                                </div>
+                                <div className="">
+                                    <input type="text" className='p-1' onChange={handleToppingSearch}/>
+                                </div>
                             </button>
                             {toppingsButtons && <div className=" " >
-                                <button className={topsFlag.whippedTop ? 'btn btn-outline-secondary m-1 toppings active p-3':'btn btn-outline-secondary m-1 toppings p-3'} value={'whipped cream'} onClick={add}>Whipped Cream</button>
+                                {listaDeToppings.map(top=>(
+                                        <button className={topsFlag[`${top.nombre}Top`]  ? 'btn btn-outline-secondary m-1 toppings active p-3 ' : 'btn btn-outline-secondary m-1 toppings p-3' }value={top.nombre} onClick={add}  >{top.nombre}</button>
+                                    ))}
+                                {/* <button className={topsFlag.whippedTop ? 'btn btn-outline-secondary m-1 toppings active p-3':'btn btn-outline-secondary m-1 toppings p-3'} value={'whipped cream'} onClick={add}>Whipped Cream</button>
                                 <button className={topsFlag.fresaTop ? 'btn btn-outline-secondary m-1 toppings active p-3':'btn btn-outline-secondary m-1 toppings p-3'} value={'fresa'} onClick={add}>Fresa</button>
                                 <button className={topsFlag.nutellaTop ? 'btn btn-outline-secondary m-1 toppings active p-3':'btn btn-outline-secondary m-1 toppings p-3'} value={'nutella'} onClick={add}>Nutella</button>
                                 <button className={topsFlag.oreoTop ? 'btn btn-outline-secondary m-1 toppings active p-3':'btn btn-outline-secondary m-1 toppings p-3'} value={'oreo'} onClick={add}>Oreo</button>
@@ -768,7 +1243,7 @@ function TerminalScreen() {
                                 <button className={topsFlag.cocoaTop ? 'btn btn-outline-secondary m-1 toppings active p-3':'btn btn-outline-secondary m-1 toppings p-3'} value={'cocoa pebbles'} onClick={add}>Cocoa Pebbles</button>
                                 <button className={topsFlag.fruityTop ? 'btn btn-outline-secondary m-1 toppings active p-3':'btn btn-outline-secondary m-1 toppings p-3'} value={'fruity pebbles'} onClick={add}>Fruity Pebbles</button>
                                 <button className={topsFlag.mymTop ? 'btn btn-outline-secondary m-1 toppings active p-3':'btn btn-outline-secondary m-1 toppings p-3'} value={'m&m'} onClick={add}>M&M</button>
-                                <button className={topsFlag.marshTop ? 'btn btn-outline-secondary m-1 toppings active p-3':'btn btn-outline-secondary m-1 toppings p-3'} value={'marshmellow'} onClick={add}>Marshmellow</button>
+                                <button className={topsFlag.marshTop ? 'btn btn-outline-secondary m-1 toppings active p-3':'btn btn-outline-secondary m-1 toppings p-3'} value={'marshmellow'} onClick={add}>Marshmellow</button> */}
                             
                             </div>}
                         </div>
@@ -787,6 +1262,21 @@ function TerminalScreen() {
                             </div>
                             <div className="col">
                                 <button className='btn btn-outline-primary rounded-pill' onClick={handleIncrement}>+</button>
+                            </div>
+                        </div>
+        
+                    </div>
+                    <div className='col d-flex flex-row m-2 p-3 ' style={{width:'90vw'}}>
+                        <div className="col">Agua</div>
+                        <div className="col d-flex flex-row w-100 justify-content-between">
+                            <div className="col">
+                            {agua}
+                            </div>
+                            <div className="col">
+                                <button className='btn btn-outline-primary rounded-pill' onClick={handleDecrementAgua}>-</button>
+                            </div>
+                            <div className="col">
+                                <button className='btn btn-outline-primary rounded-pill' onClick={handleIncrementAgua}>+</button>
                             </div>
                         </div>
         

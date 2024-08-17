@@ -9,7 +9,8 @@ const SalesSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    Items:Number,
+    IceCreams:Number,
+    Drinks:Number,
     ATH:Number,
     CASH:Number,
     Total:Number

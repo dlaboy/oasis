@@ -24,10 +24,12 @@ function App() {
   const [renderOrdersKey, setRenderOrdersKey ] = useState(1);
 
   const [itemCounter, setItemCounter] = useState(0);
+  const [favCounter, setFavCounter] = useState(0);
 
   const [metodo, setMetodo] = useState("");
 
   const [newItem, setNewItem] = useState({});
+  // const [newDrinkItem, setNewDrinkItem] = useState({});
 
   const [totalToPay,setTotalToPay] = useState(0)
   const [type,setType] = useState(0)
@@ -41,7 +43,7 @@ function App() {
   
 
   return (
-    <ItemContext.Provider value={{hideOrders,toggleHideOrders,sumToSubstract,setSumtoSubstract,typeCounter, setTypeCounter,type,setType,totalToPay,setTotalToPay,order, setOrder, name, setName, renderOrdersKey, setRenderOrdersKey, itemCounter, setItemCounter, metodo, setMetodo, newItem, setNewItem}}>
+    <ItemContext.Provider value={{ hideOrders,toggleHideOrders,sumToSubstract,setSumtoSubstract,typeCounter, setTypeCounter,favCounter, setFavCounter,type,setType,totalToPay,setTotalToPay,order, setOrder, name, setName, renderOrdersKey, setRenderOrdersKey, itemCounter, setItemCounter, metodo, setMetodo, newItem, setNewItem}}>
       <Routes>
         <Route path="/" element={<Home/>}/>
         <Route path="/terminal" element={<Terminal/>}/>

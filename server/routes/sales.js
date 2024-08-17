@@ -52,7 +52,8 @@ router.get('/', async function (req, res, next) {
         ...sale,
         _id:sale._id,
         Date: moment(sale.Date).tz('America/Puerto_Rico').format('YYYY-MM-DD hh:mm A'),
-        Items:sale.Items,
+        IceCreams:sale.IceCreams,
+        Drinks:sale.Drinks,
         ATH:sale.ATH,
         CASH:sale.CASH,
         Total:sale.Total
@@ -67,12 +68,13 @@ router.get('/', async function (req, res, next) {
 });
 
 router.post('/', async function (req, res) {
-    const items = req.body.items
+    const ice_creams = req.body.ice_creams
+    const drinks = req.body.drinks
     const ath = req.body.ath
     const cash = req.body.cash;
     const total = req.body.total;
 
-    let newSale = new Sales({Items:items, ATH:ath, CASH:cash,Total:total})
+    let newSale = new Sales({IceCreams:ice_creams,Drinks:drinks, ATH:ath, CASH:cash,Total:total})
 
     console.log(newSale)
     /**

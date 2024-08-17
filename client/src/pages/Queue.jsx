@@ -202,11 +202,13 @@ export default function Queue() {
                             </div> 
                         </div>
                         <div className="d-flex flex-column">
-                          <div className="fw-bold">
-                            Ingredients: 
-                          </div>
+                        {item && item.type !== 'drinks' && (
+                            <div className="fw-bold">
+                              Ingredients:
+                            </div>
+                          )}
                           <ul className="d-flex flex-column">
-                            {item.ings.map((ing=>(  
+                            {item.type !== 'drinks'&&item.ings.map((ing=>(  
                               <li>{ing}
                               {/* <div className="text-secondary">
                               {editEnable[order._id] ? (<input className='w-75' defaultValue={ing}/>):(<div></div>)}
@@ -216,12 +218,14 @@ export default function Queue() {
                           </ul>
                         </div>
                         <div className="d-flex flex-column">
-                          <div className="fw-bold">
-                            Toppings: 
-                          </div>
+                        {item && item.type !== 'drinks' && (
+                            <div className="fw-bold">
+                              Toppings:
+                            </div>
+                          )}
                           <ul className="d-flex flex-column">
 
-                            {item.tops.map((top=>(
+                            {item.type !== 'drinks'&& item.tops.map((top=>(
                               <li className=''>{top}
                                 {/* <div className="text-secondary">
                                 {editEnable[order._id] ? (<input  className='w-75' defaultValue={top}/>):(<div></div>)}
