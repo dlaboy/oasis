@@ -26,6 +26,7 @@ export default function Queue() {
 
     
 
+    const [message, setMessage] = useState("")
     useEffect(()=>{
     axios.get('/orders').then(response=>{
         console.log("Response", response.data)
@@ -35,7 +36,6 @@ export default function Queue() {
 
     })
 
-    const [message, setMessage] = useState("")
 
     },[])
     useEffect(()=>{
