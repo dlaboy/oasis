@@ -206,6 +206,7 @@ function OrderScreen() {
     setFavCounter(favCounter -1)
     isOrderSubmited(true)
     setRenderOrdersKey(prevKey => prevKey + 1);
+    increaseNewOrderCounter(prev => prev + 1);
 
     
     reloadChannel.postMessage({ action: 'reload' });
