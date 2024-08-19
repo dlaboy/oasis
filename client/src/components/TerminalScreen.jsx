@@ -1077,7 +1077,9 @@ function TerminalScreen() {
                         </div>
                     </div>
                     <div style={{height:'40vh'}} className="overflow-scroll d-flex justify-content-center flex-column">
+                        {type !== 'drinks' && (
                     <div className='' style={{width:'90vw'}}>
+
                             <button className="rounded-3 w-100 col d-flex flex-row text-start justify-content-between border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light"  >
                                 { favAlert && <div className='text-danger text-center'>Only One Favorite combination can be chosen</div> }
                                 
@@ -1140,10 +1142,13 @@ function TerminalScreen() {
 
 
 
-                            </div>}
+                                </div>}
                         </div>
+                        )}
 
+                        {type === 'drinks' && (
                         <div className='' style={{width:'90vw'}}>
+
                             <button className="rounded-3 w-100 col d-flex flex-row text-start justify-content-between border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light"  >
                                 <div className="" onClick={handleIngredients}>
                                     Ingredients
@@ -1206,6 +1211,10 @@ function TerminalScreen() {
 
                             </div>}
                         </div>
+                            )}
+
+                    {type === 'drinks' && (
+
                         <div className='mt-3' style={{width:'90vw'}}> 
                             <button className="rounded-3 w-100 col text-start d-flex flex-row justify-content-between border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light" >
                                 <div className="" onClick={handleToppings}>
@@ -1249,7 +1258,10 @@ function TerminalScreen() {
                         </div>
 
 
+                    )}
                     </div>
+
+                    {type === 'drinks' && (
           
                     <div className='col d-flex flex-row m-2 p-3 ' style={{width:'90vw'}}>
                         <div className="col">Quantity</div>
@@ -1266,6 +1278,7 @@ function TerminalScreen() {
                         </div>
         
                     </div>
+                        )}
                     {type === 'drinks' && (
                     <div className='col d-flex flex-row m-2 p-3' style={{ width: '90vw' }}>
                         <div className="col">Agua</div>
@@ -1282,18 +1295,21 @@ function TerminalScreen() {
                         </div>
                     </div>
                     )}
-
+                    {type !== 'drinks' && (
                     <div className='col m-2 d-flex flex-column ps-3' style={{width:'90vw'}}>
                         <div className="col">Comments</div>
                         <div className="col">
                             <textarea name="" id="" cols="30" rows="2" defaultValue={comments} onChange={handleComments}></textarea>
                         </div>
                     </div>
+                    )}
+
                     { required && <div className='text-danger text-center'>Missing fields</div> }
 
                     <div className="col w-100 d-flex justify-content-center align-items-center">
                         <button className='btn btn-outline-primary p-3 rounded-pill' onClick={handleNewItem}>Add Item to Order</button>
                     </div>
+
             
                 </div>
             </div>
