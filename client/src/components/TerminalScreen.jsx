@@ -1296,7 +1296,7 @@ function TerminalScreen() {
                     </div>
                     )}
                     {type !== 'drinks' && (
-                    <div className='col m-2 d-flex flex-row ps-3' style={{width:'90vw'}}>
+                    <div className='col m-2 d-flex flex-row justify-content-between ps-3' style={{width:'90vw'}}>
                         <div className="col">Comments</div>
                         <div className="col">
                             <textarea name="" id="" cols="30" rows="2" defaultValue={comments} onChange={handleComments}></textarea>
