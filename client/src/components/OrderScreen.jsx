@@ -54,6 +54,7 @@ function OrderScreen() {
   const {typeCounter, setTypeCounter} = useContext( ItemContext );
   const {favCounter, setFavCounter} = useContext( ItemContext );
   const {sumToSubstract,setSumtoSubstract} = useContext( ItemContext );
+  const {newOrderCounter, increaseNewOrderCounter} = useContext(ItemContext);
 
 
   
@@ -205,11 +206,13 @@ function OrderScreen() {
     setFavCounter(favCounter -1)
     isOrderSubmited(true)
     setRenderOrdersKey(prevKey => prevKey + 1);
+
     
     reloadChannel.postMessage({ action: 'reload' });
       console.log("Client Name",JSON.parse(localStorage.getItem(LOCAL_NAME_KEY)))
 
     }
+
 
   
 

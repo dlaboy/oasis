@@ -22,6 +22,8 @@ export default function Queue() {
       };
 
     const {renderOrdersKey, setRenderOrdersKey} = useContext( ItemContext );
+    const {newOrderCounter, increaseNewOrderCounter} = useContext(ItemContext);
+
     
 
     useEffect(()=>{
@@ -34,6 +36,16 @@ export default function Queue() {
     })
 
     },[])
+    useEffect(()=>{
+    axios.get('/orders').then(response=>{
+      console.log("Response", response.data)
+      setCurrentOrders(response.data)
+    }).catch(error =>{
+        console.log("Error", error)
+
+    })
+
+    },[renderOrdersKey])
 
     
 
