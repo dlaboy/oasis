@@ -1206,7 +1206,7 @@ function TerminalScreen() {
 
                             </div>}
                         </div>
-                        <div className='mt-3 overflow-scroll' style={{width:'90vw'}}> 
+                        <div className='mt-3' style={{width:'90vw'}}> 
                             <button className="rounded-3 w-100 col text-start d-flex flex-row justify-content-between border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light" >
                                 <div className="" onClick={handleToppings}>
                                     Toppings
