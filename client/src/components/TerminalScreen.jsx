@@ -1077,7 +1077,7 @@ function TerminalScreen() {
                         </div>
                     </div>
                     <div style={{height:'40vh'}} className="overflow-scroll d-flex justify-content-center flex-column">
-                    <div className='overflow-scroll' style={{width:'90vw'}}>
+                    <div className='' style={{width:'90vw'}}>
                             <button className="rounded-3 w-100 col d-flex flex-row text-start justify-content-between border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light"  >
                                 { favAlert && <div className='text-danger text-center'>Only One Favorite combination can be chosen</div> }
                                 
@@ -1143,7 +1143,7 @@ function TerminalScreen() {
                             </div>}
                         </div>
 
-                        <div className='overflow-scroll' style={{width:'90vw'}}>
+                        <div className='' style={{width:'90vw'}}>
                             <button className="rounded-3 w-100 col d-flex flex-row text-start justify-content-between border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light"  >
                                 <div className="" onClick={handleIngredients}>
                                     Ingredients
