@@ -1146,7 +1146,7 @@ function TerminalScreen() {
                         </div>
                         )}
 
-                        {type === 'drinks' && (
+                        {type !== 'drinks' && (
                         <div className='' style={{width:'90vw'}}>
 
                             <button className="rounded-3 w-100 col d-flex flex-row text-start justify-content-between border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light"  >
@@ -1213,7 +1213,7 @@ function TerminalScreen() {
                         </div>
                             )}
 
-                    {type === 'drinks' && (
+                    {type !== 'drinks' && (
 
                         <div className='mt-3' style={{width:'90vw'}}> 
                             <button className="rounded-3 w-100 col text-start d-flex flex-row justify-content-between border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light" >
@@ -1261,7 +1261,7 @@ function TerminalScreen() {
                     )}
                     </div>
 
-                    {type === 'drinks' && (
+                    {type !== 'drinks' && (
           
                     <div className='col d-flex flex-row m-2 p-3 ' style={{width:'90vw'}}>
                         <div className="col">Quantity</div>
