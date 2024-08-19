@@ -35,6 +35,8 @@ export default function Queue() {
 
     })
 
+    const [message, setMessage] = useState("")
+
     },[])
     useEffect(()=>{
     axios.get('/orders').then(response=>{
@@ -44,6 +46,7 @@ export default function Queue() {
         console.log("Error", error)
 
     })
+    setMessage("New Order coming")
 
     },[newOrderCounter])
 
@@ -177,7 +180,7 @@ export default function Queue() {
 
             <h6>
                 Pending Orders
-
+                {message}
             </h6>
             </div>
             <div className=""><img src="" alt="" /></div>
