@@ -1266,21 +1266,23 @@ function TerminalScreen() {
                         </div>
         
                     </div>
-                    <div className='col d-flex flex-row m-2 p-3 ' style={{width:'90vw'}}>
+                    {type === 'drinks' && (
+                    <div className='col d-flex flex-row m-2 p-3' style={{ width: '90vw' }}>
                         <div className="col">Agua</div>
                         <div className="col d-flex flex-row w-100 justify-content-between">
-                            <div className="col">
+                        <div className="col">
                             {agua}
-                            </div>
-                            <div className="col">
-                                <button className='btn btn-outline-primary rounded-pill' onClick={handleDecrementAgua}>-</button>
-                            </div>
-                            <div className="col">
-                                <button className='btn btn-outline-primary rounded-pill' onClick={handleIncrementAgua}>+</button>
-                            </div>
                         </div>
-        
+                        <div className="col">
+                            <button className='btn btn-outline-primary rounded-pill' onClick={handleDecrementAgua}>-</button>
+                        </div>
+                        <div className="col">
+                            <button className='btn btn-outline-primary rounded-pill' onClick={handleIncrementAgua}>+</button>
+                        </div>
+                        </div>
                     </div>
+                    )}
+
                     <div className='col m-2 d-flex flex-column ps-3' style={{width:'90vw'}}>
                         <div className="col">Comments</div>
                         <div className="col">
