@@ -46,10 +46,11 @@ export default function Queue() {
         console.log("Error", error)
 
     })
-    setMessage("New Order coming")
-
-    },[newOrderCounter])
-
+    if(newOrderCounter != 0){
+      setMessage("New Order coming")
+    }
+    
+  },[newOrderCounter])
     
 
 
