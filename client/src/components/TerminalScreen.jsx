@@ -1077,7 +1077,7 @@ function TerminalScreen() {
                         </div>
                     </div>
                     <div style={{height:'40vh'}} className="overflow-scroll d-flex justify-content-center flex-column">
-                    <div className='' style={{width:'90vw'}}>
+                    <div className='overflow-scroll' style={{width:'90vw'}}>
                             <button className="rounded-3 w-100 col d-flex flex-row text-start justify-content-between border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light"  >
                                 { favAlert && <div className='text-danger text-center'>Only One Favorite combination can be chosen</div> }
                                 
@@ -1088,7 +1088,7 @@ function TerminalScreen() {
                                     <input type="text" className='p-1' onChange={handleFavoritesSearch}/>
                                 </div>
                             </button>
-                            {favoritesButtons && <div className=" " >
+                            {favoritesButtons && <div className="overflow-scroll d-flex" >
                                 {listaDeFavoritos.map(fav=>(
                                     <button className={favoriteFlag[`${fav.nombre}`]  ? 'btn btn-outline-secondary m-1 ingredients favorite active p-3 ' : 'btn btn-outline-secondary m-1 favorite ingredients p-3' }value={fav.nombre} onClick={add}  >{fav.nombre}</button>
                                 ))}
@@ -1143,7 +1143,7 @@ function TerminalScreen() {
                             </div>}
                         </div>
 
-                        <div className='' style={{width:'90vw'}}>
+                        <div className='overflow-scroll' style={{width:'90vw'}}>
                             <button className="rounded-3 w-100 col d-flex flex-row text-start justify-content-between border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light"  >
                                 <div className="" onClick={handleIngredients}>
                                     Ingredients
@@ -1152,7 +1152,7 @@ function TerminalScreen() {
                                     <input type="text" className='p-1' onChange={handleIngredientSearch}/>
                                 </div>
                             </button>
-                            {ingredientsButtons && <div className=" " >
+                            {ingredientsButtons && <div className="overflow-scroll d-flex " >
                                 {listaDeIngredientes.map(ing=>(
                                     <button className={ingsFlag[`${ing.nombre}Ing`]  ? 'btn btn-outline-secondary m-1 ingredients active p-3 ' : 'btn btn-outline-secondary m-1 ingredients p-3' }value={ing.nombre} onClick={add}  >{ing.nombre}</button>
                                 ))}
@@ -1206,7 +1206,7 @@ function TerminalScreen() {
 
                             </div>}
                         </div>
-                        <div className='mt-3 ' style={{width:'90vw'}}> 
+                        <div className='mt-3 overflow-scroll' style={{width:'90vw'}}> 
                             <button className="rounded-3 w-100 col text-start d-flex flex-row justify-content-between border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light" >
                                 <div className="" onClick={handleToppings}>
                                     Toppings
@@ -1215,7 +1215,7 @@ function TerminalScreen() {
                                     <input type="text" className='p-1' onChange={handleToppingSearch}/>
                                 </div>
                             </button>
-                            {toppingsButtons && <div className=" " >
+                            {toppingsButtons && <div className="overflow-scroll d-flex" >
                                 {listaDeToppings.map(top=>(
                                         <button className={topsFlag[`${top.nombre}Top`]  ? 'btn btn-outline-secondary m-1 toppings active p-3 ' : 'btn btn-outline-secondary m-1 toppings p-3' }value={top.nombre} onClick={add}  >{top.nombre}</button>
                                     ))}
