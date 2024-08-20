@@ -27,26 +27,37 @@ export default function Queue() {
     
 
     useEffect(()=>{
-    axios.get('/orders').then(response=>{
-        console.log("Response", response.data)
-        setCurrentOrders(response.data)
-    }).catch(error =>{
-        console.log("Error", error)
 
-    })
+      useEffect(() => {
+        const intervalId = setInterval(() => {
+          console.log('This will run every 5 seconds');
+          axios.get('/orders').then(response=>{
+            console.log("Response", response.data)
+            setCurrentOrders(response.data)
+        }).catch(error =>{
+            console.log("Error", error)
+    
+        })
+          // Place your logic here that you want to execute every 5 seconds
+        }, 5000);
+    
+        // Cleanup function to clear the interval when the component unmounts
+        return () => clearInterval(intervalId);
+      }, []); 
+  
 
-    const socket = new WebSocket(`wss://${window.location.hostname}:${window.location.port}`);
+    // const socket = new WebSocket(`wss://${window.location.hostname}:${window.location.port}`);
 
-    socket.onmessage = (event) => {
-      // setReceivedMessage(event.data);
-      if (event.data == 'message'){
-        location.reload()
-      }
-    };
+    // socket.onmessage = (event) => {
+    //   // setReceivedMessage(event.data);
+    //   if (event.data == 'message'){
+    //     location.reload()
+    //   }
+    // };
 
-    return () => {
-      socket.close();
-    };
+    // return () => {
+    //   socket.close();
+    // };
 
 
 
