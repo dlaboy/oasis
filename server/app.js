@@ -80,7 +80,7 @@ app.listen(PORT, async () =>{
 
 
 })
-const wss = new WebSocket.Server({ server });
+const wss = new WebSocket.Server({ app });
 
 wss.on('connection', (ws) => {
   ws.on('message', (message) => {
