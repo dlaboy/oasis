@@ -329,7 +329,7 @@ function OrderScreen() {
     }
   }
   const socket = new WebSocket(`wss://${window.location.hostname}:${window.location.port}`);
-  setWs(socket);
+  // setWs(socket);
 
   return () => {
     socket.close();
