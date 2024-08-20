@@ -31,15 +31,12 @@ export default function Queue() {
       useEffect(() => {
         const intervalId = setInterval(() => {
           console.log('This will run every 5 seconds');
-          axios.get('/orders').then(response=>{
-            console.log("Response", response.data)
-            setCurrentOrders(response.data)
-        }).catch(error =>{
-            console.log("Error", error)
-    
-        })
           // Place your logic here that you want to execute every 5 seconds
-        }, 5000);
+        }, 500);
+    
+        // Cleanup function to clear the interval when the component unmounts
+        return () => clearInterval(intervalId);
+      }, []); 
     
         // Cleanup function to clear the interval when the component unmounts
         return () => clearInterval(intervalId);
@@ -61,7 +58,7 @@ export default function Queue() {
 
 
 
-    },[])
+    // },[])
   //   useEffect(()=>{
   //   axios.get('/orders').then(response=>{
   //     console.log("Response", response.data)

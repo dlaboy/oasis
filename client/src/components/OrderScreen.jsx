@@ -97,7 +97,7 @@ function OrderScreen() {
 
     })
       // Place your logic here that you want to execute every 5 seconds
-    }, 5000);
+    }, 500);
 
     // Cleanup function to clear the interval when the component unmounts
     return () => clearInterval(intervalId);
