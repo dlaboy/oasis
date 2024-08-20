@@ -35,8 +35,7 @@ export default function Queue() {
 
     })
 
-    const socket = new WebSocket('ws://https://oasispos-79128360d945.herokuapp.com/queue:8080');
-    setWs(socket);
+    const socket = new WebSocket('ws://oasispos-79128360d945.herokuapp.com/queue:8080');
 
     socket.onmessage = (event) => {
       // setReceivedMessage(event.data);
