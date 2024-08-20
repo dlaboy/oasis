@@ -26,7 +26,6 @@ export default function Queue() {
 
     
 
-    useEffect(()=>{
 
       useEffect(() => {
         const intervalId = setInterval(() => {
@@ -38,9 +37,7 @@ export default function Queue() {
         return () => clearInterval(intervalId);
       }, []); 
     
-        // Cleanup function to clear the interval when the component unmounts
-        return () => clearInterval(intervalId);
-      }, []); 
+     
   
 
     // const socket = new WebSocket(`wss://${window.location.hostname}:${window.location.port}`);
