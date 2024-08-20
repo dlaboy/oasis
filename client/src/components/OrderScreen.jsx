@@ -328,7 +328,7 @@ function OrderScreen() {
       // Add your logic here for viewports wider than 768px
     }
   }
-  const socket = new WebSocket('ws://oasispos-79128360d945.herokuapp.com/queue:8080');
+  const socket = new WebSocket(`wss://${window.location.hostname}:${window.location.port}`);
   setWs(socket);
 
   return () => {

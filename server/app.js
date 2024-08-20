@@ -24,6 +24,8 @@ var salesRouter = require('./routes/sales.js');
 var ingredienteRouter = require('./routes/ingredientes.js')
 var toppingRouter = require('./routes/toppings.js')
 var favoritesRouter = require('./routes/favorites.js')
+const WebSocket = require('ws');
+
 
 var app = express();
 app.use(express.static(path.join(__dirname, '../client/dist')));
@@ -78,7 +80,20 @@ app.listen(PORT, async () =>{
 
 
 })
+const wss = new WebSocket.Server({ server });
 
+wss.on('connection', (ws) => {
+  ws.on('message', (message) => {
+    // Broadcast the received message to all connected clients
+    wss.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(message);
+      }
+    });
+  });
+
+  ws.send('Welcome to the WebSocket server!');
+});
 
 
 module.exports = app;
