@@ -35,7 +35,7 @@ export default function Queue() {
     
         // Cleanup function to clear the interval when the component unmounts
         return () => clearInterval(intervalId);
-      }, []); 
+      }, [renderOrdersKey]); 
     
      
   
