@@ -14,19 +14,18 @@ export default function Queue() {
 
     const reloadChannel = new BroadcastChannel('reload-channel');
 
-    reloadChannel.onmessage = (event) => {
-        if (event.data.action === 'reload') {
-          // Reload the page in response to the message
-          location.reload();
-        }
-      };
+    // reloadChannel.onmessage = (event) => {
+    //     if (event.data.action === 'reload') {
+    //       // Reload the page in response to the message
+    //       location.reload();
+    //     }
+    //   };
 
     const {renderOrdersKey, setRenderOrdersKey} = useContext( ItemContext );
     const {newOrderCounter, increaseNewOrderCounter} = useContext(ItemContext);
 
     
 
-    const [message, setMessage] = useState("")
     useEffect(()=>{
     axios.get('/orders').then(response=>{
         console.log("Response", response.data)
@@ -36,21 +35,32 @@ export default function Queue() {
 
     })
 
+    const socket = new WebSocket('ws://https://oasispos-79128360d945.herokuapp.com/queue:8080');
+    setWs(socket);
+
+    socket.onmessage = (event) => {
+      // setReceivedMessage(event.data);
+      location.reload()
+    };
+
+    return () => {
+      socket.close();
+    };
+
+
 
     },[])
-    useEffect(()=>{
-    axios.get('/orders').then(response=>{
-      console.log("Response", response.data)
-      setCurrentOrders(response.data)
-    }).catch(error =>{
-        console.log("Error", error)
+  //   useEffect(()=>{
+  //   axios.get('/orders').then(response=>{
+  //     console.log("Response", response.data)
+  //     setCurrentOrders(response.data)
+  //   }).catch(error =>{
+  //       console.log("Error", error)
 
-    })
-    if(newOrderCounter != 0){
-      setMessage("New Order coming")
-    }
+  //   })
+   
     
-  },[newOrderCounter])
+  // },[newOrderCounter])
     
 
 
@@ -181,7 +191,6 @@ export default function Queue() {
 
             <h6>
                 Pending Orders
-                {message}
             </h6>
             </div>
             <div className=""><img src="" alt="" /></div>

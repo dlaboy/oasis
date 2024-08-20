@@ -24,7 +24,7 @@ function OrderScreen() {
 
 
   // RELOAD CHANNEL
-  const reloadChannel = new BroadcastChannel('reload-channel');
+  // const reloadChannel = new BroadcastChannel('reload-channel');
   
   // USESTATE HOOKS
   const [currentOrders,setCurrentOrders] = useState(null)
@@ -213,6 +213,9 @@ function OrderScreen() {
       console.log("Client Name",JSON.parse(localStorage.getItem(LOCAL_NAME_KEY)))
 
     }
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send('message');
+    }
 
 
   
@@ -325,6 +328,12 @@ function OrderScreen() {
       // Add your logic here for viewports wider than 768px
     }
   }
+  const socket = new WebSocket('ws://https://oasispos-79128360d945.herokuapp.com/queue:8080');
+  setWs(socket);
+
+  return () => {
+    socket.close();
+  };
   },[])
 
 
