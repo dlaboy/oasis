@@ -80,7 +80,14 @@ app.listen(PORT, async () =>{
 
 
 })
-const wss = new WebSocket.Server({ app });
+
+// Create the HTTP server with Express
+const server = app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
+// Attach WebSocket server to the same HTTP server
+const wss = new WebSocket.Server({ server });
 
 wss.on('connection', (ws) => {
   ws.on('message', (message) => {
