@@ -68,7 +68,7 @@ app.get('*', (req, res) => {
 });
 
 
-app.listen(PORT, async () =>{
+const server  = app.listen(PORT, async () =>{
   console.log("server started")
   console.log("127.0.0.1:3000")
   if (PORT == 3000){
@@ -81,10 +81,7 @@ app.listen(PORT, async () =>{
 
 })
 
-// Create the HTTP server with Express
-const server = app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+
 
 // Attach WebSocket server to the same HTTP server
 const wss = new WebSocket.Server({ server });
