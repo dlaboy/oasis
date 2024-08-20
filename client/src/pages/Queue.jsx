@@ -39,7 +39,9 @@ export default function Queue() {
 
     socket.onmessage = (event) => {
       // setReceivedMessage(event.data);
-      location.reload()
+      if (event.data == 'message'){
+        location.reload()
+      }
     };
 
     return () => {
