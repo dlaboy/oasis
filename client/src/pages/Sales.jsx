@@ -87,15 +87,16 @@ function Sales(){
         
     },[selectedItem])
     useEffect(()=>{
-        axios.get('/sales').then(response=>{
-            console.log("Response", response.data)
-            setAllSales(response.data)
-        }).catch(error =>{
-            console.log("Error", error)
-    
-        })
+       
         const intervalId = setInterval(() => {
             console.log('This will run every 5 seconds');
+            axios.get('/sales').then(response=>{
+                console.log("Response", response.data)
+                setAllSales(response.data)
+            }).catch(error =>{
+                console.log("Error", error)
+        
+            })
             // Place your logic here that you want to execute every 5 seconds
             axios.get('/orders/salesATH').then(response=>{
                 console.log("Response", typeof(response.data))
