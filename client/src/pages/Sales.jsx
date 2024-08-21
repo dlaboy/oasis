@@ -94,6 +94,103 @@ function Sales(){
             console.log("Error", error)
     
         })
+        const intervalId = setInterval(() => {
+            console.log('This will run every 5 seconds');
+            // Place your logic here that you want to execute every 5 seconds
+            axios.get('/orders/salesATH').then(response=>{
+                console.log("Response", typeof(response.data))
+                setATHsales(response.data.totalSalesATH)
+              }).catch(error =>{
+                console.log("Error", error)
+              })
+            axios.get('/orders/salesCASH').then(response=>{
+                console.log("Response", typeof(response.data))
+                setCASHsales(response.data.totalSalesCASH)
+    
+                }).catch(error =>{
+                console.log("Error", error)
+            })
+            axios.get('/orders/count').then(response=>{
+                console.log("Count Response", response.data)
+                var map = response.data
+                console.log("Map", map)
+                map.forEach(object => {
+                    console.log("iterating calculations")
+                    console.log("object to look: ", object)
+    
+                    if (object._id == 'rolls'){
+                        console.log("There are rolls")
+    
+                        setRolls(object.totalQuantity)
+                    }
+                    else if (object._id == 'shakes'){
+                        console.log("There are shakes")
+    
+                        setShakes(object.totalQuantity)
+                    }
+                    else if (object._id == 'banana'){
+                        setBanana(object.totalQuantity)
+                    }
+                    else if (object._id == 'puppy'){
+                        setPerro(object.totalQuantity)
+                        
+    
+                    }
+                    else if (object._id == 'drinks'){
+                        setDrinks(object.totalQuantity)
+                        
+    
+                    }
+                    else{
+                        console.log("Types not found")
+    
+                    }
+                })
+    
+    
+                }).catch(error =>{
+                console.log("Error", error)
+            })
+            axios.get('/orders/countIngredients').then(response=>{
+                // console.log("Ingredients: ", response.data.length)
+                var labels=[]
+                var data=[]
+                response.data.forEach(object =>{
+                    labels.push(object._id)
+                    data.push(object.totalQuantity)
+                })
+                console.log("Labels: ",labels)
+                console.log("Data: ", data)
+                setIngredientLabels(labels)
+                setIngredientData(data)
+                
+            }).catch(error =>{
+                console.log("Error", error)
+            })
+            axios.get('/orders/countToppings').then(response=>{
+                // console.log("Ingredients: ", response.data.length)
+                var labels=[]
+                var data=[]
+                response.data.forEach(object =>{
+                    labels.push(object._id)
+                    data.push(object.totalQuantity)
+                })
+                console.log("Labels: ",labels)
+                console.log("Data: ", data)
+                setToppingLabels(labels)
+                setToppingData(data)
+                
+            }).catch(error =>{
+                console.log("Error", error)
+            })
+            generateReport(true)
+          }, 500);
+      
+          // Cleanup function to clear the interval when the component unmounts
+          return () => clearInterval(intervalId);
+          
+
+
 
     },[])
 
@@ -385,6 +482,7 @@ function Sales(){
    
     }
 
+
     
     const handleReport = event => {
         axios.get('/orders/salesATH').then(response=>{
@@ -635,7 +733,7 @@ function Sales(){
             </div>
             { today ? <div className="text-center">
                 <div className="d-flex justify-content-around align-items-center flex-row">
-                    <button className='btn btn-outline-primary rounded-pill p-3 m-2' onClick={handleReport}> Generate Today's Report</button>
+                    {/* <button className='btn btn-outline-primary rounded-pill p-3 m-2' onClick={handleReport}> Generate Today's Report</button> */}
                     {generate && 
                         <button className='btn btn-outline-dark rounded-pill p-3 m-2' onClick={handleSubmitShow}> Submit Today's Report</button>
                     }
