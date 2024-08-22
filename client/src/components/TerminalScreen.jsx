@@ -1134,6 +1134,22 @@ function TerminalScreen() {
                 setQty(0)
                 setComments("")
                 setComponentKey(prevKey => prevKey + 1);
+                setIngsFlag(prevState => {
+                    // Create a new object with all keys set to false
+                    const resetFlags = {};
+                    Object.keys(prevState).forEach(key => {
+                        resetFlags[key] = false;
+                    });
+                    return resetFlags;
+                });
+                setTopsFlag(prevState => {
+                    // Create a new object with all keys set to false
+                    const resetFlags = {};
+                    Object.keys(prevState).forEach(key => {
+                        resetFlags[key] = false;
+                    });
+                    return resetFlags;
+                });
             }
         }
         
