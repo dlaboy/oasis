@@ -47,6 +47,7 @@ function Sales(){
     const [day,setDay] = useState("")
     const [month,setMonth] = useState("")
     const [isSubmitted, setSubmission] = useState(false);
+    const [isSubmittedCounter, setSubmissionCounter] = useState(0);
 
 
     const doc = new jsPDF();
@@ -96,7 +97,7 @@ function Sales(){
             console.log("Error", error)
     
         })
-    },[isSubmitted])
+    },[isSubmittedCounter])
 
     useEffect(()=>{
         axios.get('/sales').then(response=>{
@@ -245,6 +246,7 @@ function Sales(){
 
     const handleSubmit = async (event) =>{
         setSubmission(true)
+        setSubmissionCounter(prev=>prev+1)
         try{
             const response = await axios.post('/sales', {
                 'ice_creams': rolls + shakes + banana + perro,
