@@ -87,32 +87,48 @@ function Sales(){
         
     },[selectedItem])
     useEffect(()=>{
-       
+        axios.get('/sales').then(response=>{
+            console.log("Response", response.data)
+            setAllSales(response.data)
+        }).catch(error =>{
+            console.log("Error", error)
+    
+        })
+    },[isSubmitted])
+
+    useEffect(()=>{
+        axios.get('/sales').then(response=>{
+            console.log("Response", response.data)
+            setAllSales(response.data)
+        }).catch(error =>{
+            console.log("Error", error)
+    
+        })
         const intervalId = setInterval(() => {
-            if (month != '' &&  day != ''){
-                axios.get('/sales',{
-                    params: {
-                    //   year: year,
-                      month: month,
-                      day: day
-                    }
-                  }).then(response=>{
-                    console.log("Response", response.data)
-                    setAllSales(response.data)
-                }).catch(error =>{
-                    console.log("Error", error)
+            // if (month != '' &&  day != ''){
+            //     axios.get('/sales',{
+            //         params: {
+            //         //   year: year,
+            //           month: month,
+            //           day: day
+            //         }
+            //       }).then(response=>{
+            //         console.log("Response", response.data)
+            //         setAllSales(response.data)
+            //     }).catch(error =>{
+            //         console.log("Error", error)
             
-                })
-            }
-            else{
-                axios.get('/sales').then(response=>{
-                    console.log("Response", response.data)
-                    setAllSales(response.data)
-                }).catch(error =>{
-                    console.log("Error", error)
+            //     })
+            // }
+            // else{
+            //     axios.get('/sales').then(response=>{
+            //         console.log("Response", response.data)
+            //         setAllSales(response.data)
+            //     }).catch(error =>{
+            //         console.log("Error", error)
             
-                })
-            }
+            //     })
+            // }
             // Place your logic here that you want to execute every 5 seconds
             axios.get('/orders/salesATH').then(response=>{
                 console.log("Response", typeof(response.data))
