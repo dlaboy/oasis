@@ -191,83 +191,8 @@ function TerminalScreen() {
        console.log('Current state of ingsFlag:', ingsFlag);
     },[listaDeIngredientes])
 
-    useEffect(()=>{
-        var storedIngs = JSON.parse(localStorage.getItem(LOCAL_INGS_KEY));
-
-
-        if (checkButtons){
-            if(storedIngs){
-                const StrawberryShortcake = ["Fresa","BizcochoDeVainilla","Queso"]
-                const Smores = ["Marshemellow","BizcochoDeVainilla","Chocolate"]
-                const ILoveCoffee = ["Caramelo","Café","Almendra"]
-                const CinnamonAndCarrot = ["BizcochoDeZanahoria","Canela","Nueces"]
-                const CocoNut = ["Coco","Nutella","Almendra"]
-                const CookiesAndCream = ["Oreo","Chips","Queso"]
-
-                if (storedIngs === StrawberryShortcake){
-                    setFavFlag({
-                        CookiesAndCream:false,
-                        CocoNut:false,
-                        ILoveCoffee:false,
-                        Smores:false,
-                        CinnamonAndCarrot:false,
-                        StrawberryShortcake:true
-                    })
-                }
-                else if (storedIngs === Smores){
-                    setFavFlag({
-                        CookiesAndCream:false,
-                        CocoNut:false,
-                        ILoveCoffee:false,
-                        Smores:true,
-                        CinnamonAndCarrot:false,
-                        StrawberryShortcake:false
-                    })
-                }
-                else if (storedIngs === ILoveCoffee){
-                    setFavFlag({
-                        CookiesAndCream:false,
-                        CocoNut:false,
-                        ILoveCoffee:true,
-                        Smores:false,
-                        CinnamonAndCarrot:false,
-                        StrawberryShortcake:false
-                    })
-                }
-                else if (storedIngs === CinnamonAndCarrot){
-                    setFavFlag({
-                        CookiesAndCream:false,
-                        CocoNut:false,
-                        ILoveCoffee:false,
-                        Smores:false,
-                        CinnamonAndCarrot:true,
-                        StrawberryShortcake:false
-                    })
-                }
-                else if (storedIngs === CocoNut){
-                    setFavFlag({
-                        CookiesAndCream:false,
-                        CocoNut:true,
-                        ILoveCoffee:false,
-                        Smores:false,
-                        CinnamonAndCarrot:false,
-                        StrawberryShortcake:false
-                    })
-                }
-                else if (storedIngs === CookiesAndCream){
-                    setFavFlag({
-                        CookiesAndCream:true,
-                        CocoNut:false,
-                        ILoveCoffee:false,
-                        Smores:false,
-                        CinnamonAndCarrot:false,
-                        StrawberryShortcake:false
-                    })
-                }
-            }
-        }
-
-    },[ings])
+   
+               
 
     useEffect(()=>{
         
