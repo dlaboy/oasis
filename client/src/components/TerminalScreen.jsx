@@ -737,6 +737,8 @@ function TerminalScreen() {
 
                     if (event.target.value == "CookiesAndCream"){
                         const ingre = ["Oreo","Chips","Queso"]
+
+                    
     
                         ingre.map(ingredient=>{
                             if (ings.includes(ingredient)){
@@ -746,6 +748,7 @@ function TerminalScreen() {
                                 event.target.classList.remove('active')
                                 var key = ingredient + 'Ing'
                                 localStorage.setItem(key,'0')
+                                // localStorage.setItem(LOCAL_INGS_KEY,updatedIngs)
                                 
                             }
                             else {
@@ -754,9 +757,12 @@ function TerminalScreen() {
                                 event.target.classList.add('active')
                                 var key = ingredient + 'Ing'
                                 localStorage.setItem(key,'1')
+                                // localStorage.setItem(LOCAL_INGS_KEY,updatedIngs)
+
                 
                             }
                         })
+
                         // setFavCounter(favCounter + 1)
                  
     
