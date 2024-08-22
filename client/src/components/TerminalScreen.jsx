@@ -742,7 +742,7 @@ function TerminalScreen() {
     
                         ingre.map(ingredient=>{
                             if (ings.includes(ingredient)){
-                                const updatedIngs = ings.filter(ing => ing !== ingredient)
+                                const updatedIngs = ings.filter(ing => !ingre.includes(ing))
                                 setIngs(updatedIngs)
                                 console.log('removed '+ ingredient + ' from ingredient')
                                 event.target.classList.remove('active')
@@ -772,7 +772,7 @@ function TerminalScreen() {
     
                         ingre.map(ingredient=>{
                             if (ings.includes(ingredient)){
-                                const updatedIngs = ings.filter(ing => ing !== ingredient)
+                                const updatedIngs = ings.filter(ing => !ingre.includes(ing))
                                 setIngs(updatedIngs)
                                 console.log('removed '+ ingredient + ' from ingredient')
                                 event.target.classList.remove('active')
@@ -798,7 +798,7 @@ function TerminalScreen() {
     
                         ingre.map(ingredient=>{
                             if (ings.includes(ingredient)){
-                                const updatedIngs = ings.filter(ing => ing !== ingredient)
+                                const updatedIngs = ings.filter(ing => !ingre.includes(ing))
                                 setIngs(updatedIngs)
                                 console.log('removed '+ ingredient + ' from ingredient')
                                 event.target.classList.remove('active')
@@ -825,7 +825,7 @@ function TerminalScreen() {
     
                         ingre.map(ingredient=>{
                             if (ings.includes(ingredient)){
-                                const updatedIngs = ings.filter(ing => ing !== ingredient)
+                                const updatedIngs = ings.filter(ing => !ingre.includes(ing))
                                 setIngs(updatedIngs)
                                 console.log('removed '+ ingredient + ' from ingredient')
                                 event.target.classList.remove('active')
@@ -848,11 +848,11 @@ function TerminalScreen() {
     
                     }
                     else if (event.target.value == "Smores"){
-                        const ingre = ["Marshemellow","BizcochoDeVainilla","Chocolate"]
+                        const ingre = ["Marshmellow","BizcochoDeVainilla","Chocolate"]
     
                         ingre.map(ingredient=>{
                             if (ings.includes(ingredient)){
-                                const updatedIngs = ings.filter(ing => ing !== ingredient)
+                                const updatedIngs = ings.filter(ing => !ingre.includes(ing))
                                 setIngs(updatedIngs)
                                 console.log('removed '+ ingredient + ' from ingredient')
                                 event.target.classList.remove('active')
@@ -879,7 +879,7 @@ function TerminalScreen() {
     
                         ingre.map(ingredient=>{
                             if (ings.includes(ingredient)){
-                                const updatedIngs = ings.filter(ing => ing !== ingredient)
+                                const updatedIngs = ings.filter(ing => !ingre.includes(ing))
                                 setIngs(updatedIngs)
                                 console.log('removed '+ ingredient + ' from ingredient')
                                 event.target.classList.remove('active')
