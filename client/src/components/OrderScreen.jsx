@@ -88,9 +88,7 @@ function OrderScreen() {
     //   console.log("Error", error)
     // })
     const intervalId = setInterval(() => {
-      console.log('This will run every 5 seconds');
       axios.get('/orders').then(response=>{
-        console.log("Response", response.data)
         setCurrentOrders(response.data)
     }).catch(error =>{
         console.log("Error", error)

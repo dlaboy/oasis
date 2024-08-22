@@ -188,6 +188,10 @@ function TerminalScreen() {
       }
 
     useEffect(()=>{
+       console.log('Current state of ingsFlag:', ingsFlag);
+    },[listaDeIngredientes])
+
+    useEffect(()=>{
         var storedIngs = JSON.parse(localStorage.getItem(LOCAL_INGS_KEY));
 
 
@@ -284,20 +288,39 @@ function TerminalScreen() {
             }
             
             if(storedIngs){
+                axios.get('/ingrediente').then(response=>{
+                    const respuesta_ingredientes = response.data 
+                    actualizarIngredientes(respuesta_ingredientes)
+                    
+                }).catch(error =>{
+                    console.log("Error", error)
+                })
                 setIngs(storedIngs)
                 storedIngs.forEach(function(i){
                     var ingKey = i + 'Ing';
+                    console.log(ingKey)
                     if(localStorage.getItem(ingKey) !== null){
                         for (const key in ingsFlag){
                             if(key === ingKey){
                                 if(localStorage.getItem(ingKey) === '1'){
+                                    console.log()
                                     ingsFlag[ingKey] = true
+                                    console.log("Key set to true",ingsFlag[ingKey])
+
                                 }
                                 else{
                                     ingsFlag[ingKey] = false
+                                    console.log("Key set to false",ingsFlag[ingKey])
+
                                 }
                             }
+                            else{
+                                console.log("No key found")
+                            }
                         }
+                    }
+                    else{
+                        console.log("NULL")
                     }
                    
                 })
@@ -453,11 +476,13 @@ function TerminalScreen() {
         }
         else if(ingrediente_a_buscar === ""){
             console.log("Ingrediente a Buscar", ingrediente_a_buscar)
+
+        
     
             axios.get('/ingrediente').then(response=>{
               console.log('Ingredientes encontrados', response.data)
     
-            actualizarIngredientes(response.data)
+              actualizarIngredientes(response.data)
                 
             }).catch(error =>{
                 console.log("Error", error)
@@ -962,7 +987,10 @@ function TerminalScreen() {
                     event.target.classList.remove('active')
                     var key = event.target.value + 'Ing'
                     localStorage.setItem(key,'0')
-                    
+                    setIngsFlag(prevState => ({
+                        ...prevState,
+                        [key]: false
+                    }));
                 }
                 else {
                     setIngs(prevIngs =>[...prevIngs,event.target.value])
@@ -970,6 +998,10 @@ function TerminalScreen() {
                     event.target.classList.add('active')
                     var key = event.target.value + 'Ing'
                     localStorage.setItem(key,'1')
+                    setIngsFlag(prevState => ({
+                        ...prevState,
+                        [key]: true
+                    }));
     
                 }
             }
@@ -983,6 +1015,10 @@ function TerminalScreen() {
                 event.target.classList.remove('active')
                 var key = event.target.value + 'Top'
                 localStorage.setItem(key,'0')
+                setTopsFlag(prevState => ({
+                    ...prevState,
+                    [key]: false
+                }));
                 
             }
             else {
@@ -991,6 +1027,11 @@ function TerminalScreen() {
                 event.target.classList.add('active')
                 var key = event.target.value + 'Top'
                 localStorage.setItem(key,'1')
+
+                setTopsFlag(prevState => ({
+                    ...prevState,
+                    [key]: true
+                }));
 
             }
         }
