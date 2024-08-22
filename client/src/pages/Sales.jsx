@@ -788,7 +788,6 @@ function Sales(){
                 </div>  }
             </div> :
             <div className='container w-100 text-center d-flex flex-column justify-content-center align-items-center'>
-                <button className="p-2 btn" onClick={handleSearch}>Search</button>
                 <div className='m-3 container w-100 text-center d-flex flex-row justify-content-around'>
                     <select value={day} onChange={handleDay} className='p-2'>
                             <option value="">Day</option>
@@ -817,6 +816,8 @@ function Sales(){
                     <select className='p-2'>
                             <option value="2024">2024</option>
                     </select>
+                    <button className="p-2 btn" onClick={handleSearch}>Search</button>
+
                 </div>
                 
                 <Table className='' striped bordered hover>
