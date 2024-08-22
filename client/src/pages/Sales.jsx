@@ -46,6 +46,8 @@ function Sales(){
     const [allSales,setAllSales] = useState([])
     const [day,setDay] = useState("")
     const [month,setMonth] = useState("")
+    const [isSubmitted, setSubmission] = useState(false);
+
 
     const doc = new jsPDF();
 
@@ -710,7 +712,6 @@ function Sales(){
     const handleSubmitClose = () => setSubmitShow(false);
     const handleSubmitShow = () => setSubmitShow(true);
 
-    const [isSubmitted, setSubmission] = useState(false);
 
     
   
