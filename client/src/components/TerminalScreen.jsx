@@ -1199,7 +1199,10 @@ function TerminalScreen() {
                             </button>
                             <div className="overflow-scroll d-flex " >
                                 {listaDeIngredientes.map(ing=>(
+                                    <>
+                                    <div className="">{ingsFlag[`${ing.nombre}Ing`]}</div>
                                     <button className={ingsFlag[`${ing.nombre}Ing`]  ? 'btn btn-outline-secondary m-1 ingredients active p-3 ' : 'btn btn-outline-secondary m-1 ingredients p-3' }value={ing.nombre} onClick={add}  >{ing.nombre}</button>
+                                    </>
                             ))}
                                 
                             </div>
