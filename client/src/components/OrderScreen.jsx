@@ -208,28 +208,30 @@ function OrderScreen() {
             'total': totalToPay
         })
 
+        showMetodoModal(false)
+
+        setTotalToPay(0)
+        setTypeCounter(typeCounter -1)
+        setFavCounter(favCounter -1)
+        isOrderSubmited(true)
+        setRenderOrdersKey(prevKey => prevKey + 1);
+        increaseNewOrderCounter(prev => prev + 1);
+
         // const response = await axios.get('/orders');
         console.log('Response:', response.headers);
     } catch(error){
         console.error('Error', error)
     }
-    showMetodoModal(false)
-
-    setTotalToPay(0)
-    setTypeCounter(typeCounter -1)
-    setFavCounter(favCounter -1)
-    isOrderSubmited(true)
-    setRenderOrdersKey(prevKey => prevKey + 1);
-    increaseNewOrderCounter(prev => prev + 1);
+   
 
     
-    reloadChannel.postMessage({ action: 'reload' });
-      console.log("Client Name",JSON.parse(localStorage.getItem(LOCAL_NAME_KEY)))
+    // reloadChannel.postMessage({ action: 'reload' });
+    //   console.log("Client Name",JSON.parse(localStorage.getItem(LOCAL_NAME_KEY)))
 
-    }
-    if (ws && ws.readyState === WebSocket.OPEN) {
-      ws.send('message');
-    }
+    // }
+    // if (ws && ws.readyState === WebSocket.OPEN) {
+    //   ws.send('message');
+    // }
 
 
   
