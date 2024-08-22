@@ -708,19 +708,19 @@ function TerminalScreen() {
         if(orderMounted.current){
             if (JSON.parse(localStorage.getItem(LOCAL_ORDER_KEY))?.items != undefined && order?.items != undefined){
                 var compareMe = JSON.parse(localStorage.getItem(LOCAL_ORDER_KEY))
-                console.log("Are the items the same in both variables?", order?.items.length === compareMe.items.length)
-                console.log("Order State Variable Length: ",order?.items.length)
-                console.log("Order LS Variable Length: ",compareMe.items.length)
+                // console.log("Are the items the same in both variables?", order?.items.length === compareMe.items.length)
+                // console.log("Order State Variable Length: ",order?.items.length)
+                // console.log("Order LS Variable Length: ",compareMe.items.length)
                 if (order?.items.length === compareMe.items.length){
                     same = true
-                    console.log("Same is", same)
+                    // console.log("Same is", same)
                 }
                 if(order?.items.length < compareMe.items.length){
                     deletion = true
-                    console.log("Deletion is", deletion)
+                    // console.log("Deletion is", deletion)
 
                 }
-                console.log("Change in Order Detected")
+                // console.log("Change in Order Detected")
             }
             localStorage.setItem(LOCAL_ORDER_KEY,JSON.stringify(order))
             var storedOrder = JSON.parse(localStorage.getItem(LOCAL_ORDER_KEY));
@@ -731,11 +731,11 @@ function TerminalScreen() {
                     if (storedItems[item].hasOwnProperty(key)){
                         if (key == 'type'){
                             var itemQty = storedItems[item]['qty']
-                            console.log("Quantity of this item: ", itemQty)
+                            // console.log("Quantity of this item: ", itemQty)
             
                             var sumToTotal = itemCosts[storedItems[item][key]] * itemQty
-                            console.log("Sum to total pay, please: ", sumToTotal)
-                            console.log("Same is", same,"before trying to sum")
+                            // console.log("Sum to total pay, please: ", sumToTotal)
+                            // console.log("Same is", same,"before trying to sum")
                             if (same == false && deletion == false){
 
                                 setTotalToPay(totalToPay + sumToTotal)

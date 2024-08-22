@@ -19,6 +19,8 @@ const LOCAL_CMTS_KEY =  import.meta.env.VITE_REACT_APP_LOCAL_CMTS_KEY;
 const LOCAL_ITEM_KEY =  import.meta.env.VITE_REACT_APP_LOCAL_ITEMS_KEY;
 const LOCAL_ORDER_KEY =  import.meta.env.VITE_REACT_APP_LOCAL_ORDER_KEY
 const LOCAL_PM_KEY =  import.meta.env.VITE_REACT_APP_LOCAL_PM_KEY;
+const LOCAL_TOTAL_KEY = import.meta.env.VITE_REACT_APP_LOCAL_TOTAL_KEY;
+
 
 function OrderScreen() {
 
@@ -190,6 +192,7 @@ function OrderScreen() {
     }));
 
 
+
     var storedOrder = JSON.parse(localStorage.getItem(LOCAL_ORDER_KEY));
     var storedItems = storedOrder.items;
 
@@ -207,7 +210,6 @@ function OrderScreen() {
             'payment_method': JSON.parse(localStorage.getItem(LOCAL_PM_KEY)),
             'total': totalToPay
         })
-
         showMetodoModal(false)
 
         setTotalToPay(0)
@@ -219,20 +221,15 @@ function OrderScreen() {
 
         // const response = await axios.get('/orders');
         console.log('Response:', response.headers);
-    } catch(error){
-        console.error('Error', error)
-    }
-   
+        } catch(error){
+            console.error('Error', error)
+        }
+       
 
     
-    // reloadChannel.postMessage({ action: 'reload' });
-    //   console.log("Client Name",JSON.parse(localStorage.getItem(LOCAL_NAME_KEY)))
 
-    // }
-    // if (ws && ws.readyState === WebSocket.OPEN) {
-    //   ws.send('message');
-    // }
-
+    }
+    
 
   
 
@@ -294,9 +291,9 @@ function OrderScreen() {
   };
 
   const handleDecrement = () => {
-    if (charge > 0){
-        setCharge(charge - .25);
-    }
+    // if (charge > 0){
+    setCharge(charge - .25);
+    // }
   };
 
   const añadirCargo = () =>{
@@ -304,6 +301,8 @@ function OrderScreen() {
     console.log("Parsed totalToPay", typeof(parseInt(totalToPay,10)))
     console.log("Type of charge", typeof(charge))
     setTotalToPay(parseInt(totalToPay,10) + charge)
+    localStorage.setItem(LOCAL_TOTAL_KEY,parseInt(totalToPay,10) + charge)
+    
     setChargeShow(false)
   }
   const [detailShow, setDetailShow] = useState(false)
@@ -543,6 +542,7 @@ function OrderScreen() {
               <div className="">
               Total: {<CurrencyFormatter value={totalToPay} currency='USD'/>}
               </div>
+             
               {/* <div className="">
               Items In Order: { totalItems }
               </div> */}
@@ -667,7 +667,7 @@ function OrderScreen() {
                   </div>
                   <div className=" d-flex flex-row justify-content-center align-items-center">
                     <span class="p-3">$</span>
-                    <input type="number"  min={0} onChange={handleCharge} id='charge' value={charge} className='increment-charge bg-secondary-subtle rounded-3 p-3 border-0'/>
+                    <input type="number"  min={-100} onChange={handleCharge} id='charge' value={charge} className='increment-charge bg-secondary-subtle rounded-3 p-3 border-0'/>
                   </div>
                   <div className="">
                       <button className='btn btn-outline-primary rounded-pill p-3' onClick={handleIncrement}>+</button>
