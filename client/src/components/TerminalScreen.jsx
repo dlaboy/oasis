@@ -288,13 +288,7 @@ function TerminalScreen() {
             }
             
             if(storedIngs){
-                axios.get('/ingrediente').then(response=>{
-                    const respuesta_ingredientes = response.data 
-                    actualizarIngredientes(respuesta_ingredientes)
-                    
-                }).catch(error =>{
-                    console.log("Error", error)
-                })
+             
                 setIngs(storedIngs)
                 storedIngs.forEach(function(i){
                     var ingKey = i + 'Ing';
