@@ -47,7 +47,6 @@ function Sales(){
     const [day,setDay] = useState("")
     const [month,setMonth] = useState("")
     const [isSubmitted, setSubmission] = useState(false);
-    const [isSubmittedCounter, setSubmissionCounter] = useState(0);
 
 
     const doc = new jsPDF();
@@ -89,15 +88,7 @@ function Sales(){
         }
         
     },[selectedItem])
-    useEffect(()=>{
-        axios.get('/sales').then(response=>{
-            console.log("Response", response.data)
-            setAllSales(response.data)
-        }).catch(error =>{
-            console.log("Error", error)
-    
-        })
-    },[isSubmittedCounter])
+  
 
     useEffect(()=>{
         axios.get('/sales').then(response=>{
@@ -107,31 +98,19 @@ function Sales(){
             console.log("Error", error)
     
         })
+        const intervalSales = setInterval(() => {
+            axios.get('/sales').then(response=>{
+                console.log("Response", response.data)
+                setAllSales(response.data)
+            }).catch(error =>{
+                console.log("Error", error)
+        
+            })
+        }, 15000);
+
         const intervalId = setInterval(() => {
-            // if (month != '' &&  day != ''){
-            //     axios.get('/sales',{
-            //         params: {
-            //         //   year: year,
-            //           month: month,
-            //           day: day
-            //         }
-            //       }).then(response=>{
-            //         console.log("Response", response.data)
-            //         setAllSales(response.data)
-            //     }).catch(error =>{
-            //         console.log("Error", error)
             
-            //     })
-            // }
-            // else{
-            //     axios.get('/sales').then(response=>{
-            //         console.log("Response", response.data)
-            //         setAllSales(response.data)
-            //     }).catch(error =>{
-            //         console.log("Error", error)
             
-            //     })
-            // }
             // Place your logic here that you want to execute every 5 seconds
             axios.get('/orders/salesATH').then(response=>{
                 console.log("Response", typeof(response.data))
@@ -223,7 +202,14 @@ function Sales(){
           }, 500);
       
           // Cleanup function to clear the interval when the component unmounts
-          return () => clearInterval(intervalId);
+          return () => {
+            clearInterval(intervalId);
+            clearInterval(intervalSales);
+
+
+              
+        }
+
           
 
 
@@ -246,7 +232,6 @@ function Sales(){
 
     const handleSubmit = async (event) =>{
         setSubmission(true)
-        setSubmissionCounter(prev=>prev+1)
         try{
             const response = await axios.post('/sales', {
                 'ice_creams': rolls + shakes + banana + perro,
@@ -622,6 +607,7 @@ function Sales(){
     }
 
     const handleSearch = event =>{
+
         axios.get('/sales',{
             params: {
             //   year: year,
@@ -635,6 +621,9 @@ function Sales(){
             console.log("Error", error)
     
         })
+
+        
+        // Cleanup function to clear the interval when the component unmounts
     }
     const handleDelete = async (salesId) => {
         try{
