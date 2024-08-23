@@ -223,13 +223,13 @@ export default function Queue() {
                 <div className={order.status == 'done' ? "d-flex bg-success-subtle  justify-content-between align-items-center flex-column list-group-item list-group-item-action p-3":"d-flex justify-content-between align-items-center flex-column list-group-item list-group-item-action p-3"}>
                     <div className="d-flex flex-row w-100 justify-content-between align-items-center">
 
-                    <button key={order._id} className='btn' onClick={() => toggleVisibility(order._id)}>{order.client_name}</button>
-                    <button  className="btn text-secondary" onClick={()=>handleDeleteShow(order._id)}>Delete</button>
+                    <button key={order._id} className='btn fs-4' onClick={() => toggleVisibility(order._id)}>{order.client_name}</button>
+                    <button  className="btn text-secondary fs-4" onClick={()=>handleDeleteShow(order._id)}>Delete</button>
                     
                     {/* <button className="btn text-secondary" onClick={()=>handleDelete(order._id)}>
                         Delete
                     </button> */}
-                    <button className="btn text-secondary" onClick={()=>handleDone(order)}>
+                    <button className="btn text-secondary fs-4" onClick={()=>handleDone(order)}>
                         Toggle Status
                     </button>
                     </div>
@@ -238,8 +238,8 @@ export default function Queue() {
                       {order.items.map(item =>(
                       <div className=" border-bottom border-dark w-100">
                         <div className="d-flex flex-row">
-                           <div className='fw-bold'> Type:  </div> 
-                           <div className="">
+                           <div className='fw-bold fs-4'> Type:  </div> 
+                           <div className="fs-4">
                            {item.type}
                            {/* <div className="text-secondary">
                               {editEnable[order._id] ? (<input className='w-75' defaultValue={item.type} />):(<div></div>)}
@@ -248,13 +248,13 @@ export default function Queue() {
                         </div>
                         <div className="d-flex flex-column">
                         {item && item.type !== 'drinks' && (
-                            <div className="fw-bold">
+                            <div className="fw-bold fs-4">
                               Ingredients:
                             </div>
                           )}
                           <ul className="d-flex flex-column">
                             {item.type !== 'drinks'&&item.ings.map((ing=>(  
-                              <li>{ing}
+                              <li className='fs-4'>{ing}
                               {/* <div className="text-secondary">
                               {editEnable[order._id] ? (<input className='w-75' defaultValue={ing}/>):(<div></div>)}
                               </div> */}
@@ -264,14 +264,14 @@ export default function Queue() {
                         </div>
                         <div className="d-flex flex-column">
                         {item && item.type !== 'drinks' && (
-                            <div className="fw-bold">
+                            <div className="fw-bold fs-4">
                               Toppings:
                             </div>
                           )}
                           <ul className="d-flex flex-column">
 
                             {item.type !== 'drinks'&& item.tops.map((top=>(
-                              <li className=''>{top}
+                              <li className='fs-4'>{top}
                                 {/* <div className="text-secondary">
                                 {editEnable[order._id] ? (<input  className='w-75' defaultValue={top}/>):(<div></div>)}
                                 </div> */}
@@ -280,10 +280,10 @@ export default function Queue() {
                           </ul>
                         </div>
                         <div className="d-flex flex-column">
-                          <div className="fw-bold">
+                          <div className="fw-bold fs-4">
                             Quantity: 
                           </div>
-                          <ul className="col d-flex flex-row w-100 justify-content-between">
+                          <ul className="col d-flex flex-row w-100 justify-content-between fs-4">
                             {item.qty}
                             {/* {editEnable[order._id] ? (
                               <input type="text" className='w-25' defaultValue={item.qty}/>
@@ -295,10 +295,10 @@ export default function Queue() {
                         </ul>
                         </div>
                         <div className="d-flex flex-column pb-2">
-                          <div className="fw-bold">
+                          <div className="fw-bold fs-4">
                             Comments: 
                           </div>
-                          <ul className="d-flex flex-column">
+                          <ul className="d-flex flex-column fs-4">
                             
                             {item.comments}
                             {/* <div className="text-secondary">
@@ -312,26 +312,26 @@ export default function Queue() {
                     </div>
                     <div className="d-flex flex-column">
                       <div className="fw-bold d-flex flex-row w-100">
-                        <div className="">
+                        <div className="fs-4">
                           Payment Method:
                         </div>
-                        <div className="fw-normal d-flex justify-content-center align-items-center">
+                        <div className="fw-normal d-flex justify-content-center align-items-center fs-4">
                           {order.payment_method}
                         </div>
                       </div>
                       <div className="fw-bold d-flex flex-row w-100">
-                        <div className="">
+                        <div className="fs-4">
                           Total:
                         </div>
-                        <div className="fw-normal d-flex justify-content-center align-items-center">
+                        <div className="fw-normal d-flex justify-content-center align-items-cente fs-4">
                               <CurrencyFormatter value={order.total} />
                         </div>
                       </div>
                       <div className="fw-bold d-flex flex-row w-100">
-                        <div className="">
+                        <div className="fs-4">
                           Status:
                         </div>
-                        <div className="fw-normal d-flex justify-content-center align-items-center">
+                        <div className="fw-normal d-flex justify-content-center align-items-center fs-4">
                           {order.status}
                         </div>
                       </div>
