@@ -98,6 +98,7 @@ function TerminalScreen() {
         GuayabaIng:false,
         BizcochoDeZanahoriaIng:false,
         FerreroIng:false,
+        CrackersIng:false,
 
         
     })
@@ -848,7 +849,7 @@ function TerminalScreen() {
     
                     }
                     else if (event.target.value == "Smores"){
-                        const ingre = ["Marshmellow","BizcochoDeVainilla","Chocolate"]
+                        const ingre = ["Marshmellow","Crackers","Chocolate"]
     
                         ingre.map(ingredient=>{
                             if (ings.includes(ingredient)){
