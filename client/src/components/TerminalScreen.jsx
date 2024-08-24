@@ -795,7 +795,7 @@ function TerminalScreen() {
     
                     }
                     else if (event.target.value == "CinnamonAndCarrot"){
-                        const ingre = ["BizcochoDeZanahoria","Canela","Nueces"]
+                        const ingre = ["BizcochoDeZanahoria","Canela","Queso"]
     
                         ingre.map(ingredient=>{
                             if (ings.includes(ingredient)){
