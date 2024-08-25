@@ -99,6 +99,7 @@ function TerminalScreen() {
         BizcochoDeZanahoriaIng:false,
         FerreroIng:false,
         CrackersIng:false,
+        MarshmellowIng:false,
 
         
     })
