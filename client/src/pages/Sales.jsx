@@ -818,10 +818,10 @@ function Sales(){
                         <td>
                             {sale.Report ? (
                                 <button
-                                    className='btn btn-primary'
+                                    className='btn text-secondary'
                                     onClick={() => handleDownload(sale.Report)}
                                 >
-                                    Download
+                                    Open
                                 </button>
                             ) : (
                                 'No Report'
