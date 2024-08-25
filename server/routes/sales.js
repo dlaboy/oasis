@@ -56,7 +56,8 @@ router.get('/', async function (req, res, next) {
         Drinks:sale.Drinks,
         ATH:sale.ATH,
         CASH:sale.CASH,
-        Total:sale.Total
+        Total:sale.Total,
+        Report:sale.Report
     }));
 
     res.send(formattedSales);
@@ -73,8 +74,9 @@ router.post('/', async function (req, res) {
     const ath = req.body.ath
     const cash = req.body.cash;
     const total = req.body.total;
+    const report = req.body.report;
 
-    let newSale = new Sales({IceCreams:ice_creams,Drinks:drinks, ATH:ath, CASH:cash,Total:total})
+    let newSale = new Sales({IceCreams:ice_creams,Drinks:drinks, ATH:ath, CASH:cash,Total:total, Report:report})
 
     console.log(newSale)
     /**

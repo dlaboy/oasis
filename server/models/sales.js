@@ -13,7 +13,11 @@ const SalesSchema = new mongoose.Schema({
     Drinks:Number,
     ATH:Number,
     CASH:Number,
-    Total:Number
+    Total:Number,
+    Report: {
+        type: String, // Since it's a URL, a string type is appropriate
+        required: false // Set to false if this field is optional
+    }
 })
 
 const Sales = mongoose.model('Sales', SalesSchema);

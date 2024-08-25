@@ -200,6 +200,9 @@ function OrderScreen() {
       console.log("Order needs to be under a name")
       setAdviceMessage("Orden debe estar bajo un nombre")
     }
+    else if(JSON.parse(localStorage.getItem(LOCAL_PM_KEY)) == null || JSON.parse(localStorage.getItem(LOCAL_PM_KEY)) == ""){
+      setAdviceMessage("Orden debe tener método de pago")
+    }
     else{
       setAdviceMessage("")
 
@@ -213,6 +216,7 @@ function OrderScreen() {
         showMetodoModal(false)
 
         setTotalToPay(0)
+        setMetodo("")
         setTypeCounter(typeCounter -1)
         setFavCounter(favCounter -1)
         isOrderSubmited(true)
