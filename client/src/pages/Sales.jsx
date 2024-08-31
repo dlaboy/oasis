@@ -846,7 +846,7 @@ function Sales(){
 
                 </div>
                 
-            <Table className='' striped bordered hover size='sm' responsive='md' >
+            <Table className='' striped bordered hover  >
             <thead>
                 <tr className='text-center'>
                     <th>Date</th>
