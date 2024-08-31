@@ -767,7 +767,7 @@ function Sales(){
                 </div>
             
                 {generate &&  <div className="d-flex text-center flex-column align-items-center justify-content-center">
-                <Table className=' ' striped bordered hover>
+                <Table className=' ' striped bordered hover size='sm' responsive='md'>
                     <thead>
                         <tr className='text-center'>
                             <th>Date</th>
@@ -846,14 +846,14 @@ function Sales(){
 
                 </div>
                 
-            <Table className='' striped bordered hover>
+            <Table className='' striped bordered hover size='sm' responsive='md' >
             <thead>
                 <tr className='text-center'>
                     <th>Date</th>
-                    <th>Ice Creams</th>
-                    <th>Drinks</th>
-                    <th>ATH</th>
-                    <th>CASH</th>
+                    {/* <th>ICs</th> */}
+                    {/* <th>Drinks</th> */}
+                    {/* <th>ATH</th> */}
+                    {/* <th>CASH</th> */}
                     <th>Total</th>
                     <th>Report</th> {/* Added a new column for Report */}
                     <th>Actions</th>
@@ -863,10 +863,10 @@ function Sales(){
                 {allSales.map((sale) => (
                     <tr className='text-center' key={sale._id}>
                         <td>{sale.Date}</td>
-                        <td>{sale.IceCreams}</td>
-                        <td>{sale.Drinks}</td>
-                        <td>{<CurrencyFormatter value={sale.ATH} />}</td>
-                        <td>{<CurrencyFormatter value={sale.CASH} />}</td>
+                        {/* <td>{sale.IceCreams}</td> */}
+                        {/* <td>{sale.Drinks}</td> */}
+                        {/* <td>{<CurrencyFormatter value={sale.ATH} />}</td> */}
+                        {/* <td>{<CurrencyFormatter value={sale.CASH} />}</td> */}
                         <td>{<CurrencyFormatter value={sale.Total} />}</td>
                         <td>
                             {sale.Report ? (
