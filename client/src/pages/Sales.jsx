@@ -846,7 +846,7 @@ function Sales(){
 
                 </div>
                 
-            <Table className='' striped bordered hover  >
+            <Table className='d-flex w-100' striped bordered hover  >
             <thead>
                 <tr className='text-center'>
                     <th>Date</th>
