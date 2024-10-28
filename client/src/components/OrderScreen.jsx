@@ -36,10 +36,10 @@ function OrderScreen() {
   const [orderSubmitted,isOrderSubmited] = useState(false)
 
   const itemCosts = {
-    rolls : 4.00,
+    rolls : 5.00,
     shakes : 5.00,
     banana : 6.00,
-    puppy : 3.00,
+    puppy : 5.00,
     drinks : 1.00,
   }
 
