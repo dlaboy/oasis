@@ -85,7 +85,7 @@ router.get('/count', async function(req,res, next){
         { $sort: { _id: 1 } }  // Optional: sort by item type alphabetically
     ]).then(results => {
         res.send(results)
-        console.log("Total Quantity by Item Type:", results);
+        // console.log("Total Quantity by Item Type:", results);
     }).catch(err => {
         console.error("Error during aggregation:", err);
     });
@@ -102,7 +102,7 @@ router.get('/countIngredients',async function(req,res, next){
         { $sort: { totalQuantity: -1 } },  // Sort by totalQuantity in descending order
         { $limit: 5 }  // Limit to top 5 results
     ]).then(results => {
-        console.log("Total Quantity by Ingredient:", results);
+        // console.log("Total Quantity by Ingredient:", results);
         res.send(results)
         // If you need to save these into variables:
        
@@ -122,7 +122,7 @@ router.get('/countToppings',async function(req,res, next){
         { $sort: { totalQuantity: -1 } },  // Sort by totalQuantity in descending order
         { $limit: 5 }  // Limit to top 5 results
     ]).then(results => {
-        console.log("Total Quantity by Toppings:", results);
+        // console.log("Total Quantity by Toppings:", results);
         res.send(results)
         // If you need to save these into variables:
        

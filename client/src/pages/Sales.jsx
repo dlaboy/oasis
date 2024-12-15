@@ -11,6 +11,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import Chart from 'chart.js/auto';
 import { ItemContext } from '../../context/ItemContext';
+import FileUpload from '../components/FileUploadTest';
 
 
 const formatCurrency = (value) => {
@@ -230,8 +231,15 @@ function Sales(){
     //     setYear(event.target.value);
     // };
 
+
+    const [isUploaded,setUploaded] = useState(false)
+    const [isUploading,setUploading] = useState(false)
+    const [submitMessage,setSubmitMessage] = useState("")
+    
     const handleSubmit = async (event) =>{
         setSubmission(true)
+        setSubmitMessage("Posting Sale...")
+
         try{
             const response = await axios.post('/sales', {
                 'ice_creams': rolls + shakes + banana + perro,
@@ -275,6 +283,8 @@ function Sales(){
         doc.text(orderTitle, 20, 25); // Adjust y coordinate as needed
 
         let orders = [];
+        setSubmitMessage("Getting Orders...")
+
         try {
             const ordersResponse = await axios.get('/orders');
             orders = ordersResponse.data;
@@ -323,6 +333,8 @@ function Sales(){
                 fillColor: [255, 165, 0] // Red color, you can change to any color
             }
         });
+        setSubmitMessage("Counting Orders...")
+
 
         axios.get('/orders/count').then(response=>{
             console.log("Count Response", response.data)
@@ -365,6 +377,8 @@ function Sales(){
             }).catch(error =>{
             console.log("Error", error)
         })
+        setSubmitMessage("Counting Ingredients on All Orders...")
+
         axios.get('/orders/countIngredients').then(response=>{
             // console.log("Ingredients: ", response.data.length)
             var labels=[]
@@ -381,6 +395,8 @@ function Sales(){
         }).catch(error =>{
             console.log("Error", error)
         })
+        setSubmitMessage("Counting Toppings on All Orders...")
+
         axios.get('/orders/countToppings').then(response=>{
             // console.log("Ingredients: ", response.data.length)
             var labels=[]
@@ -473,7 +489,7 @@ function Sales(){
         for (const url of chartUrls) {
           currentY = await addChartToPDF(url, currentY);
         }
-        doc.save(`${timestamp}.pdf`);
+        // doc.save(`${timestamp}.pdf`);
 
         
         console.log("Report generated")
@@ -481,12 +497,34 @@ function Sales(){
         
         
     }
-    
-    
+    setSubmitMessage("Generating Charts...")
     addChartsSequentially();
+    let formData = new FormData();
+    const pdfBlob = doc.output('blob');
+
+    formData.append("file", pdfBlob , `${timestamp}.pdf`);
+
+    try {
+        setSubmitMessage("Uploading")
+        const response = await axios.post("http://127.0.0.1:3000/upload", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data", // Inform the server of the data format
+          },
+        });
+    
+        if (response.status === 200 && response?.data) {
+          setUploaded(true)
+          window.location.reload()
+    
+        }
+    } catch (error) {
+        setSubmitMessage("Error Uploading...")
+
+        console.error("Error uploading file:", error);
+    }
     
     setSubmitShow(false)
-      axios.delete("/orders",).then(response=>{
+    axios.delete("/orders",).then(response=>{
         console.log(response.data)
         setRenderOrdersKey(prevKey => prevKey + 1)
         location.reload()
@@ -713,7 +751,7 @@ function Sales(){
         <div>
         
         <Modal show={submitShow} onHide={handleSubmitClose}>
-        {isSubmitted?<Modal.Body>Submiting Report</Modal.Body> :<>
+        {isSubmitted?<Modal.Body>Submiting Report:{submitMessage}</Modal.Body> :<>
             <Modal.Header closeButton>
           <Modal.Title>Submmiting Sale</Modal.Title>
         </Modal.Header>
@@ -811,6 +849,9 @@ function Sales(){
                     { top5Ings &&<BarChart  className='m-2' keys={ingredientLabels} values={ingredientData} />}
                     { top5Tops &&<BarChart  className='m-2' keys={toppingLabels} values={toppingData} />}
                 </div>
+                {/* <FileUpload></FileUpload> */}
+                {isUploaded && <>{alert("File Uploaded!")}</>}
+
                 </div>  }
             </div> :
             <div className='container w-100 text-center d-flex flex-column justify-content-center align-items-center'>
@@ -843,7 +884,7 @@ function Sales(){
                             <option value="2024">2024</option>
                     </select>
                     <button className="p-2 btn" onClick={handleSearch}>Search</button>
-
+                    
                 </div>
                 
             <Table className='' striped bordered hover  >

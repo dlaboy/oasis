@@ -24,6 +24,7 @@ var salesRouter = require('./routes/sales.js');
 var ingredienteRouter = require('./routes/ingredientes.js')
 var toppingRouter = require('./routes/toppings.js')
 var favoritesRouter = require('./routes/favorites.js')
+var fileUploadRouter = require('./routes/upload.js')
 const WebSocket = require('ws');
 
 
@@ -49,6 +50,7 @@ app.use('/sales', salesRouter);
 app.use('/ingrediente',ingredienteRouter);
 app.use('/topping',toppingRouter);
 app.use('/favorite',favoritesRouter);
+app.use('/upload',fileUploadRouter);
 
 
 
