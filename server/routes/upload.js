@@ -9,6 +9,13 @@ const upload = multer({ dest: 'uploads/' });
 
 const router = express.Router();
 
+const dotenv = require('dotenv');
+
+
+dotenv.config();
+
+
+
 
 // const multer = Multer({
 //   storage: Multer.diskStorage({
@@ -27,7 +34,9 @@ const router = express.Router();
 
 const authenticateGoogle = () => {
   const auth = new google.auth.GoogleAuth({
-    keyFile: `${__dirname}/fluted-oasis-433605-f6-aa5c5ad4da53.json`,
+    // keyFile: `${__dirname}/fluted-oasis-433605-f6-aa5c5ad4da53.json`,
+    credentials: JSON.parse(process.env.GOOGLE_KEY),
+    // keyFile: process.env.GOOGLE_FILE,
     scopes: "https://www.googleapis.com/auth/drive",
   });
   return auth;

@@ -524,15 +524,15 @@ function Sales(){
     }
     
     setSubmitShow(false)
-    axios.delete("/orders",).then(response=>{
-        console.log(response.data)
-        setRenderOrdersKey(prevKey => prevKey + 1)
-        location.reload()
+    // axios.delete("/orders",).then(response=>{
+    //     console.log(response.data)
+    //     setRenderOrdersKey(prevKey => prevKey + 1)
+    //     location.reload()
         
         
-    }).catch(error =>{
-        console.log("Error", error)
-    })
+    // }).catch(error =>{
+    //     console.log("Error", error)
+    // })
         
  
 
