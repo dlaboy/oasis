@@ -506,7 +506,7 @@ function Sales(){
 
     try {
         setSubmitMessage("Uploading")
-        const response = await axios.post("http://127.0.0.1:3000/upload", formData, {
+        const response = await axios.post("/upload", formData, {
           headers: {
             "Content-Type": "multipart/form-data", // Inform the server of the data format
           },
