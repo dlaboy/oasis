@@ -491,39 +491,41 @@ function Sales(){
         }
         // doc.save(`${timestamp}.pdf`);
 
+        let formData = new FormData();
+        const pdfBlob = doc.output('blob');
+    
+        formData.append("file", pdfBlob , `${timestamp}.pdf`);
+    
+        try {
+            setSubmitMessage("Uploading")
+            const response = await axios.post("/upload", formData, {
+              headers: {
+                "Content-Type": "multipart/form-data", // Inform the server of the data format
+              },
+            });
+        
+            if (response.status === 200 && response?.data) {
+              setUploaded(true)
+              window.location.reload()
+        
+            }
+        } catch (error) {
+            setSubmitMessage("Error Uploading...")
+    
+            console.error("Error uploading file:", error);
+        }
+
         
         console.log("Report generated")
         
         
         
+        setSubmitShow(false)
     }
     setSubmitMessage("Generating Charts...")
     addChartsSequentially();
-    let formData = new FormData();
-    const pdfBlob = doc.output('blob');
 
-    formData.append("file", pdfBlob , `${timestamp}.pdf`);
-
-    try {
-        setSubmitMessage("Uploading")
-        const response = await axios.post("/upload", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data", // Inform the server of the data format
-          },
-        });
     
-        if (response.status === 200 && response?.data) {
-          setUploaded(true)
-          window.location.reload()
-    
-        }
-    } catch (error) {
-        setSubmitMessage("Error Uploading...")
-
-        console.error("Error uploading file:", error);
-    }
-    
-    setSubmitShow(false)
     axios.delete("/orders",).then(response=>{
         console.log(response.data)
         setRenderOrdersKey(prevKey => prevKey + 1)
