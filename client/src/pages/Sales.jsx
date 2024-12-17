@@ -238,23 +238,8 @@ function Sales(){
     
     const handleSubmit = async (event) =>{
         setSubmission(true)
-        setSubmitMessage("Posting Sale...")
 
-        try{
-            const response = await axios.post('/sales', {
-                'ice_creams': rolls + shakes + banana + perro,
-                'drinks': drinks,
-                'ath': ATHsales,
-                'cash': CASHsales,
-                'total': ATHsales + CASHsales,
-                'report':""
-            })
-    
-            // const response = await axios.get('/orders');
-            console.log('Response:', response.data);
-        } catch(error){
-            console.error('Error', error)
-        }
+      
         // Add a title, centered
         const pageTitle = "Daily Report";
         const pageHeight = doc.internal.pageSize.getHeight();
@@ -497,7 +482,7 @@ function Sales(){
         formData.append("file", pdfBlob , `${timestamp}.pdf`);
     
         try {
-            setSubmitMessage("Uploading")
+            setSubmitMessage("Uploading...")
             const response = await axios.post("/upload", formData, {
               headers: {
                 "Content-Type": "multipart/form-data", // Inform the server of the data format
@@ -505,9 +490,38 @@ function Sales(){
             });
         
             if (response.status === 200 && response?.data) {
-              setUploaded(true)
-              window.location.reload()
-        
+                console.log("Respuesta", response.data)
+                const keys = Object.keys(response.data.response);
+                console.log("Keys", keys)
+
+                const link = response.data.response.shareableLink
+
+                setSubmitMessage("Posting Sale...")
+                try{
+                    const response = await axios.post('/sales', {
+                        'ice_creams': rolls + shakes + banana + perro,
+                        'drinks': drinks,
+                        'ath': ATHsales,
+                        'cash': CASHsales,
+                        'total': ATHsales + CASHsales,
+                        'report':link
+                    })
+            
+                    // const response = await axios.get('/orders');
+                    console.log('Response:', response.data);
+
+                    setUploaded(true)
+
+                    window.location.reload()
+
+
+                } catch(error){
+                    console.error('Error', error)
+                }
+
+
+
+                
             }
         } catch (error) {
             setSubmitMessage("Error Uploading...")

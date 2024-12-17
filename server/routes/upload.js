@@ -61,7 +61,30 @@ const uploadToGoogleDrive = async (file, auth) => {
       media: media,
       fields: "id",
     });
-    return response;
+    let fileId = response.data.id
+    console.log("File ID",fileId)
+
+      // Step 2: Set permissions to make the file shareable
+    await driveService.permissions.create({
+      fileId: fileId,
+      requestBody: {
+        role: "reader", // "reader" allows viewing
+        type: "anyone", // "anyone" makes it accessible by anyone with the link
+      },
+    });
+
+      // Step 3: Construct the shareable link
+      const shareableLink = `https://drive.google.com/file/d/${fileId}/view?usp=sharing`;
+
+      console.log("Shareable Link:", shareableLink);
+
+    // return response;
+    let status = response.status
+    let data = response.data
+
+    return {"fileId":fileId, "shareableLink":shareableLink, "status":status,"data":data}
+
+
   };
 
   const deleteFile = (filePath) => {
@@ -80,6 +103,7 @@ try {
     }
     const auth = authenticateGoogle();
     const response = await uploadToGoogleDrive(req.file, auth);
+    console.log("Respuesta desde la ruta", response)
     deleteFile(req.file.path);
     console.log("Upload Successfull")
     res.status(200).json({ response });
