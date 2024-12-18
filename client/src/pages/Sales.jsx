@@ -721,9 +721,22 @@ function Sales(){
       }
     const handleSearchReport = event =>{
         console.log("Sales to be reported", allSales)
-        
 
-         // Add a title, centered
+
+        axios.get('/sales/sum',{
+            params: {
+            //   year: year,
+              month: month,
+              day: day
+            }
+          }).then(response=>{
+            console.log("Response", response.data)
+
+
+            let sum = response.data.totals
+            console.log("SUMMMMMMMMMMMM",sum)
+
+             // Add a title, centered
          const pageTitle = "Searched Report";
          const pageWidth = doc.internal.pageSize.getWidth();
          const textSize = doc.getStringUnitWidth(pageTitle) * doc.internal.getFontSize() / doc.internal.scaleFactor;
@@ -734,7 +747,31 @@ function Sales(){
          doc.setDrawColor(0);
          doc.setLineWidth(0.5);
          doc.line(20, 15, pageWidth - 20, 15); // Adjust line position as needed
- 
+
+         
+         const tableTotalColumn = ["Ice Creams","Drinks", "Ath", "Cash","Total"];
+         
+         let ics = sum.IceCreams
+         let d = sum.Drinks
+         let ath = sum.ATH
+         let cash = sum.Cash
+         let tot = sum.Total
+         
+         const tableTotalRows = [[ics,d,formatCurrency(ath),formatCurrency(cash),formatCurrency(tot)]]
+         
+         
+         autoTable(doc, {
+             head: [tableTotalColumn],
+             body: tableTotalRows,
+             startY: 20,
+             theme: 'grid'
+            });
+            
+        let finalY = doc.lastAutoTable.finalY || 40;
+        const totalTitle = "Sales By Day";    
+        doc.text(totalTitle, 20, finalY + 20); // Adjust y coordinate as needed
+        
+            
          const tableColumn = ["Date","Ice Creams","Drinks", "Ath", "Cash","Total"];
          console.log("Timestamp", timestamp)
 
@@ -757,13 +794,28 @@ function Sales(){
          autoTable(doc, {
              head: [tableColumn],
              body: tableRows,
-             startY: 20,
+             startY: finalY +25,
              theme: 'grid'
          });
+
+         
+
+     
  
          doc.save(`${timestamp}.pdf`);
  
          console.log("Report generated")
+
+            // setAllSales(response.data)
+        }).catch(error =>{
+            console.log("Error", error)
+        })
+        
+        
+
+
+
+        
     }
     const [idToDelete,setIDtoDelete] = useState(0);
     const [deleteShow, setDeleteShow] = useState(false);

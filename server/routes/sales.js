@@ -12,6 +12,77 @@ function formatEventDate(date) {
       .format('YYYY-MM-DD hh:mm A'); // Formats date to 'YYYY-MM-DD' and time to 12-hour format with AM/PM
   }
 
+router.get('/sum',async function (req, res, next) {
+    try {
+        const {month, day } = req.query;
+        const year = "2024"
+    
+        // Build the date query dynamically based on provided params
+        let query = {};
+        if (month || day) {
+            query.Date = {};
+    
+            if (month) {
+                console.log("Month", month)
+                let startMonth = new Date(year,month-1,1);
+                console.log(`By Start Month: ${formatEventDate(startMonth)}`)
+                let endMonth = new Date(startMonth.getFullYear(), startMonth.getMonth() + 1,1);
+                console.log(`By End Month: ${formatEventDate(endMonth)}`)
+                
+                query.Date.$gte = startMonth;
+                query.Date.$lt = endMonth;
+            }
+            if (day) {
+                let startDay = new Date(year,month-1,day);
+                console.log(`By Day: ${startDay}`)
+                
+                let endDay = new Date(startDay.getFullYear(), startDay.getMonth(), startDay.getDate() + 1);
+                query.Date.$gte = startDay;
+                query.Date.$lt = endDay;
+            }
+        }
+    
+        const sales = await Sales.find(query);
+
+        // Complete the code here
+
+          // Calculate sums for each field
+         const totals = sales.reduce((acc, sale) => {
+            acc.IceCreams += sale.IceCreams || 0;
+            acc.Drinks += sale.Drinks || 0;
+            acc.ATH += sale.ATH || 0;
+            acc.Cash += sale.CASH || 0;
+            acc.Total += sale.Total || 0;
+            return acc;
+        }, { IceCreams: 0, Drinks: 0, ATH: 0, Cash: 0, Total: 0 });
+
+        console.log("TOTALS: ",totals)
+
+        // Send the response
+        res.send({
+            query: query,
+            totals: totals,
+            count: sales.length // Optional: include the number of sales records processed
+        });
+
+    
+        // const formattedSales = sales.map(sale => ({
+        //     ...sale,
+        //     _id:sale._id,
+        //     Date: moment(sale.Date).tz('America/Puerto_Rico').format('YYYY-MM-DD hh:mm A'),
+        //     IceCreams:sale.IceCreams,
+        //     Drinks:sale.Drinks,
+        //     ATH:sale.ATH,
+        //     CASH:sale.CASH,
+        //     Total:sale.Total,
+        //     Report:sale.Report
+        // }));
+        // res.send(formattedSales);
+} catch (error) {
+    res.status(500).send(error);
+}
+});
+
   
 
 // /* GET users listing. */
