@@ -79,6 +79,7 @@ router.post('/', async function (req, res) {
     let newSale = new Sales({IceCreams:ice_creams,Drinks:drinks, ATH:ath, CASH:cash,Total:total, Report:report})
 
     console.log(newSale)
+    let id = newSale._id
     /**
      * This function below allows us to verify that both
      * the username and password for the user are correct. 
@@ -88,7 +89,8 @@ router.post('/', async function (req, res) {
 
     // console.log(verifyUser)
     await newSale.save();
-    res.send("Sale Added").status(200)
+    res.status(200).json({ message: 'Sale Added', sale_id:id });
+    // res.send("Sale Added").status(200)
 
 })
 

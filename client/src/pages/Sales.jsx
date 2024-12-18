@@ -238,7 +238,6 @@ function Sales(){
     
     const handleSubmit = async (event) =>{
         setSubmission(true)
-
       
         // Add a title, centered
         const pageTitle = "Daily Report";
@@ -508,10 +507,32 @@ function Sales(){
                     })
             
                     // const response = await axios.get('/orders');
-                    console.log('Response:', response.data);
+                    console.log('Response:', response.data.sale_id);
+
 
                     setUploaded(true)
+                    axios.post("/orders/copy_orders",{sale_id:response.data.sale_id}).then(response=>{
+                        console.log(response.data)
+                        setRenderOrdersKey(prevKey => prevKey + 1)
+                        location.reload()
+            
+                        
+                        
+                        
+                    }).catch(error =>{
+                        console.log("Error", error)
+                    })
 
+
+                    axios.delete("/orders",).then(response=>{
+                        console.log(response.data)
+                        setRenderOrdersKey(prevKey => prevKey + 1)
+                        location.reload()
+                        
+                        
+                    }).catch(error =>{
+                        console.log("Error", error)
+                    })
                     window.location.reload()
 
 
@@ -533,22 +554,20 @@ function Sales(){
         console.log("Report generated")
         
         
-        
         setSubmitShow(false)
+
+    
+
+
+    
+        
     }
     setSubmitMessage("Generating Charts...")
     addChartsSequentially();
 
-    
-    axios.delete("/orders",).then(response=>{
-        console.log(response.data)
-        setRenderOrdersKey(prevKey => prevKey + 1)
-        location.reload()
-        
-        
-    }).catch(error =>{
-        console.log("Error", error)
-    })
+    console.log("No longer deleting")
+
+  
         
  
 

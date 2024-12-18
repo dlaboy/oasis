@@ -1,18 +1,17 @@
 var express = require('express');
 var mongoose = require("mongoose");
 var router = express.Router();
-var Order = require('../models/order.js')
-var OldOrder = require('../models/old_order.js')
+var OldOrder = require('../models/order.js')
 var db = require("../db.js");
 
 
 /* GET users listing. */
 router.get('/', async function (req, res, next) {
     if (req.body.name){
-        var orders = await Order.find({client_name: req.body.name})
+        var orders = await OldOrder.find({client_name: req.body.name})
     }
     else{
-        var orders = await Order.find({})
+        var orders = await OldOrder.find({})
     }
     
     res.send(orders);
@@ -20,7 +19,7 @@ router.get('/', async function (req, res, next) {
 // GET all totalATHs sales
 // Use the aggregate function to calculate the sum
 router.get('/salesATH',async function(req, res, next){
-    Order.aggregate([
+    OldOrder.aggregate([
         {
             $match: {
                 payment_method: "ATH"  // Filter to only include orders with payment method "ATH"
@@ -50,7 +49,7 @@ router.get('/salesATH',async function(req, res, next){
 })
 
 router.get('/salesCASH',async function(req, res, next){
-    Order.aggregate([
+    OldOrder.aggregate([
         {
             $match: {
                 payment_method: "CASH"  // Filter to only include orders with payment method "ATH"
@@ -77,7 +76,7 @@ router.get('/salesCASH',async function(req, res, next){
     });
 })
 router.get('/count', async function(req,res, next){
-    Order.aggregate([
+    OldOrder.aggregate([
         { $unwind: "$items" },  // Flatten the items array to process each item
         { $group: {
             _id: "$items.type",  // Group by item type
@@ -93,7 +92,7 @@ router.get('/count', async function(req,res, next){
     
 })
 router.get('/countIngredients',async function(req,res, next){
-    Order.aggregate([
+    OldOrder.aggregate([
         { $unwind: "$items" },  // Unwind the items array
         { $unwind: "$items.ings" },  // Unwind the ingredients array within each item
         { $group: {
@@ -113,7 +112,7 @@ router.get('/countIngredients',async function(req,res, next){
     
 })
 router.get('/countToppings',async function(req,res, next){
-    Order.aggregate([
+    OldOrder.aggregate([
         { $unwind: "$items" },  // Unwind the items array
         { $unwind: "$items.tops" },  // Unwind the ingredients array within each item
         { $group: {
@@ -140,7 +139,7 @@ router.post('/', async function (req, res) {
 
     console.log(items)
 
-    let newOrder = new Order({client_name: name, items:items, payment_method: payment,total: total_to_pay})
+    let newOldOrder = new OldOrder({client_name: name, items:items, payment_method: payment,total: total_to_pay})
     /**
      * This function below allows us to verify that both
      * the username and password for the user are correct. 
@@ -149,7 +148,7 @@ router.post('/', async function (req, res) {
     // var verifyUser = await loginVerify(username, password)
 
     // console.log(verifyUser)
-    await newOrder.save();
+    await newOldOrder.save();
     res.send("order sent").status(200)
 
 })
@@ -158,15 +157,15 @@ router.delete('/', async function (req, res){
     if(req.body.id != undefined){
         try{
             console.log(req.body.id)
-            await Order.findByIdAndDelete(req.body.id);
-            res.status(200).json({ success: true, msg: 'Order Deleted' });
+            await OldOrder.findByIdAndDelete(req.body.id);
+            res.status(200).json({ success: true, msg: 'OldOrder Deleted' });
         }
         catch(error){
             console.log('Error:', error)
         }
     }
     else{
-        await Order.deleteMany({})
+        await OldOrder.deleteMany({})
 
     }
 
@@ -175,9 +174,9 @@ router.delete('/', async function (req, res){
 router.put('/', async function (req, res){
     try{
         console.log("ID of record to update: ",req.body.id)
-        const updatedOrder = await Order.findByIdAndUpdate(req.body.id, req.body.updated_record, { new: true })
+        const updatedOldOrder = await OldOrder.findByIdAndUpdate(req.body.id, req.body.updated_record, { new: true })
 
-        if (!updatedOrder) {
+        if (!updatedOldOrder) {
             return res.status(404).json({ message: 'Item not found' });
           }
         else{
@@ -189,41 +188,5 @@ router.put('/', async function (req, res){
         res.status(500).json({ message: 'Internal Server Error' });
       }
 })
-
-const { ObjectId } = mongoose.Types;
-
-
-// POST route to copy data from 'orders' to 'old_orders'
-router.post('/copy_orders', async (req, res) => {
-    try {
-
-        const sale_id = req.body.sale_id
-        console.log(typeof(req.body.sale_id))
-
-        // Fetch all orders
-        const orders = await Order.find();
-
-        if (!orders.length) {
-            return res.status(404).json({ message: "No orders found to copy" });
-        }
-
-        // const saleIdObject = new ObjectId(sale_id);
-        // Attach sale_id to each order
-        const ordersWithSaleId = orders.map(order => ({
-            ...order.toObject(),
-            sale_id
-        }));
-
-        // Insert them into 'old_orders'
-        const result = await OldOrder.insertMany(ordersWithSaleId);
-
-        console.log("Successfully copied orders")
-        res.status(200).json({ message: 'Orders copied successfully', result });
-    } catch (error) {
-        console.error('Error copying orders:', error);
-        res.status(500).json({ message: 'Error copying orders', error });
-    }
-});
-
 
 module.exports = router;
