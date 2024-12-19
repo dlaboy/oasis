@@ -511,7 +511,7 @@ function Sales(){
 
 
                     setUploaded(true)
-                    axios.post("/orders/copy_orders",{sale_id:response.data.sale_id}).then(response=>{
+                    await axios.post("/orders/copy_orders",{sale_id:response.data.sale_id}).then(response=>{
                         console.log(response.data)
                         setRenderOrdersKey(prevKey => prevKey + 1)
                         location.reload()
@@ -524,7 +524,7 @@ function Sales(){
                     })
 
 
-                    axios.delete("/orders",).then(response=>{
+                    await axios.delete("/orders",).then(response=>{
                         console.log(response.data)
                         setRenderOrdersKey(prevKey => prevKey + 1)
                         location.reload()
