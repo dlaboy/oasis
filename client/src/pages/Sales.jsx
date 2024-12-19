@@ -48,7 +48,7 @@ function Sales(){
     const [day,setDay] = useState("")
     const [month,setMonth] = useState("")
     const [isSubmitted, setSubmission] = useState(false);
-
+    const [saleCharts, setSaleCharts] = useState([])
 
     const doc = new jsPDF();
 
@@ -89,9 +89,56 @@ function Sales(){
         }
         
     },[selectedItem])
-  
+
+
+  useEffect(()=>{
+    console.log("Sale Charts",saleCharts)
+    console.log("Sale Charts Values",Object.values(saleCharts))
+    console.log("Sale Chart Array",saleCharts)
+    // if (saleCharts.length > 0){
+    //     saleCharts.forEach((s)=>{
+    //         console.log("Keys",Object.keys(s))
+    //         // <BarChart  className='m-2' keys={['Ice Creams','Drinks','ATH','Cash','Total']} values={[s.IceCreams,s.Drinks,s.ATH,s.Cash,s.Total]} />
+    //     })
+    // }
+
+
+
+
+
+  },[saleCharts])
 
     useEffect(()=>{
+        let months = ['01','02','03','04','05','06','07','08','09','10','11','12']
+          months.forEach((m)=>{
+            axios.get('/sales/sum',{
+                params: {
+                //   year: year,
+                  month: m,
+                  
+                }
+              }).then(response=>{
+                console.log("Response", response.data)
+    
+    
+                let sum = response.data.totals
+                
+                console.log("SUMMMMMMMMMMMM",sum)
+                setSaleCharts(prevArray => [...prevArray, sum])
+                // setSaleCharts(saleCharts.push(sum))
+
+
+    
+       
+                // setAllSales(response.data)
+            }).catch(error =>{
+                console.log("Error", error)
+            })
+            
+          })
+
+
+
         axios.get('/sales').then(response=>{
             console.log("Response", response.data)
             setAllSales(response.data)
@@ -201,6 +248,9 @@ function Sales(){
             })
             generateReport(true)
           }, 500);
+
+          
+         
       
           // Cleanup function to clear the interval when the component unmounts
           return () => {
@@ -210,6 +260,8 @@ function Sales(){
 
               
         }
+
+        
 
           
 
@@ -832,6 +884,13 @@ function Sales(){
     const handleDownload = (reportUrl) => {
         window.open(reportUrl, '_blank');
     };
+
+    const [charts,setCharts] = useState(false);
+
+    const toggleCharts = () => {
+        setCharts((prevState) => !prevState);
+    };
+
   
 
     return (
@@ -883,6 +942,7 @@ function Sales(){
             <div className="d-flex flex-row">
                 <button className='btn btn-outline-dark rounded-pill p-3 m-2' onClick={handleToday}>{today ?'Today Sales':'All Sales'}</button>
             </div>
+          
             { today ? <div className="text-center">
                 <div className="d-flex justify-content-around align-items-center flex-row">
                     {/* <button className='btn btn-outline-primary rounded-pill p-3 m-2' onClick={handleReport}> Generate Today's Report</button> */}
@@ -942,7 +1002,12 @@ function Sales(){
                 </div>  }
             </div> :
             <div className='container w-100 text-center d-flex flex-column justify-content-center align-items-center'>
-                <div className='m-3 container w-100 text-center d-flex flex-row justify-content-around'>
+                  <div className="">
+                        <button className='btn btn-outline-primary rounded-pill p-3 m-2' onClick={toggleCharts}>{charts ?'Charts':'Reports'}</button>
+
+                    </div>
+                    {charts ? <>
+                        <div className='m-3 container w-100 text-center d-flex flex-row justify-content-around'>
                     <select value={day} onChange={handleDay} className='p-2'>
                             <option value="">Day</option>
                             {Array.from({ length: 31 }, (_, i) => (
@@ -1016,8 +1081,49 @@ function Sales(){
                     </tr>
                 ))}
             </tbody>
-        </Table>
-                <button className='btn btn-outline-dark rounded-pill p-3 m-2' onClick={handleSearchReport}>Generate Report of Search</button>
+            </Table>
+            <button className='btn btn-outline-dark rounded-pill p-3 m-2' onClick={handleSearchReport}>Generate Report of Search</button>
+
+                    </>:<div className="container d-flex">
+  {
+    saleCharts.length > 0 ? (
+      <div className='container d-flex flex-wrap'>
+        {
+          Object.keys(saleCharts)
+            .sort((keyA, keyB) => parseInt(saleCharts[keyA].Month) - parseInt(saleCharts[keyB].Month))
+            .map((key) => (
+            <div key={key}>
+              {/* Replace this with your chart component */}
+              {/* {if (key == '0'){
+                <p>January Sales</p>
+              } } */}
+              {saleCharts[key].Month == "01" ? (<p>January Sales</p>):saleCharts[key].Month == "02" ?(<>February Sales</>):saleCharts[key].Month == "03" ?(<>March Sales</>):saleCharts[key].Month == "04" ?(<>April Sales</>):saleCharts[key].Month == "05" ?(<>May Sales</>):saleCharts[key].Month == "06" ?(<>June Sales</>):saleCharts[key].Month == "07" ?(<>July Sales</>):saleCharts[key].Month == "08" ?(<>August Sales</>):saleCharts[key].Month == "09" ?(<>September Sales</>):saleCharts[key].Month == "10" ?(<>October Sales</>):saleCharts[key].Month == "11" ?(<>November Sales</>):saleCharts[key].Month == "12" ?(<>December Sales</>):(<>Other Month</>)}
+              
+              {/* Example of using BarChart */}
+              {/* Uncomment and configure if applicable */}
+              {
+              <BarChart
+                className="m-5"
+                keys={['Ice Creams', 'Drinks', 'ATH', 'Cash', 'Total']}
+                values={[
+                  saleCharts[key].IceCreams,
+                  saleCharts[key].Drinks,
+                  saleCharts[key].ATH,
+                  saleCharts[key].Cash,
+                  saleCharts[key].Total
+                ]}
+              />
+              }
+            </div>
+          ))
+        }
+      </div>
+    ) : (
+      <>No Sales</>
+    )
+  }
+</div>}
+
             </div>}
         </div>
         </div>

@@ -48,13 +48,14 @@ router.get('/sum',async function (req, res, next) {
 
           // Calculate sums for each field
          const totals = sales.reduce((acc, sale) => {
+            acc.Month = month
             acc.IceCreams += sale.IceCreams || 0;
             acc.Drinks += sale.Drinks || 0;
             acc.ATH += sale.ATH || 0;
             acc.Cash += sale.CASH || 0;
             acc.Total += sale.Total || 0;
             return acc;
-        }, { IceCreams: 0, Drinks: 0, ATH: 0, Cash: 0, Total: 0 });
+        }, { Month :month, IceCreams: 0, Drinks: 0, ATH: 0, Cash: 0, Total: 0 });
 
         console.log("TOTALS: ",totals)
 
