@@ -94,31 +94,34 @@ router.get('/sum',async function (req, res, next) {
 router.get('/', async function (req, res, next) {
    // Build the date query dynamically based on provided params
    try {
-    const {month, day } = req.query;
-    const year = "2024"
+    const {month, day,year } = req.query;
+    // const year = "2024"
 
     // Build the date query dynamically based on provided params
     let query = {};
-    if (month || day) {
+    if (month || day || year) {
         query.Date = {};
 
-        if (month) {
-            console.log("Month", month)
-            let startMonth = new Date(year,month-1,1);
-            console.log(`By Start Month: ${formatEventDate(startMonth)}`)
-            let endMonth = new Date(startMonth.getFullYear(), startMonth.getMonth() + 1,1);
-            console.log(`By End Month: ${formatEventDate(endMonth)}`)
-            
-            query.Date.$gte = startMonth;
-            query.Date.$lt = endMonth;
-        }
-        if (day) {
-            let startDay = new Date(year,month-1,day);
-            console.log(`By Day: ${startDay}`)
-            
-            let endDay = new Date(startDay.getFullYear(), startDay.getMonth(), startDay.getDate() + 1);
-            query.Date.$gte = startDay;
-            query.Date.$lt = endDay;
+        if (year) {
+            if (month) {
+                console.log("Month", month)
+                console.log("Year", year)
+                let startMonth = new Date(year,month-1,1);
+                console.log(`By Start Month: ${formatEventDate(startMonth)}`)
+                let endMonth = new Date(startMonth.getFullYear(), startMonth.getMonth() + 1,1);
+                console.log(`By End Month: ${formatEventDate(endMonth)}`)
+                
+                query.Date.$gte = startMonth;
+                query.Date.$lt = endMonth;
+            }
+            if (day) {
+                let startDay = new Date(year,month-1,day);
+                console.log(`By Day: ${startDay}`)
+                
+                let endDay = new Date(startDay.getFullYear(), startDay.getMonth(), startDay.getDate() + 1);
+                query.Date.$gte = startDay;
+                query.Date.$lt = endDay;
+            }
         }
     }
 

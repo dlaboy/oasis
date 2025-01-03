@@ -116,8 +116,8 @@ function Sales(){
             months.forEach((m)=>{
                 axios.get('/sales/sum',{
                     params: {
-                      year: y,
-                      month: m,
+                        month: m,
+                        year: y
                       
                     }
                   }).then(response=>{
@@ -740,7 +740,6 @@ function Sales(){
 
         axios.get('/sales',{
             params: {
-            //   year: year,
               month: month,
               day: day,
               year: year
@@ -783,9 +782,9 @@ function Sales(){
 
         axios.get('/sales/sum',{
             params: {
-              year: year,
-              month: month,
-              day: day
+                month: month,
+                day: day,
+                year: year
             }
           }).then(response=>{
             console.log("Response", response.data)
@@ -1013,7 +1012,7 @@ function Sales(){
 
                     </div>
                     {charts ? <>
-                        {/* <div className='m-3 container w-100 text-center d-flex flex-row justify-content-around'>
+                        <div className='m-3 container w-100 text-center d-flex flex-row justify-content-around'>
                     <select value={day} onChange={handleDay} className='p-2'>
                             <option value="">Day</option>
                             {Array.from({ length: 31 }, (_, i) => (
@@ -1039,14 +1038,13 @@ function Sales(){
                             <option value="12">December</option>
                     </select>
                     <select value={year}className='p-2' onChange={handleYear}>
-                            <option value="">Year</option>
-
+                            {/* <option value="">Year</option> */}
                             <option value="2024">2024</option>
                             <option value="2025">2025</option>
                     </select>
                     <button className="p-2 btn" onClick={handleSearch}>Search</button>
                     
-                </div> */}
+                </div>
                 
             <Table className='' striped bordered hover  >
             <thead>
