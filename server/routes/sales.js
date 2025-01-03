@@ -14,31 +14,35 @@ function formatEventDate(date) {
 
 router.get('/sum',async function (req, res, next) {
     try {
-        const {month, day } = req.query;
-        const {year} = req.query;
+        const {month, day, year } = req.query;
+        // const {year} = req.query;
+        console.log("Year", year)
+
     
         // Build the date query dynamically based on provided params
         let query = {};
-        if (month || day) {
+        if (month || day || year) {
             query.Date = {};
+            if (year) {
+                if (month) {
+                    console.log("Month", month)
     
-            if (month) {
-                console.log("Month", month)
-                let startMonth = new Date(year,month-1,1);
-                console.log(`By Start Month: ${formatEventDate(startMonth)}`)
-                let endMonth = new Date(startMonth.getFullYear(), startMonth.getMonth() + 1,1);
-                console.log(`By End Month: ${formatEventDate(endMonth)}`)
-                
-                query.Date.$gte = startMonth;
-                query.Date.$lt = endMonth;
-            }
-            if (day) {
-                let startDay = new Date(year,month-1,day);
-                console.log(`By Day: ${startDay}`)
-                
-                let endDay = new Date(startDay.getFullYear(), startDay.getMonth(), startDay.getDate() + 1);
-                query.Date.$gte = startDay;
-                query.Date.$lt = endDay;
+                    let startMonth = new Date(year,month-1,1);
+                    console.log(`By Start Month: ${formatEventDate(startMonth)}`)
+                    let endMonth = new Date(startMonth.getFullYear(), startMonth.getMonth() + 1,1);
+                    console.log(`By End Month: ${formatEventDate(endMonth)}`)
+                    
+                    query.Date.$gte = startMonth;
+                    query.Date.$lt = endMonth;
+                }
+                if (day) {
+                    let startDay = new Date(year,month-1,day);
+                    console.log(`By Day: ${startDay}`)
+                    
+                    let endDay = new Date(startDay.getFullYear(), startDay.getMonth(), startDay.getDate() + 1);
+                    query.Date.$gte = startDay;
+                    query.Date.$lt = endDay;
+                }
             }
         }
     
