@@ -15,7 +15,7 @@ function formatEventDate(date) {
 router.get('/sum',async function (req, res, next) {
     try {
         const {month, day } = req.query;
-        const year = "2024"
+        const {year} = req.query;
     
         // Build the date query dynamically based on provided params
         let query = {};
@@ -55,7 +55,7 @@ router.get('/sum',async function (req, res, next) {
             acc.Cash += sale.CASH || 0;
             acc.Total += sale.Total || 0;
             return acc;
-        }, { Month :month, IceCreams: 0, Drinks: 0, ATH: 0, Cash: 0, Total: 0 });
+        }, { Year:year,Month :month, IceCreams: 0, Drinks: 0, ATH: 0, Cash: 0, Total: 0 });
 
         console.log("TOTALS: ",totals)
 

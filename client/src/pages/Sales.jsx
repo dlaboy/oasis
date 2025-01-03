@@ -47,6 +47,7 @@ function Sales(){
     const [allSales,setAllSales] = useState([])
     const [day,setDay] = useState("")
     const [month,setMonth] = useState("")
+    const [year,setYear] = useState("")
     const [isSubmitted, setSubmission] = useState(false);
     const [saleCharts, setSaleCharts] = useState([])
 
@@ -110,32 +111,36 @@ function Sales(){
 
     useEffect(()=>{
         let months = ['01','02','03','04','05','06','07','08','09','10','11','12']
-          months.forEach((m)=>{
-            axios.get('/sales/sum',{
-                params: {
-                //   year: year,
-                  month: m,
-                  
-                }
-              }).then(response=>{
-                console.log("Response", response.data)
+        let year = ['2025','2024']
+        year.forEach((y)=>{
+            months.forEach((m)=>{
+                axios.get('/sales/sum',{
+                    params: {
+                      year: y,
+                      month: m,
+                      
+                    }
+                  }).then(response=>{
+                    console.log("Response", response.data)
+        
+        
+                    let sum = response.data.totals
+                    
+                    console.log("SUMMMMMMMMMMMM",sum)
+                    setSaleCharts(prevArray => [...prevArray, sum])
+                    // setSaleCharts(saleCharts.push(sum))
     
     
-                let sum = response.data.totals
+        
+           
+                    // setAllSales(response.data)
+                }).catch(error =>{
+                    console.log("Error", error)
+                })
                 
-                console.log("SUMMMMMMMMMMMM",sum)
-                setSaleCharts(prevArray => [...prevArray, sum])
-                // setSaleCharts(saleCharts.push(sum))
-
-
-    
+              })
+        })
        
-                // setAllSales(response.data)
-            }).catch(error =>{
-                console.log("Error", error)
-            })
-            
-          })
 
 
 
@@ -279,9 +284,9 @@ function Sales(){
     const handleMonth = (event) => {
         setMonth(event.target.value);
     };
-    // const handleYear = (event) => {
-    //     setYear(event.target.value);
-    // };
+    const handleYear = (event) => {
+        setYear(event.target.value);
+    };
 
 
     const [isUploaded,setUploaded] = useState(false)
@@ -737,7 +742,8 @@ function Sales(){
             params: {
             //   year: year,
               month: month,
-              day: day
+              day: day,
+              year:year
             }
           }).then(response=>{
             console.log("Response", response.data)
@@ -777,7 +783,7 @@ function Sales(){
 
         axios.get('/sales/sum',{
             params: {
-            //   year: year,
+              year: year,
               month: month,
               day: day
             }
@@ -1032,8 +1038,9 @@ function Sales(){
                             <option value="11">November</option>
                             <option value="12">December</option>
                     </select>
-                    <select className='p-2'>
+                    <select value={year}className='p-2' onChange={handleYear}>
                             <option value="2024">2024</option>
+                            <option value="2025">2025</option>
                     </select>
                     <button className="p-2 btn" onClick={handleSearch}>Search</button>
                     
@@ -1097,7 +1104,7 @@ function Sales(){
               {/* {if (key == '0'){
                 <p>January Sales</p>
               } } */}
-              {saleCharts[key].Month == "01" ? (<p>January Sales</p>):saleCharts[key].Month == "02" ?(<>February Sales</>):saleCharts[key].Month == "03" ?(<>March Sales</>):saleCharts[key].Month == "04" ?(<>April Sales</>):saleCharts[key].Month == "05" ?(<>May Sales</>):saleCharts[key].Month == "06" ?(<>June Sales</>):saleCharts[key].Month == "07" ?(<>July Sales</>):saleCharts[key].Month == "08" ?(<>August Sales</>):saleCharts[key].Month == "09" ?(<>September Sales</>):saleCharts[key].Month == "10" ?(<>October Sales</>):saleCharts[key].Month == "11" ?(<>November Sales</>):saleCharts[key].Month == "12" ?(<>December Sales</>):(<>Other Month</>)}
+              {saleCharts[key].Month == "01" ? (<p>January {saleCharts[key].Year} Sales</p>):saleCharts[key].Month == "02" ?(<>February {saleCharts[key].Year} Sales</>):saleCharts[key].Month == "03" ?(<>March {saleCharts[key].Year} Sales</>):saleCharts[key].Month == "04" ?(<>April {saleCharts[key].Year} Sales</>):saleCharts[key].Month == "05" ?(<>May {saleCharts[key].Year} Sales</>):saleCharts[key].Month == "06" ?(<>June {saleCharts[key].Year} Sales</>):saleCharts[key].Month == "07" ?(<>July {saleCharts[key].Year} Sales</>):saleCharts[key].Month == "08" ?(<>August {saleCharts[key].Year} Sales</>):saleCharts[key].Month == "09" ?(<>September {saleCharts[key].Year} Sales</>):saleCharts[key].Month == "10" ?(<>October {saleCharts[key].Year} Sales</>):saleCharts[key].Month == "11" ?(<>November {saleCharts[key].Year} Sales</>):saleCharts[key].Month == "12" ?(<>December {saleCharts[key].Year} Sales</>):(<>Other Month</>)}
               
               {/* Example of using BarChart */}
               {/* Uncomment and configure if applicable */}
