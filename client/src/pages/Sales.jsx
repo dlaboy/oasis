@@ -48,6 +48,7 @@ function Sales(){
     const [day,setDay] = useState("")
     const [month,setMonth] = useState("")
     const [year,setYear] = useState("")
+    const [chartYear,setChartYear] = useState("2025")
     const [isSubmitted, setSubmission] = useState(false);
     const [saleCharts, setSaleCharts] = useState([])
 
@@ -286,6 +287,9 @@ function Sales(){
     };
     const handleYear = (event) => {
         setYear(event.target.value);
+    };
+    const handleChartYear = (event) => {
+        setChartYear(event.target.value);
     };
 
 
@@ -1091,7 +1095,12 @@ function Sales(){
             </Table>
             <button className='btn btn-outline-dark rounded-pill p-3 m-2' onClick={handleSearchReport}>Generate Report of Search</button>
 
-                    </>:<div className="container d-flex">
+                    </>:<div className="container d-flex flex-column justify-content-center align-items-center">
+                    <select value={chartYear}className='p-2 m-4' onChange={handleChartYear}>
+                            {/* <option value="">Year</option> */}
+                            <option value="2025">2025</option>
+                            <option value="2024">2024</option>
+                    </select>
   {
     saleCharts.length > 0 ? (
       <div className='container d-flex flex-wrap'>
@@ -1099,7 +1108,8 @@ function Sales(){
           Object.keys(saleCharts)
             .sort((keyA, keyB) => parseInt(saleCharts[keyA].Month) - parseInt(saleCharts[keyB].Month))
             .map((key) => (
-            <div key={key}>
+            
+            chartYear === saleCharts[key].Year ? (<div key={key}>
               {/* Replace this with your chart component */}
               {/* {if (key == '0'){
                 <p>January Sales</p>
@@ -1121,7 +1131,7 @@ function Sales(){
                 ]}
               />
               }
-            </div>
+            </div>):(<></>)
           ))
         }
       </div>
