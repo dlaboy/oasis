@@ -947,7 +947,7 @@ function Sales(){
             <div className="pt-3 pb-3 d-flex w-25 text-center"></div>
 
         </div>
-        <div className='bg-light d-flex justify-content-start align-items-center flex-column' style={{height:'90vh'}}>
+        <div className='d-flex justify-content-start align-items-center flex-column' >
             <div className="d-flex flex-row">
                 <button className='btn btn-outline-dark rounded-pill p-3 m-2' onClick={handleToday}>{today ?'Today Sales':'All Sales'}</button>
             </div>
