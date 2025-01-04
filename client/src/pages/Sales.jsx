@@ -506,6 +506,17 @@ function Sales(){
                       size: 16
                     }
                   },
+                  plugins: {
+                    datalabels: {
+                      anchor: 'center',
+                      align: 'center',
+                      color: 'black',
+                      font: {
+                        weight: 'bold'
+                      },
+                      formatter: (value) => value // Display data values on top of the bars
+                    }
+                  }
               }
             };
             return `https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(chartConfig))}`;
