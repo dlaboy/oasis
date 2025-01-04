@@ -1095,7 +1095,7 @@ function Sales(){
             </Table>
             <button className='btn btn-outline-dark rounded-pill p-3 m-2' onClick={handleSearchReport}>Generate Report of Search</button>
 
-                    </>:<div className="container d-flex flex-column justify-content-center align-items-center">
+                    </>:<div className=" d-flex flex-column justify-content-around align-items-center w-100 ">
                     <select value={chartYear}className='p-2 m-4' onChange={handleChartYear}>
                             {/* <option value="">Year</option> */}
                             <option value="2025">2025</option>
@@ -1103,7 +1103,7 @@ function Sales(){
                     </select>
   {
     saleCharts.length > 0 ? (
-      <div className='container d-flex flex-wrap'>
+      <div className=' d-flex flex-wrap w-100 justify-content-around '>
         {
           Object.keys(saleCharts)
             .sort((keyA, keyB) => parseInt(saleCharts[keyA].Month) - parseInt(saleCharts[keyB].Month))
