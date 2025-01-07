@@ -88,6 +88,117 @@ router.get('/sum',async function (req, res, next) {
 }
 });
 
+router.get('/avg_week_sales',async function (req,res,next) {
+    try {
+        const {month, day, year } = req.query;
+        // const {year} = req.query;
+        console.log("Year", year)
+
+    
+        // Build the date query dynamically based on provided params
+        let query = {};
+        if (month || day || year) {
+            query.Date = {};
+            if (year) {
+                if (month) {
+                    console.log("Month", month)
+    
+                    let startMonth = new Date(year,month-1,1);
+                    console.log(`By Start Month: ${formatEventDate(startMonth)}`)
+                    let endMonth = new Date(startMonth.getFullYear(), startMonth.getMonth() + 1,1);
+                    console.log(`By End Month: ${formatEventDate(endMonth)}`)
+                    
+                    query.Date.$gte = startMonth;
+                    query.Date.$lt = endMonth;
+                }
+                if (day) {
+                    let startDay = new Date(year,month-1,day);
+                    console.log(`By Day: ${startDay}`)
+                    
+                    let endDay = new Date(startDay.getFullYear(), startDay.getMonth(), startDay.getDate() + 1);
+                    query.Date.$gte = startDay;
+                    query.Date.$lt = endDay;
+                }
+            }
+        }
+    
+        const sales = await Sales.find(query);
+
+        // console.log("Sale 1", sales[0].Date)
+
+
+        // Calculate sums for each field, including day-of-week totals
+        const totals = sales.reduce(
+            (acc, sale) => {
+            // console.log("sale.date",sale.date)
+            const saleDate = new Date(sale.Date); // Convert sale.date to a Date object
+            const dayOfWeek = saleDate.getDay(); // Get day of the week (0 for Sunday, 6 for Saturday)
+
+            // console.log("Day of the week",typeof(dayOfWeek))
+            // Initialize totals for days of the week if not already
+            const days = ["Sundays", "Mondays", "Tuesdays", "Wednesdays", "Thursdays", "Fridays", "Saturdays"];
+            acc.DayTotals = acc.DayTotals || {};
+            acc[days[dayOfWeek]] = acc[days[dayOfWeek]]||{ total: 0, count: 0 };
+
+            days.forEach(day => {
+                acc.DayTotals[day] = acc.DayTotals[day] || 0;
+            });
+
+            acc[days[dayOfWeek]].total += sale.Total || 0;
+            acc[days[dayOfWeek]].count += 1;
+
+            console.log(`Count for ${dayOfWeek}:${acc[days[dayOfWeek]].count}`)
+
+
+            
+            // else{
+                // console.log("Paso tío")
+            // }
+            // console.log("Value",acc.DayTotals)
+
+            // const d = typeof(days)
+            console.log("Dia de la semana", dayOfWeek.toString())
+        
+            // Accumulate values
+            acc.Year = year;
+            acc.Month = month;
+            acc.IceCreams += sale.IceCreams || 0;
+            acc.Drinks += sale.Drinks || 0;
+            acc.ATH += sale.ATH || 0;
+            acc.Cash += sale.CASH || 0;
+            acc.Total += sale.Total || 0;
+            acc.DayTotals[days[dayOfWeek]] += parseFloat(sale.Total/acc[days[dayOfWeek]].count.toFixed(2)) || 0; // Accumulate Total for the specific day of the week
+        
+            return acc;
+            },
+            {
+            Year: year,
+            Month: month,
+            IceCreams: 0,
+            Drinks: 0,
+            ATH: 0,
+            Cash: 0,
+            Total: 0,
+            DayTotals: {},
+            }
+        );
+        
+        console.log("Totals",totals);
+  
+
+        // Send the response
+        res.send({
+            query: query,
+            totals: totals,
+            count: sales.length // Optional: include the number of sales records processed
+        });
+
+    } catch (error) {
+        
+    }
+
+});
+
   
 
 // /* GET users listing. */

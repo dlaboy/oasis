@@ -51,6 +51,7 @@ function Sales(){
     const [chartYear,setChartYear] = useState("2025")
     const [isSubmitted, setSubmission] = useState(false);
     const [saleCharts, setSaleCharts] = useState([])
+    const [stat,setStat] = useState("0")
 
     const doc = new jsPDF();
 
@@ -109,10 +110,12 @@ function Sales(){
 
 
   },[saleCharts])
+  useEffect(()=>{
+    let months = ['01','02','03','04','05','06','07','08','09','10','11','12']
+    let year = ['2025','2024']
+    setSaleCharts([])
 
-    useEffect(()=>{
-        let months = ['01','02','03','04','05','06','07','08','09','10','11','12']
-        let year = ['2025','2024']
+    if (stat === "0"){
         year.forEach((y)=>{
             months.forEach((m)=>{
                 axios.get('/sales/sum',{
@@ -141,6 +144,73 @@ function Sales(){
                 
               })
         })
+    }
+    else if (stat === "1") {
+        console.log("Average")
+        year.forEach((y)=>{
+            months.forEach((m)=>{
+                axios.get('/sales/avg_week_sales',{
+                    params: {
+                        month: m,
+                        year: y
+                      
+                    }
+                  }).then(response=>{
+                    console.log("Response", response.data)
+        
+        
+                    let sum = response.data.totals
+                    
+                    console.log("SUMMMMMMMMMMMM",sum)
+                    setSaleCharts(prevArray => [...prevArray, sum])
+                    // setSaleCharts(saleCharts.push(sum))
+    
+    
+        
+           
+                    // setAllSales(response.data)
+                }).catch(error =>{
+                    console.log("Error", error)
+                })
+                
+              })
+        })
+
+    }
+   
+  },[stat])
+
+    useEffect(()=>{
+        // let months = ['01','02','03','04','05','06','07','08','09','10','11','12']
+        // let year = ['2025','2024']
+        // year.forEach((y)=>{
+        //     months.forEach((m)=>{
+        //         axios.get('/sales/sum',{
+        //             params: {
+        //                 month: m,
+        //                 year: y
+                      
+        //             }
+        //           }).then(response=>{
+        //             console.log("Response", response.data)
+        
+        
+        //             let sum = response.data.totals
+                    
+        //             console.log("SUMMMMMMMMMMMM",sum)
+        //             setSaleCharts(prevArray => [...prevArray, sum])
+        //             // setSaleCharts(saleCharts.push(sum))
+    
+    
+        
+           
+        //             // setAllSales(response.data)
+        //         }).catch(error =>{
+        //             console.log("Error", error)
+        //         })
+                
+        //       })
+        // })
        
 
 
@@ -290,6 +360,9 @@ function Sales(){
     };
     const handleChartYear = (event) => {
         setChartYear(event.target.value);
+    };
+    const handleStat = (event) => {
+        setStat(event.target.value);
     };
 
 
@@ -509,7 +582,7 @@ function Sales(){
                   plugins: {
                     datalabels: {
                       anchor: 'center',
-                      align: 'center',
+                      align: 'center    ',
                       color: 'black',
                       font: {
                         weight: 'bold'
@@ -1107,13 +1180,22 @@ function Sales(){
             <button className='btn btn-outline-dark rounded-pill p-3 m-2' onClick={handleSearchReport}>Generate Report of Search</button>
 
                     </>:<div className=" d-flex flex-column justify-content-around align-items-center w-100 ">
+                    <div className="">
+                    <select value={stat}lassName='p-2 m-4' onChange={handleStat}>
+
+                            <option value="0">Total Sales</option>
+                            <option value="1">Average Sale by day of the week</option>
+                            {/* <option value="2">2024</option> */}
+                    </select> 
                     <select value={chartYear}className='p-2 m-4' onChange={handleChartYear}>
                             {/* <option value="">Year</option> */}
                             <option value="2025">2025</option>
                             <option value="2024">2024</option>
                     </select>
+                    {/* <div className="">Currently Displaying Stat {stat}</div>     */}
+                    </div>
   {
-    saleCharts.length > 0 ? (
+    saleCharts.length > 0 && stat == "0" ? (
       <div className=' d-flex flex-wrap w-100 justify-content-around '>
         {
           Object.keys(saleCharts)
@@ -1142,13 +1224,61 @@ function Sales(){
                 ]}
               />
               }
-            </div>):(<></>)
+            </div>): (<></>)
           ))
         }
       </div>
-    ) : (
-      <>No Sales</>
-    )
+    ) : saleCharts.length > 0 && stat == "1" ? (
+        <div className=' d-flex flex-wrap w-100 justify-content-around '>
+        {
+          Object.keys(saleCharts)
+            .sort((keyA, keyB) => parseInt(saleCharts[keyA].Month) - parseInt(saleCharts[keyB].Month))
+            .map((key) => (
+            
+            chartYear === saleCharts[key].Year ? (<div key={key}>
+              {/* Replace this with your chart component */}
+              {/* {if (key == '0'){
+                <p>January Sales</p>
+              } } */}
+              {saleCharts[key].Month == "01" ? (<p>January {saleCharts[key].Year} Sales</p>):saleCharts[key].Month == "02" ?(<>February {saleCharts[key].Year} Sales</>):saleCharts[key].Month == "03" ?(<>March {saleCharts[key].Year} Sales</>):saleCharts[key].Month == "04" ?(<>April {saleCharts[key].Year} Sales</>):saleCharts[key].Month == "05" ?(<>May {saleCharts[key].Year} Sales</>):saleCharts[key].Month == "06" ?(<>June {saleCharts[key].Year} Sales</>):saleCharts[key].Month == "07" ?(<>July {saleCharts[key].Year} Sales</>):saleCharts[key].Month == "08" ?(<>August {saleCharts[key].Year} Sales</>):saleCharts[key].Month == "09" ?(<>September {saleCharts[key].Year} Sales</>):saleCharts[key].Month == "10" ?(<>October {saleCharts[key].Year} Sales</>):saleCharts[key].Month == "11" ?(<>November {saleCharts[key].Year} Sales</>):saleCharts[key].Month == "12" ?(<>December {saleCharts[key].Year} Sales</>):(<>Other Month</>)}
+              
+              {/* Example of using BarChart */}
+              {/* Uncomment and configure if applicable */}
+              {
+              saleCharts[key].DayTotals ? (<BarChart
+                className="m-5"
+                keys={["Sundays", "Mondays", "Tuesdays", "Wednesdays", "Thursdays", "Fridays", "Saturdays"]}
+                values={[
+                  saleCharts[key].DayTotals["Sundays"],
+                  saleCharts[key].DayTotals["Mondays"],
+                  saleCharts[key].DayTotals["Tuesdays"],
+                  saleCharts[key].DayTotals["Wednesdays"],
+                  saleCharts[key].DayTotals["Thursdays"],
+                  saleCharts[key].DayTotals["Fridays"],
+                  saleCharts[key].DayTotals["Saturdays"],
+                  
+                ]}
+              />):(<BarChart
+                className="m-5"
+                keys={["Sundays", "Mondays", "Tuesdays", "Wednesdays", "Thursdays", "Fridays", "Saturdays"]}
+                values={[
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  
+                ]}
+              />)
+              }
+            </div>): (<></>)
+          ))
+        }
+      </div>
+    ) : (<>No Sales</>)
+    
   }
 </div>}
 
