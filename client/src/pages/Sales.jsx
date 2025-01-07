@@ -1249,13 +1249,13 @@ function Sales(){
                 className="m-5"
                 keys={["Sundays", "Mondays", "Tuesdays", "Wednesdays", "Thursdays", "Fridays", "Saturdays"]}
                 values={[
+                    saleCharts[key].DayTotals["Saturdays"],
                   saleCharts[key].DayTotals["Sundays"],
                   saleCharts[key].DayTotals["Mondays"],
                   saleCharts[key].DayTotals["Tuesdays"],
                   saleCharts[key].DayTotals["Wednesdays"],
                   saleCharts[key].DayTotals["Thursdays"],
-                  saleCharts[key].DayTotals["Fridays"],
-                  saleCharts[key].DayTotals["Saturdays"]
+                  saleCharts[key].DayTotals["Fridays"]
                   
                 ]}
               />):(<BarChart
