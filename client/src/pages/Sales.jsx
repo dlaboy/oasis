@@ -1255,7 +1255,7 @@ function Sales(){
                   saleCharts[key].DayTotals["Wednesdays"],
                   saleCharts[key].DayTotals["Thursdays"],
                   saleCharts[key].DayTotals["Fridays"],
-                  saleCharts[key].DayTotals["Saturdays"],
+                  saleCharts[key].DayTotals["Saturdays"]
                   
                 ]}
               />):(<BarChart
@@ -1268,7 +1268,7 @@ function Sales(){
                   0,
                   0,
                   0,
-                  0,
+                  0
                   
                 ]}
               />)
