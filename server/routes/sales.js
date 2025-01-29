@@ -167,7 +167,7 @@ router.get('/avg_week_sales',async function (req,res,next) {
             acc.ATH += sale.ATH || 0;
             acc.Cash += sale.CASH || 0;
             acc.Total += sale.Total || 0;
-            acc.DayTotals[days[dayOfWeek]] += sale.Total || 0; // Accumulate Total for the specific day of the week
+            acc.DayTotals[days[dayOfWeek]] += sale.Total/acc[days[dayOfWeek]].count || 0; // Accumulate Total for the specific day of the week
         
             return acc;
             },
