@@ -1184,7 +1184,7 @@ function Sales(){
                     <select value={stat}lassName='p-2 m-4' onChange={handleStat}>
 
                             <option value="0">Total Sales</option>
-                            <option value="1">Sale by day of the week</option>
+                            <option value="1">Average Sale by day of the week</option>
                             {/* <option value="2">2024</option> */}
                     </select> 
                     <select value={chartYear}className='p-2 m-4' onChange={handleChartYear}>
