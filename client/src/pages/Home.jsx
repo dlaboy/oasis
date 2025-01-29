@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import { NavLink } from 'react-router-dom'
 import { Nav } from 'react-bootstrap'
 import Form from 'react-bootstrap/Form';
-
+import './Home.css'
 
 const ADMIN_USERNAME = import.meta.env.VITE_REACT_APP_ADMIN_USERNAME
 const ADMIN_PASSWORD = import.meta.env.VITE_REACT_APP_ADMIN_PASSWORD
@@ -74,20 +74,21 @@ function Home() {
   }
   
   return (
-    <div className='  justify-content-center bg-light  align-items-center d-flex flex-column' style={{height:"100vh"}}>
+    <div className='  justify-content-center  align-items-center d-flex flex-column home' style={{height:"100vh"}}>
+      {/* <div class="overlay"></div> */}
         <div className="">
-            <h1>
+            <h1 className='fw-bold text-light'>
             Oasis POS System
             </h1>
         </div>
 
         {loginSuccessfull ? <div className='d-flex flex-column text-center'>
           <Nav>
-            <Nav.Link to='/terminal' as={NavLink} className='btn  p-3 '>Terminal</Nav.Link>
-            <Nav.Link to='/queue' as={NavLink} className='btn p-3'>Queue</Nav.Link>
-            { admin && <Nav.Link to='/ventas' as={NavLink} className='btn p-3'>Sales</Nav.Link>}
+            <Nav.Link to='/terminal' as={NavLink} className='btn btn-outline-primary text-light m-3'>Terminal</Nav.Link>
+            <Nav.Link to='/queue' as={NavLink} className='btn btn-outline-primary text-light m-3'>Queue</Nav.Link>
+            { admin && <Nav.Link to='/ventas' as={NavLink} className='btn btn-outline-primary text-light m-3'>Sales</Nav.Link>}
         </Nav>
-        <button className='btn rounded-pill btn-outline-secondary' onClick={handleSignOut}>Sign Out</button>
+        <button className='btn rounded-pill btn-outline-light' onClick={handleSignOut}>Sign Out</button>
         </div> : 
         <div className='d-flex flex-column'> 
             { incorrect && <div className='text-danger text-center'>Incorrect Credentials</div> }
