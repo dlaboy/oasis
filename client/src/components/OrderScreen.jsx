@@ -492,11 +492,11 @@ function OrderScreen() {
         {/* <div  className=""  style={{height:'95vh',width:'30vw'}}> */}
         <div  className="" >
           <div className="d-flex flex-column text-center" style={{height:'15vh'}}>
-            <div className="d-flex flex-row justify-content-around">
+            <div className="d-flex flex-row justify-content-between">
               <Nav>
-                <Nav.Link to='/' as={NavLink} className='btn  p-3    text-center'>Home</Nav.Link>
+                <Nav.Link to='/' as={NavLink} className='btn  p-3  w-100 text-center'>Home</Nav.Link>
               </Nav>
-              <div className=" p-3 btn" onClick={handleShowOrders}>X</div>
+              <button className="p-3 btn btn-outline-light closeShowOrders" onClick={handleShowOrders}><img className='closeIcon' src="/close-4.png" alt="" /></button>
 
             </div>
             <div className='d-flex flex-row w-100 justify-content-between p-3 text-start'>
