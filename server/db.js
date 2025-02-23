@@ -43,7 +43,7 @@ const password = process.env.P;
 
 // }
 
-const MONGO_URI = `mongodb+srv://${username}:${password}@cluster0.su9cocn.mongodb.net/dev?retryWrites=true&w=majority`;
+const MONGO_URI = `mongodb+srv://${username}:${password}@cluster0.su9cocn.mongodb.net/test?retryWrites=true&w=majority`;
 
 mongoose.connect(MONGO_URI, {
   useNewUrlParser: true,
