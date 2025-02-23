@@ -237,7 +237,7 @@ export default function Queue() {
                     <div className="d-flex flex-column w-100 ">
                       {order.items.map(item =>(
                       <div className=" border-bottom border-dark w-100">
-                        <div className="d-flex flex-row">
+                        <div className="d-flex flex-row bg-danger-subtle p-3">
                            <div className='fw-bold fs-4'> Type:  </div> 
                            <div className="fs-4">
                            {item.type}
@@ -246,7 +246,7 @@ export default function Queue() {
                               </div> */}
                             </div> 
                         </div>
-                        <div className="d-flex flex-column">
+                        <div className="d-flex flex-column bg-warning-subtle p-3">
                         {item && item.type !== 'drinks' && (
                             <div className="fw-bold fs-4">
                               Ingredients:
@@ -262,7 +262,7 @@ export default function Queue() {
                             )))}
                           </ul>
                         </div>
-                        <div className="d-flex flex-column">
+                        <div className="d-flex flex-column bg-primary-subtle p-3">
                         {item && item.type !== 'drinks' && (
                             <div className="fw-bold fs-4">
                               Toppings:
@@ -279,7 +279,7 @@ export default function Queue() {
                             )))}
                           </ul>
                         </div>
-                        <div className="d-flex flex-column">
+                        <div className="d-flex flex-column bg-info-subtle p-3">
                           <div className="fw-bold fs-4">
                             Quantity: 
                           </div>
@@ -294,7 +294,7 @@ export default function Queue() {
                             } */}
                         </ul>
                         </div>
-                        <div className="d-flex flex-column pb-2">
+                        <div className="d-flex flex-column pb-2 bg-success-subtle p-3">
                           <div className="fw-bold fs-4">
                             Comments: 
                           </div>
