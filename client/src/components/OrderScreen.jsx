@@ -539,7 +539,7 @@ function OrderScreen() {
             <div>Current Order</div>
             <button className='rounded-3 bg-light border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-2' onClick={handleClear}>Clear</button>
           </div>
-          <div  className=" w-100  p-3 d-flex flex-column">
+          <div  className=" w-100  p-3 d-flex flex-column " style={{zIndex:'1'}}>
               <div className="">
               Client: {name}
               </div>
@@ -556,11 +556,11 @@ function OrderScreen() {
        
             
           {/* <div style={order.items ? {height:'20vh'}: {height:'0vh'}} className="m-3 overflow-scroll "> */}
-          <div style={order.items ? {height:'20vh'}: {height:'0vh'}} className="orden-de-ahora bg-secondary-subtle overflow-scroll">
+          <div style={order.items ? {height:'20vh'}: {height:'0vh'}} className="orden-de-ahora bg-secondary-subtle overflow-scroll mt-3">
               { order ? ( order?.items &&
 
                 order.items.map(item =>  (
-                  <div key={item.item_id} className='border-bottom border-dark d-flex flex-row m-2'>
+                  <div key={item.item_id} className='border-bottom border-dark d-flex flex-row '>
                     <div className="w-100 p-3">
                       <div className="d-flex flex-column">
                         <div className="">
