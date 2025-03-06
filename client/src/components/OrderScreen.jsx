@@ -31,6 +31,7 @@ function OrderScreen() {
   // USESTATE HOOKS
   const [currentOrders,setCurrentOrders] = useState(null)
   const [metodoModal, showMetodoModal] = useState(false);
+  const [editModal, showEditModal] = useState(false);
   const [itemVisibility, setItemVisibility] = useState({});
   const [editEnable, isEditEnable] = useState({})
   const [orderSubmitted,isOrderSubmited] = useState(false)
@@ -42,6 +43,14 @@ function OrderScreen() {
     puppy : 5.00,
     drinks : 1.00,
   }
+
+   const [newTypeFlags, setNewTypeFlags] = useState({
+          rolls:false,
+          shakes:false,
+          banana:false,
+          puppy:false,
+          drinks:false
+      })
 
 
   // CONTEXT
@@ -69,6 +78,8 @@ function OrderScreen() {
   // MODAL HANDLERS
   const handleShow = () => showMetodoModal(true)
   const handleClose = () => showMetodoModal(false)
+  const handleEditShow = () => showEditModal(true)
+  const handleEditClose = () => showEditModal(false)
 
   // MODAL PAYMENT HANDLER 
     const handlePayment = (event) => {
@@ -355,6 +366,141 @@ function OrderScreen() {
   };
   },[])
 
+  const [editType,setEditType] = useState(true)
+  const [pastValue,setPastValue]=useState("")
+  const [itemsIDtoEdit,setItemsIDtoEdit] = useState(0)
+  const [triggerUpdate,setTriggerUpdate] = useState(true)
+  const [uI,setUI] = useState(() => {
+    const storedItems = localStorage.getItem('items');
+    return storedItems
+      ? JSON.parse(storedItems)
+      : [
+          { }        ];
+  });
+
+  const handleEditType = (item_id)=>{
+    setEditType(prevState => !prevState)
+    if (itemsIDtoEdit ===item_id){
+      setItemsIDtoEdit(0)
+    }
+    else{
+      setItemsIDtoEdit(item_id)
+    }
+    console.log("ID of item to edit",itemsIDtoEdit)
+  }
+
+  const updateItemValue = (itemss,itemId, key, newValue,past) => {
+    
+    const updatedItems = itemss.map((item) =>
+      item.item_id === itemId ? { ...item, [key]: newValue } : item
+    );
+    setUI(updatedItems)
+    order['items'].map(i=>{
+      if(i.item_id === itemId){
+        // const updatedOrder = order['items'].filter(i => i.item_id !== id)
+        setOrder(previous => ({
+          ...previous,
+          items: updatedItems,
+        }));
+        localStorage.setItem(LOCAL_ITEM_KEY, JSON.stringify({}))
+        console.log("Past value",past)
+        console.log("New value",newValue)
+
+        console.log("Past value's cost",itemCosts[past]* i.qty)
+        console.log("New value's cost",itemCosts[newValue] * i.qty)
+
+        var sub = (itemCosts[newValue] * i.qty) - (itemCosts[past]* i.qty)
+        console.log("Sum to substract",sub)
+        setSumtoSubstract(sub)
+        console.log("Total Updated")
+      }
+      else{
+        console.log('item not found')
+      }
+    })
+    setEditType(true)
+    newTypeFlags['rolls'] = false
+    newTypeFlags['shakes'] = false
+    newTypeFlags['banana'] = false
+    newTypeFlags['puppy'] = false
+    newTypeFlags['drinks'] = false
+    setNewType("")
+
+
+  };
+
+  useEffect(()=>{
+    localStorage.setItem(LOCAL_ITEM_KEY, JSON.stringify(uI));
+    console.log("Updated Items",uI)
+   
+  },[uI])
+ 
+
+  const [newType,setNewType] = useState("")
+
+  const handleNewType = (event) =>{
+    var t = event.target.value
+    if (t == "rolls"){
+      if (newTypeFlags['rolls']==true){
+        newTypeFlags['rolls'] = false
+        setNewType("")
+
+      }
+      else{
+        newTypeFlags['rolls'] = true
+        setNewType(t)
+
+      }
+    }
+    else if (t == "shakes"){
+      if (newTypeFlags['shakes'] === true){
+        newTypeFlags['shakes'] = false
+        setNewType("")
+        
+      }
+      else{
+        newTypeFlags['shakes'] = true
+        setNewType(t)
+
+      }
+    }
+    else if (t == "banana"){
+      if (newTypeFlags['banana'] === true){
+        newTypeFlags['banana'] = false
+        setNewType("")
+        
+      }
+      else{
+        newTypeFlags['banana'] = true
+        setNewType(t)
+
+      }
+    }
+    else if (t == "puppy"){
+      if (newTypeFlags['puppy'] === true){
+        newTypeFlags['puppy'] = false
+        setNewType("")
+        
+      }
+      else{
+        newTypeFlags['puppy'] = true
+        setNewType(t)
+
+      }
+    }
+    else if (t == "drinks"){
+      if (newTypeFlags['drinks'] === true){
+        newTypeFlags['drinks'] = false
+        setNewType("")
+        
+      }
+      else{
+        newTypeFlags['drinks'] = true
+        setNewType(t)
+
+      }
+    }
+  }
 
 
 
@@ -366,7 +512,7 @@ function OrderScreen() {
             <Modal.Title>Detalles de la Orden</Modal.Title>
           </Modal.Header>
           <Modal.Body className='overflow-scroll detalles-body'>
-          <div className={itemVisibility[orderToShow._id] ? 'detalle-de-orden d-flex flex-column bg-primary-subtle p-2':'d-flex bg-danger flex-column'}>
+          <div className={itemVisibility[orderToShow._id] ? 'detalle-de-orden d-flex flex-column bg-primary-subtle p-2':'d-flex  flex-column'}>
             <div className="d-flex flex-column overflow-scroll bg-secondary-subtle">
               {orderToShow?.items && orderToShow.items.map(item =>(
               <div className="border-bottom border-dark">
@@ -539,17 +685,21 @@ function OrderScreen() {
             <div>Current Order</div>
             <button className='rounded-3 bg-light border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-2' onClick={handleClear}>Clear</button>
           </div>
-          <div  className=" w-100  p-3 d-flex flex-column " style={{zIndex:'1'}}>
+          <div  className=" w-100  p-3 d-flex flex-row justify-content-between" style={{zIndex:'1'}}>
+            <div className="">
               <div className="">
               Client: {name}
               </div>
               <div className="">
               Total: {<CurrencyFormatter value={totalToPay} currency='USD'/>}
               </div>
+            </div>
              
               {/* <div className="">
               Items In Order: { totalItems }
               </div> */}
+              <button className='rounded-3 bg-light border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-2' onClick={handleEditShow}>Edit Order</button>
+
 
           </div>
           <div>
@@ -639,6 +789,134 @@ function OrderScreen() {
           </div>
 
         </div>
+          <Modal show={editModal} onHide={handleEditClose} centered size='xl' >
+            <Modal.Header closeButton>
+              <Modal.Title>Editando Orden</Modal.Title>
+                <div className="text-danger">{adviceMessage}</div>
+            </Modal.Header>
+              <Modal.Body className='overflow-scroll detalles-body'>
+              <div  className=" bg-secondary-subtle overflow-scroll">
+              { order ? ( order?.items &&
+
+                order.items.map(item =>  (
+                  <div key={item.item_id} className='border-bottom border-dark d-flex flex-row '>
+                    <div className="w-100 p-3">
+                      <div className="btn d-flex flex-column justify-content-start align-items-start" onClick={()=>handleEditType(item.item_id)}>
+                        <div className="">
+                          Type: 
+                        </div>
+                        <ul className="">
+                          {item.type}
+                        </ul>
+                      </div>
+                      <div style={itemsIDtoEdit !== item.item_id ? {display:'none'}: {display:'flex'}} className='mt-3 mb-3 flex-column  w-100 justify-content-center align-items-center bg-primary-subtle'>
+                        {/* <div className="col w-25 type-text text-start">Type</div> */}
+                        <div className=" d-flex flex-row w-100 justify-content-around align-items-center "  style={{pointerEvents : 'none'}}>
+                            <div className=" me-1">
+                                <button style={{pointerEvents : 'auto'}} className={newTypeFlags.rolls ? 'btn btn-outline-secondary type active p-3' : 'btn btn-outline-secondary type p-3'} value={'rolls'} onClick={handleNewType}>Rolls</button>
+                            </div>
+                            <div className=" ms-1 me-1">
+                                <button style={{pointerEvents : 'auto'}} className= {newTypeFlags.shakes ? 'btn btn-outline-secondary type active p-3':'btn btn-outline-secondary type p-3'}  value={'shakes'} onClick={handleNewType}>Shakes</button>
+        
+        
+                            </div>
+                            <div className=" ms-1 me-1">
+                                <button style={{pointerEvents : 'auto'}} className={newTypeFlags.banana ? 'btn btn-outline-secondary type active p-3':'btn btn-outline-secondary type p-3'} value={'banana'} onClick={handleNewType}>Banana</button>
+        
+                                
+                            </div>
+                            <div className=" ms-1 me-1">
+                                <button style={{pointerEvents : 'auto'}} className={newTypeFlags.puppy ? 'btn btn-outline-secondary type active p-3':'btn btn-outline-secondary type p-3'} value={'puppy'} onClick={handleNewType}>Puppy</button>
+        
+                            </div>
+                            <div className=" ms-1 me-1">
+                                <button style={{pointerEvents : 'auto'}} className={newTypeFlags.drinks ? 'btn btn-outline-secondary type active p-3':'btn btn-outline-secondary type p-3'} value={'drinks'} onClick={handleNewType}>Drinks</button>
+        
+                            </div>
+                        </div>
+                        <button  className={newType ?? newType != item.type ?? newType != "" ? 'btn btn-primary p-2 mt-1 w-100':'btn btn-outline-secondary p-2 mt-1 w-100 disabled' } onClick={()=>updateItemValue(order.items,item.item_id,'type',newType,item.type)}>Guardar</button>
+                        {/* <input type="text" value={newType} className='' /> */}
+                    </div>
+                      <div className="btn d-flex flex-column justify-content-start align-items-start">   
+                      {item && item.type !== 'drinks' && (
+                            <div className="">
+                              Ingredients:
+                            </div>
+                          )}
+                      <ul className="d-flex flex-column justify-content-start align-items-start">
+                        {item && item.type !== 'drinks' && item.ings.map((ing=>(  
+                                <li>{ing}
+                                {/* <div className="text-secondary">
+                                {editEnable[order._id] ? (<input className='w-75' defaultValue={ing}/>):(<div></div>)}
+                                </div> */}
+                                </li>
+                              )))}
+                      </ul>
+                      </div>
+                      <div className="btn d-flex flex-column justify-content-start align-items-start">
+                      {item && item.type !== 'drinks' && (
+                            <div className="">
+                              Toppings:
+                            </div>
+                          )}                        <ul>
+                            {item && item.type !== 'drinks' && item.tops.map((top=>(
+                                <li className=''>{top}
+                                  {/* <div className="text-secondary">
+                                  {editEnable[order._id] ? (<input  className='w-75' defaultValue={top}/>):(<div></div>)}
+                                  </div> */}
+                                </li>
+                              )))}
+                        </ul>
+                      </div>
+                      <div className="btn d-flex flex-column justify-content-start align-items-start">
+                        <div className="">
+                          Qty: 
+                        </div>
+                        <ul className="">
+                          {item.qty}
+                        </ul>
+                      </div>
+                      <div className="btn d-flex flex-column justify-content-start align-items-start">
+                        <div className="">
+                          Comments: 
+                        </div>
+                        <ul className="">
+                          {item.comments}
+                        </ul>
+                      </div>
+                    </div>
+                    {/* <div className="d-flex justify-content-around align-items-center w-25 flex-column">
+                      <button className="btn text-secondary" onClick={()=>handleDeleteItem(item.item_id)}>
+                        Edit
+                      </button>
+                      <button className="btn text-secondary" onClick={()=>handleDeleteItem(item.item_id)}>
+                        Delete
+                      </button>
+                    </div> */}
+                  </div>
+                ))
+              ):(
+                <div className=""></div>
+              ) }
+              
+            
+              </div>
+            
+          
+              </Modal.Body>
+              <Modal.Footer>
+              {/* <div className="">
+                  Método de pago: {metodo}
+              </div>
+
+              <Button variant="secondary" onClick={handleClose}>
+                  Close
+              </Button>
+              <Button variant="primary" onClick={handleOrder}>
+                  Send Order
+              </Button> */}
+            </Modal.Footer>
+          </Modal>
           <Modal show={metodoModal} onHide={handleClose} centered>
             <Modal.Header closeButton>
               <Modal.Title>Método de Pago</Modal.Title>

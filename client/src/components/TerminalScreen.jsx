@@ -623,18 +623,30 @@ function TerminalScreen() {
     useEffect(()=>{
         var same = false
         var deletion = false
+        var editing = false
         if (localStorage.getItem(LOCAL_TOTAL_KEY) == undefined){
             localStorage.setItem(LOCAL_TOTAL_KEY,0)
         }
         if(orderMounted.current){
             if (JSON.parse(localStorage.getItem(LOCAL_ORDER_KEY))?.items != undefined && order?.items != undefined){
                 var compareMe = JSON.parse(localStorage.getItem(LOCAL_ORDER_KEY))
-                // console.log("Are the items the same in both variables?", order?.items.length === compareMe.items.length)
-                // console.log("Order State Variable Length: ",order?.items.length)
-                // console.log("Order LS Variable Length: ",compareMe.items.length)
+                console.log("Are the items the same in both variables?", order?.items.length === compareMe.items.length)
+                console.log("Order State Variable Items: ",order?.items)
+                console.log("Order LS Variable Items: ",compareMe.items)
                 if (order?.items.length === compareMe.items.length){
-                    same = true
+                    if (JSON.stringify(order?.items) === JSON.stringify(compareMe.items)){
+                        console.log("Mismos")
+                        same = true
+                    }
+                    else{
+                        console.log("No son los mismos")
+                
+
+                        same = false
+                        editing = true
+                    }
                     // console.log("Same is", same)
+
                 }
                 if(order?.items.length < compareMe.items.length){
                     deletion = true
@@ -658,11 +670,18 @@ function TerminalScreen() {
                             // console.log("Sum to total pay, please: ", sumToTotal)
                             // console.log("Same is", same,"before trying to sum")
                             if (same == false && deletion == false){
-
-                                setTotalToPay(totalToPay + sumToTotal)
-                                localStorage.setItem(LOCAL_TOTAL_KEY,totalToPay + sumToTotal)
-
-                                console.log("Summed Quantity")
+                                if (editing == false){
+                                    setTotalToPay(totalToPay + sumToTotal)
+                                    localStorage.setItem(LOCAL_TOTAL_KEY,totalToPay + sumToTotal)
+    
+                                    console.log("Summed Quantity")
+                                }
+                                else{
+                                    setTotalToPay(totalToPay + sumToSubstract)
+                                    localStorage.setItem(LOCAL_TOTAL_KEY,totalToPay - sumToSubstract)
+                                    console.log("Substracted Quantity", sumToSubstract)
+                                }
+                                
                             }
                             else if (same == false && deletion == true){
                                 setTotalToPay(totalToPay - sumToSubstract)
