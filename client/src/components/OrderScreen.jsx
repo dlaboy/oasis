@@ -582,7 +582,7 @@ function OrderScreen() {
           }
         })
       }
-      else if(key=="comments"){
+      else if(key=="comments" || key==='ings'||key==='tops'){
         const updatedItems = itemss.map((item) =>
           item.item_id === itemId ? { ...item, [key]: newValue } : item
         );
@@ -602,6 +602,9 @@ function OrderScreen() {
           }
         })
         
+      }
+      else{
+
       }
 
       setEditType(false)
