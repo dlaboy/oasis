@@ -617,7 +617,9 @@ function TerminalScreen() {
 
     },[itemCounter])
 
-
+    useEffect(()=>{
+        setSumtoSubstract(0)
+    },[totalToPay])
 
 
     useEffect(()=>{
@@ -671,21 +673,23 @@ function TerminalScreen() {
                             // console.log("Same is", same,"before trying to sum")
                             if (same == false && deletion == false){
                                 if (editing == false){
-                                    setTotalToPay(totalToPay + sumToTotal)
-                                    localStorage.setItem(LOCAL_TOTAL_KEY,totalToPay + sumToTotal)
-    
+                                    setTotalToPay(parseFloat(totalToPay) + sumToTotal)
+                                    localStorage.setItem(LOCAL_TOTAL_KEY,parseFloat(totalToPay) + sumToTotal)
                                     console.log("Summed Quantity")
+                                   
+
                                 }
                                 else{
-                                    setTotalToPay(totalToPay + sumToSubstract)
-                                    localStorage.setItem(LOCAL_TOTAL_KEY,totalToPay - sumToSubstract)
+                                    setTotalToPay(parseFloat(totalToPay) + sumToSubstract)
+                                    localStorage.setItem(LOCAL_TOTAL_KEY,parseFloat(totalToPay) + sumToSubstract)
                                     console.log("Substracted Quantity", sumToSubstract)
+
                                 }
                                 
                             }
                             else if (same == false && deletion == true){
-                                setTotalToPay(totalToPay - sumToSubstract)
-                                localStorage.setItem(LOCAL_TOTAL_KEY,totalToPay - sumToSubstract)
+                                setTotalToPay(parseFloat(totalToPay) - sumToSubstract)
+                                localStorage.setItem(LOCAL_TOTAL_KEY,parseFloat(totalToPay) - sumToSubstract)
                                 console.log("Substracted Quantity", sumToSubstract)
                             }
                             else if (same == true){

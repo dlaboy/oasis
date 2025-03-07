@@ -8,7 +8,7 @@ function CurrencyFormatter({ value, currency = 'USD', locale = 'en-US' }) {
     });
 
     // Format the value as currency
-    const formattedValue = formatter.format(value);
+    const formattedValue = formatter.format(parseFloat(value));
 
     return <span>{formattedValue}</span>;
 }

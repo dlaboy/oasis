@@ -52,6 +52,58 @@ function OrderScreen() {
           drinks:false
       })
 
+    const [newIngsFlag, setNewIngsFlag] = useState({
+        VainillaIng:false,
+        ChocolateIng:false,
+        FresaIng:false,
+        NutellaIng:false,
+        OreoIng:false,
+        ManíIng:false,
+        AlmendraIng:false,
+        CocoIng:false,
+        BizcochoDeVainillaIng:false,
+        PistachioIng:false,
+        AmaretoIng:false,
+        GranolaIng:false,
+        ParchaIng:false,
+        MangoIng:false,
+        CanelaIng:false,
+        AnísIng:false,
+        LimónIng:false,
+        CaféIng:false,
+        BrownieIng:false,
+        GuineoIng:false,
+        CameoIng:false,
+        TronkyIng:false,
+        ChipsIng:false,
+        CheesecakeIng:false,
+        ChocolateBlancoIng:false,
+        FruityPebblesIng:false,
+        CocoaPebblesIng:false,
+        QuesoIng:false,
+        UvaIng:false,
+        ChinaIng:false,
+        GuanabanaIng:false,
+        ChipsAhoyIng:false,
+        KitKatIng:false,
+        BlueberryIng:false,
+        RedVelvettIng:false,
+        NuecesIng:false,
+        CarameloIng:false,
+        CherryIng:false,
+        BrandyIng:false,
+        PinaIng:false,
+        PinaColadaIng:false,
+        ManzanaIng:false,
+        GuayabaIng:false,
+        BizcochoDeZanahoriaIng:false,
+        FerreroIng:false,
+        CrackersIng:false,
+        MarshmellowIng:false,
+
+        
+    })
+
 
   // CONTEXT
   const {order, setOrder} = useContext( ItemContext )
@@ -366,7 +418,11 @@ function OrderScreen() {
   };
   },[])
 
-  const [editType,setEditType] = useState(true)
+  const [editType,setEditType] = useState(false)
+  const [editIngs,setEditIngs] = useState(false)
+  const [editTops,setEditTops] = useState(false)
+  const [editQty,setEditQty] = useState(false)
+  const [editComments,setEditComments] = useState(false)
   const [pastValue,setPastValue]=useState("")
   const [itemsIDtoEdit,setItemsIDtoEdit] = useState(0)
   const [triggerUpdate,setTriggerUpdate] = useState(true)
@@ -378,53 +434,200 @@ function OrderScreen() {
           { }        ];
   });
 
-  const handleEditType = (item_id)=>{
-    setEditType(prevState => !prevState)
-    if (itemsIDtoEdit ===item_id){
-      setItemsIDtoEdit(0)
-    }
-    else{
-      setItemsIDtoEdit(item_id)
-    }
-    console.log("ID of item to edit",itemsIDtoEdit)
-  }
+  const handleEdit = (item_id,property)=>{
+    if (property == 'type'){
+      setEditType(prevState => !prevState)
 
-  const updateItemValue = (itemss,itemId, key, newValue,past) => {
-    
-    const updatedItems = itemss.map((item) =>
-      item.item_id === itemId ? { ...item, [key]: newValue } : item
-    );
-    setUI(updatedItems)
-    order['items'].map(i=>{
-      if(i.item_id === itemId){
-        // const updatedOrder = order['items'].filter(i => i.item_id !== id)
-        setOrder(previous => ({
-          ...previous,
-          items: updatedItems,
-        }));
-        localStorage.setItem(LOCAL_ITEM_KEY, JSON.stringify({}))
-        console.log("Past value",past)
-        console.log("New value",newValue)
-
-        console.log("Past value's cost",itemCosts[past]* i.qty)
-        console.log("New value's cost",itemCosts[newValue] * i.qty)
-
-        var sub = (itemCosts[newValue] * i.qty) - (itemCosts[past]* i.qty)
-        console.log("Sum to substract",sub)
-        setSumtoSubstract(sub)
-        console.log("Total Updated")
+      if (itemsIDtoEdit ===item_id){
+        setItemsIDtoEdit(0)
       }
       else{
-        console.log('item not found')
+        setItemsIDtoEdit(item_id)
       }
-    })
-    setEditType(true)
-    newTypeFlags['rolls'] = false
-    newTypeFlags['shakes'] = false
-    newTypeFlags['banana'] = false
-    newTypeFlags['puppy'] = false
-    newTypeFlags['drinks'] = false
-    setNewType("")
+    }
+    else if (property == 'ings'){
+      setEditIngs(prevState => !prevState)
+
+      if (itemsIDtoEdit ===item_id){
+        setItemsIDtoEdit(0)
+      }
+      else{
+        setItemsIDtoEdit(item_id)
+      }
+    }
+    else if (property == 'tops'){
+      setEditTops(prevState => !prevState)
+
+      if (itemsIDtoEdit ===item_id){
+        setItemsIDtoEdit(0)
+      }
+      else{
+        setItemsIDtoEdit(item_id)
+      }
+    }
+    else if (property == 'qty'){
+      setEditQty(prevState => !prevState)
+
+      if (itemsIDtoEdit ===item_id){
+        setItemsIDtoEdit(0)
+      }
+      else{
+        setItemsIDtoEdit(item_id)
+      }
+    }
+    else if (property == 'comments'){
+      setEditComments(prevState => !prevState)
+
+      if (itemsIDtoEdit ===item_id){
+        setItemsIDtoEdit(0)
+      }
+      else{
+        setItemsIDtoEdit(item_id)
+      }
+    }
+
+      console.log("ID of item to edit",itemsIDtoEdit)
+  }
+
+    const handleIncrementNewQty = () => {
+      setNewQty(newQty + 1);
+    };
+
+    const handleDecrementNewQty = () => {
+        if (newQty > 0){
+            setNewQty(newQty - 1);
+        }
+    };
+
+  const updateItemValue = (itemss,itemId, key, newValue,past,nQ) => {
+    if (nQ != 0){
+      const updatedItems = itemss.map((item) =>
+        item.item_id === itemId ? { ...item, [key]: nQ } : item
+      );
+      setUI(updatedItems)
+
+      order['items'].map(i=>{
+        if(i.item_id === itemId){
+          // const updatedOrder = order['items'].filter(i => i.item_id !== id)
+          setOrder(previous => ({
+            ...previous,
+            items: updatedItems,
+          }));
+          localStorage.setItem(LOCAL_ITEM_KEY, JSON.stringify({}))
+        
+         if (key==='qty'){
+              console.log("Past value's cost",itemCosts[past]* i.qty)
+              console.log("Type of nQ",typeof(nQ))
+              console.log("New value's cost",itemCosts[past] * nQ)
+      
+              var sub = (itemCosts[past] * nQ) - (itemCosts[past]* i.qty)
+              console.log("Sum to substract",sub)
+              setSumtoSubstract(sub)
+              console.log("Total Updated")
+            }
+           
+          
+        }
+        else{
+          console.log('item not found')
+        }
+      })
+      setEditType(false)
+      setEditIngs(false)
+      setEditTops(false)
+      setEditQty(false)
+      setItemsIDtoEdit(0)
+      newTypeFlags['rolls'] = false
+      newTypeFlags['shakes'] = false
+      newTypeFlags['banana'] = false
+      newTypeFlags['puppy'] = false
+      newTypeFlags['drinks'] = false
+      setNewType("")
+      setNewIngs([])
+      setNewTops([])
+      setNewQty(0)
+
+    }
+    else{
+      if (key==='type'){
+        const updatedItems = itemss.map((item) =>
+          item.item_id === itemId ? { ...item, [key]: newValue } : item
+        );
+        setUI(updatedItems)
+        order['items'].map(i=>{
+          if(i.item_id === itemId){
+            // const updatedOrder = order['items'].filter(i => i.item_id !== id)
+            setOrder(previous => ({
+              ...previous,
+              items: updatedItems,
+            }));
+            localStorage.setItem(LOCAL_ITEM_KEY, JSON.stringify({}))
+            
+            console.log("Past value",past)
+            console.log("New value",newValue)
+            
+          
+            console.log("Past value's cost",itemCosts[past]* i.qty)
+            console.log("New value's cost",itemCosts[newValue] * i.qty)
+    
+            var sub = (itemCosts[newValue] * i.qty) - (itemCosts[past]* i.qty)
+            console.log("Sum to substract",sub)
+            setSumtoSubstract(sub)
+            console.log("Total Updated")
+            
+            
+          }
+          else{
+            console.log('item not found')
+          }
+        })
+      }
+      else if(key=="comments"){
+        const updatedItems = itemss.map((item) =>
+          item.item_id === itemId ? { ...item, [key]: newValue } : item
+        );
+        setUI(updatedItems)
+        order['items'].map(i=>{
+          if(i.item_id === itemId){
+            // const updatedOrder = order['items'].filter(i => i.item_id !== id)
+            setOrder(previous => ({
+              ...previous,
+              items: updatedItems,
+            }));
+            localStorage.setItem(LOCAL_ITEM_KEY, JSON.stringify({}))
+                
+          }
+          else{
+            console.log('item not found')
+          }
+        })
+        
+      }
+
+      setEditType(false)
+      setEditIngs(false)
+      setEditTops(false)
+      setEditQty(false)
+      setEditComments(false)
+      setItemsIDtoEdit(0)
+      newTypeFlags['rolls'] = false
+      newTypeFlags['shakes'] = false
+      newTypeFlags['banana'] = false
+      newTypeFlags['puppy'] = false
+      newTypeFlags['drinks'] = false
+      setNewType("")
+      setNewIngs([])
+      setNewTops([])
+      setNewQty(0)
+      setNewComments("")
+
+
+      
+ 
+
+    }
+    
+   
 
 
   };
@@ -437,6 +640,10 @@ function OrderScreen() {
  
 
   const [newType,setNewType] = useState("")
+  const [newIngs,setNewIngs] = useState([])
+  const [newTops,setNewTops] = useState([])
+  const [newQty,setNewQty] = useState(0)
+  const [newComments,setNewComments] = useState("")
 
   const handleNewType = (event) =>{
     var t = event.target.value
@@ -502,6 +709,151 @@ function OrderScreen() {
     }
   }
 
+    const [listaDeIngredientes,actualizarIngredientes] = useState([])
+    const [ingrediente_a_buscar,buscar_ingrediente] = useState("")
+
+    const [topping_a_buscar,buscar_topping] = useState("")
+    const [listaDeToppings,actualizarToppings] = useState([])
+    
+   
+
+   useEffect(()=>{
+    axios.get('/topping').then(response=>{
+      const respuesta_topping = response.data 
+      actualizarToppings(respuesta_topping)
+      
+  }).catch(error =>{
+      console.log("Error", error)
+  })
+    axios.get('/ingrediente').then(response=>{
+      const respuesta_ingredientes = response.data 
+      actualizarIngredientes(respuesta_ingredientes)
+      
+  }).catch(error =>{
+      console.log("Error", error)
+  })
+   },[])
+
+   useEffect(()=>{
+
+    if (ingrediente_a_buscar !== ""){
+        console.log("Ingrediente a Buscar", ingrediente_a_buscar)
+
+        const params = { nombre: ingrediente_a_buscar}
+        axios.get('/ingrediente',{params}).then(response=>{
+          console.log('Ingredientes encontrados', response.data)
+
+        actualizarIngredientes(response.data)
+            
+        }).catch(error =>{
+            console.log("Error", error)
+        })
+
+       
+    }
+    else if(ingrediente_a_buscar === ""){
+        console.log("Ingrediente a Buscar", ingrediente_a_buscar)
+
+    
+
+        axios.get('/ingrediente').then(response=>{
+          console.log('Ingredientes encontrados', response.data)
+
+          actualizarIngredientes(response.data)
+            
+        }).catch(error =>{
+            console.log("Error", error)
+        })
+    }
+    
+   
+},[ingrediente_a_buscar])
+
+useEffect(()=>{
+
+  if (topping_a_buscar !== ""){
+
+      const params = { nombre: topping_a_buscar}
+      axios.get('/topping',{params}).then(response=>{
+
+      actualizarToppings(response.data)
+          
+      }).catch(error =>{
+          console.log("Error", error)
+      })
+
+     
+  }
+  else if(topping_a_buscar === ""){
+
+      axios.get('/topping').then(response=>{
+
+      actualizarToppings(response.data)
+          
+      }).catch(error =>{
+          console.log("Error", error)
+      })
+  }
+  
+ 
+},[topping_a_buscar])
+
+const handleIngredientSearch = (event) =>{
+
+  buscar_ingrediente(event.target.value)
+
+}
+const handleToppingSearch = (event) =>{
+
+  buscar_topping(event.target.value)
+
+}
+
+const handleNewComments= (event) => {
+  setNewComments(event.target.value)
+}
+
+const addActive = (event) =>{
+  if (event.target.classList.contains('active')){
+    event.target.classList.remove('active')
+    if (event.target.classList.contains('ingredients')){
+      const updatedNewIngs = newIngs.filter(ing=> ing !== event.target.value)
+      setNewIngs(updatedNewIngs)
+    }
+    else if (event.target.classList.contains('toppings')){
+      if (event.target.value != "No toppings"){
+        const updatedNewTops = newTops.filter(top=> top !== event.target.value)
+        setNewTops(updatedNewTops)
+      }
+      else{
+        setNewTops([])
+
+      }
+    
+
+    }
+    
+
+
+  }
+  else if (!event.target.classList.contains('active')){
+    event.target.classList.add('active')
+    if (event.target.classList.contains('ingredients')){
+      setNewIngs(prevIngs=>[...prevIngs,event.target.value])
+    }
+    else if (event.target.classList.contains('toppings')){
+      if (event.target.value != "No toppings"){
+        setNewTops(prevTops=>[...prevTops,event.target.value])
+      }
+      else{
+        setNewTops([])
+
+      }
+
+
+    }
+  }
+}
 
 
   return (
@@ -547,7 +899,7 @@ function OrderScreen() {
                 <div className="d-flex flex-column  justify-content-around">
                 {item && item.type !== 'drinks' && (
                             <div className="fw-bold">
-                              Ingredients:
+                              Toppings:
                             </div>
                           )}
                   <ul className="d-flex flex-column">
@@ -801,7 +1153,7 @@ function OrderScreen() {
                 order.items.map(item =>  (
                   <div key={item.item_id} className='border-bottom border-dark d-flex flex-row '>
                     <div className="w-100 p-3">
-                      <div className="btn d-flex flex-column justify-content-start align-items-start" onClick={()=>handleEditType(item.item_id)}>
+                      <div className="btn d-flex flex-column justify-content-start align-items-start" onClick={()=>handleEdit(item.item_id,'type')}>
                         <div className="">
                           Type: 
                         </div>
@@ -809,7 +1161,7 @@ function OrderScreen() {
                           {item.type}
                         </ul>
                       </div>
-                      <div style={itemsIDtoEdit !== item.item_id ? {display:'none'}: {display:'flex'}} className='mt-3 mb-3 flex-column  w-100 justify-content-center align-items-center bg-primary-subtle'>
+                      <div style={ (editType && itemsIDtoEdit === item.item_id )? {display:'flex'}: {display:'none'}} className='mt-3 mb-3 flex-column  w-100 justify-content-center align-items-center bg-primary-subtle'>
                         {/* <div className="col w-25 type-text text-start">Type</div> */}
                         <div className=" d-flex flex-row w-100 justify-content-around align-items-center "  style={{pointerEvents : 'none'}}>
                             <div className=" me-1">
@@ -834,12 +1186,12 @@ function OrderScreen() {
         
                             </div>
                         </div>
-                        <button  className={newType ?? newType != item.type ?? newType != "" ? 'btn btn-primary p-2 mt-1 w-100':'btn btn-outline-secondary p-2 mt-1 w-100 disabled' } onClick={()=>updateItemValue(order.items,item.item_id,'type',newType,item.type)}>Guardar</button>
+                        <button  className={newType ?? newType != item.type ?? newType != "" ? 'btn btn-primary p-2 mt-1 w-100':'btn btn-outline-secondary p-2 mt-1 w-100 disabled' } onClick={()=>updateItemValue(order.items,item.item_id,'type',newType,item.type,0)}>Guardar</button>
                         {/* <input type="text" value={newType} className='' /> */}
                     </div>
-                      <div className="btn d-flex flex-column justify-content-start align-items-start">   
+                      <div className="btn d-flex flex-column justify-content-start align-items-start" onClick={()=>handleEdit(item.item_id,'ings')}>   
                       {item && item.type !== 'drinks' && (
-                            <div className="">
+                            <div className="" >
                               Ingredients:
                             </div>
                           )}
@@ -851,9 +1203,36 @@ function OrderScreen() {
                                 </div> */}
                                 </li>
                               )))}
+
                       </ul>
                       </div>
-                      <div className="btn d-flex flex-column justify-content-start align-items-start">
+                      <div style={ (editIngs && itemsIDtoEdit === item.item_id) ? {display:'flex'}: {display:'none'}} className=" flex-column bg-primary-subtle" >
+                        <div className="w-100">
+                          <input type="text" className='p-1 w-100' onChange={handleIngredientSearch} placeholder='Buscar ingrediente'/>
+                        </div>
+                        <div className="d-flex flex-row overflow-scroll">
+                        {listaDeIngredientes.map(ing=>(
+                              <button className={'btn btn-outline-secondary m-1 ingredients p-3' }value={ing.nombre} onClick={addActive} >{ing.nombre}</button>
+                        ))}         
+                        </div>
+                        <div className="d-flex flex-column justify-content-center align-items-center">
+                          <div className="">Ingredientes nuevos para este item</div>
+                            <ul className="d-flex flex-row justify-content-around align-items-center w-100">
+                            {newIngs && newIngs.length != 0 && newIngs.map((ing=>(  
+                                    <li>{ing}
+                                    {/* <div className="text-secondary">
+                                    {editEnable[order._id] ? (<input className='w-75' defaultValue={ing}/>):(<div></div>)}
+                                    </div> */}
+                                    </li>
+                                  )))}
+
+                          </ul>
+                        </div>
+                        <button  className={ newIngs.length !== 0 ? 'btn btn-primary p-2 mt-1 w-100':'btn btn-outline-secondary p-2 mt-1 w-100 disabled' } onClick={()=>updateItemValue(order.items,item.item_id,'ings',newIngs,item.ings,0)}>Guardar</button>
+
+                      </div>
+                      <div className="btn d-flex flex-column justify-content-start align-items-start" onClick={()=>handleEdit(item.item_id,'tops')}>
+                        
                       {item && item.type !== 'drinks' && (
                             <div className="">
                               Toppings:
@@ -868,7 +1247,34 @@ function OrderScreen() {
                               )))}
                         </ul>
                       </div>
-                      <div className="btn d-flex flex-column justify-content-start align-items-start">
+                      <div style={ (editTops && itemsIDtoEdit === item.item_id) ? {display:'flex'}: {display:'none'}} className=" flex-column bg-primary-subtle" >
+                        <div className="w-100">
+                          <input type="text" className='p-1 w-100' onChange={handleToppingSearch} placeholder='Buscar topping'/>
+                        </div>
+                        <div className="d-flex flex-row overflow-scroll">
+                        <button className={'btn btn-outline-secondary m-1 toppings p-3' }value={"No toppings"} onClick={addActive} >No toppings</button>
+
+                        {listaDeToppings.map(top=>(
+                              <button className={'btn btn-outline-secondary m-1 toppings p-3' }value={top.nombre} onClick={addActive} >{top.nombre}</button>
+                        ))}         
+                        </div>
+                        <div className="d-flex flex-column justify-content-center align-items-center">
+                          <div className="">Toppings nuevos para este item</div>
+                            <ul className="d-flex flex-row justify-content-around align-items-center w-100">
+                            {newTops && newTops.length != 0 && newTops.map((top=>(  
+                                    <li>{top}
+                                    {/* <div className="text-secondary">
+                                    {editEnable[order._id] ? (<input className='w-75' defaultValue={ing}/>):(<div></div>)}
+                                    </div> */}
+                                    </li>
+                                  )))}
+
+                          </ul>
+                        </div>
+                        <button  className={'btn btn-primary p-2 mt-1 w-100' } onClick={()=>updateItemValue(order.items,item.item_id,'tops',newTops,item.tops,0)}>Guardar</button>
+
+                      </div>
+                      <div className="btn d-flex flex-column justify-content-start align-items-start" onClick={()=>handleEdit(item.item_id,'qty')}>
                         <div className="">
                           Qty: 
                         </div>
@@ -876,13 +1282,36 @@ function OrderScreen() {
                           {item.qty}
                         </ul>
                       </div>
-                      <div className="btn d-flex flex-column justify-content-start align-items-start">
+                      <div style={ (editQty && itemsIDtoEdit === item.item_id) ? {display:'flex'}: {display:'none'}} className=" flex-column bg-primary-subtle justify-content-center align-items-center w-100">
+                          <div className=" d-flex flex-row w-100 justify-content-around p-2">
+                                <div className="">
+                                    <button className='btn btn-outline-primary rounded-pill' onClick={handleDecrementNewQty}>-</button>
+                                </div>
+                                <div className="">
+                                {newQty}
+                                </div>
+                                <div className="">
+                                    <button className='btn btn-outline-primary rounded-pill' onClick={handleIncrementNewQty}>+</button>
+                                </div>
+                            </div>
+                            <button  className= 'btn btn-primary p-2 mt-1 w-100' onClick={()=>updateItemValue(order.items,item.item_id,'qty',newType,item.type,newQty)}>Guardar</button>
+
+
+
+                      </div>
+                      <div className="btn d-flex flex-column justify-content-start align-items-start" onClick={()=>handleEdit(item.item_id,'comments')}>
                         <div className="">
                           Comments: 
                         </div>
                         <ul className="">
                           {item.comments}
                         </ul>
+                      </div>
+                      <div style={ (editComments && itemsIDtoEdit === item.item_id) ? {display:'flex'}: {display:'none'}} className="p-2 flex-column bg-primary-subtle align-items-center justify-content-center" >
+                        <div className="">
+                            <textarea name="" id="" cols="60" rows="4" defaultValue={newComments} onChange={handleNewComments} className='rounded-3'></textarea>
+                        </div>
+                        <button  className='btn btn-primary p-2 mt-1 w-100' onClick={()=>updateItemValue(order.items,item.item_id,'comments',newComments,item.comments,0)}>Guardar</button>
                       </div>
                     </div>
                     {/* <div className="d-flex justify-content-around align-items-center w-25 flex-column">
