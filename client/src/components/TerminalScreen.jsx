@@ -1282,23 +1282,22 @@ function TerminalScreen() {
                         </div>
                     </div>
                     )}
-                    <div className="d-flex flex-row m-2 p-3 justify-content-around align-items-center" style={{width:'95vw'}}>
-                        {type !== 'drinks' && (
-                        <div className='col m-2 d-flex flex-row justify-content-between ps-3' >
-                            <div className="col">Comments</div>
-                            <div className="col">
-                                <textarea name="" id="" cols="30" rows="1" defaultValue={comments} onChange={handleComments} className='rounded'></textarea>
-                            </div>
-                        </div>
-                        )}
-                        <div className="col w-100 d-flex justify-content-center align-items-center flex-column">
-                            { required && <div className='text-danger text-center'>Missing fields</div> }
-                            <button className='btn btn-primary p-3 rounded-pill' onClick={handleNewItem}>Add Item to Order</button>
+                    {type !== 'drinks' && (
+                    <div className='col m-2 d-flex flex-row justify-content-between ps-3' style={{width:'90vw'}}>
+                        <div className="col">Comments</div>
+                        <div className="col">
+                            <textarea name="" id="" cols="30" rows="1" defaultValue={comments} onChange={handleComments} className='rounded'></textarea>
                         </div>
                     </div>
+                    )}
+                    
 
 
             
+                </div>
+                <div className="col w-100 d-flex justify-content-center align-items-center flex-column">
+                    { required && <div className='text-danger text-center'>Missing fields</div> }
+                    <button className='btn btn-primary p-3 rounded-pill' onClick={handleNewItem}>Add Item to Order</button>
                 </div>
             </div>
         </div>
