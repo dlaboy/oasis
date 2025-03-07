@@ -1123,7 +1123,7 @@ function TerminalScreen() {
         <div className=" bg-light terminal-screen" >
             <div className=' d-flex flex-column terminal-screen-2' style={{height:'95vh',overflowY:'scroll'}} key={componentKey}>
                 <div className=" w-100 d-flex flex-row justify-content-around align-items-center" style={{width:'90vw'}}>
-                    <div className=" d-flex  align-items-center justify-content-center btn  border-0 rounded-pill " onClick={handleShowOrders}>Orders Screen</div>
+                    <div className=" d-flex  align-items-center justify-content-center btn rounded-pill btn-outline-primary p-2" onClick={handleShowOrders}>Orders Screen</div>
                     <div className="  pt-4 ">
                         {/* <label htmlFor="cliente">Nombre</label> */}
                         <div className=" ">
@@ -1282,20 +1282,21 @@ function TerminalScreen() {
                         </div>
                     </div>
                     )}
-                    {type !== 'drinks' && (
-                    <div className='col m-2 d-flex flex-row justify-content-between ps-3' style={{width:'90vw'}}>
-                        <div className="col">Comments</div>
-                        <div className="col">
-                            <textarea name="" id="" cols="30" rows="2" defaultValue={comments} onChange={handleComments}></textarea>
+                    <div className="d-flex flex-row m-2 p-3 justify-content-around align-items-center" style={{width:'95vw'}}>
+                        {type !== 'drinks' && (
+                        <div className='col m-2 d-flex flex-row justify-content-between ps-3' >
+                            <div className="col">Comments</div>
+                            <div className="col">
+                                <textarea name="" id="" cols="30" rows="1" defaultValue={comments} onChange={handleComments} className='rounded'></textarea>
+                            </div>
+                        </div>
+                        )}
+                        <div className="col w-100 d-flex justify-content-center align-items-center flex-column">
+                            { required && <div className='text-danger text-center'>Missing fields</div> }
+                            <button className='btn btn-primary p-3 rounded-pill' onClick={handleNewItem}>Add Item to Order</button>
                         </div>
                     </div>
-                    )}
 
-                    { required && <div className='text-danger text-center'>Missing fields</div> }
-
-                    <div className="col w-100 d-flex justify-content-center align-items-center">
-                        <button className='btn btn-outline-primary p-3 rounded-pill' onClick={handleNewItem}>Add Item to Order</button>
-                    </div>
 
             
                 </div>

@@ -861,7 +861,7 @@ const addActive = (event) =>{
 
   return (
     // <div className='m-2 bg-light' style={{height:'95vh',width:'30vw'}}>
-    <div className={hideOrders ? 'bg-light order-container':'d-none bg-light order-container'} >
+    <div className={hideOrders ? 'bg-white order-container shadow-lg':'d-none bg-white order-container'} >
       <Modal show={detailShow} onHide={handleDetailClose}>
           <Modal.Header closeButton>
             <Modal.Title>Detalles de la Orden</Modal.Title>
@@ -1138,9 +1138,11 @@ const addActive = (event) =>{
           </div>
           <div className="botones-actiones d-flex align-items-center justify-content-around flex-column">
             <div className="text-danger">{adviceMessage}</div>
-
-            <button type='button' onClick={handleShow} className='btn btn-outline-primary rounded-pill p-3'>Send Order</button>
             <button type='button' onClick={handleChargeShow} className='btn btn-outline-primary rounded-pill p-3'> Additional Charge</button>
+            <div className="d-flex flex-column w-100 justify-content-around">
+              <button type='button' onClick={handleShow} className='btn btn-primary p-3'>Send Order</button>
+            </div>
+
           </div>
 
         </div>
