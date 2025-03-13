@@ -33,8 +33,10 @@ dotenv.config();
 
 
 const authenticateGoogle = () => {
+  console.log("GOOGLE KEY",process.env.GOOGLE_KEY)
   const auth = new google.auth.GoogleAuth({
     // keyFile: `${__dirname}/fluted-oasis-433605-f6-aa5c5ad4da53.json`,
+    
     credentials: JSON.parse(process.env.GOOGLE_KEY),
     // keyFile: process.env.GOOGLE_FILE,
     scopes: "https://www.googleapis.com/auth/drive",

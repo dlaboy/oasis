@@ -4,6 +4,8 @@ var router = express.Router();
 var Order = require('../models/order.js')
 var OldOrder = require('../models/old_order.js')
 var db = require("../db.js");
+const moment = require('moment-timezone'); // Ensure this is installed
+
 
 
 /* GET users listing. */
@@ -17,9 +19,9 @@ router.get('/', async function (req, res, next) {
     
     res.send(orders);
 });
-// GET all totalATHs sales
+// GET all totalATHs orders
 // Use the aggregate function to calculate the sum
-router.get('/salesATH',async function(req, res, next){
+router.get('/ordersATH',async function(req, res, next){
     Order.aggregate([
         {
             $match: {
@@ -37,19 +39,19 @@ router.get('/salesATH',async function(req, res, next){
             if (result.length > 0) {
                 res.send({ totalSalesATH: result[0].totalSalesATH });
             } else {
-                res.status(404).send('No sales for ATH payment method found.');
+                res.status(404).send('No orders for ATH payment method found.');
             }
         } else {
-            console.log('No sales for ATH payment method found.');
+            console.log('No orders for ATH payment method found.');
         }
     }).catch(err => {
-        console.error('Error calculating total sales for ATH:', err);
+        console.error('Error calculating total orders for ATH:', err);
     });
 
 
 })
 
-router.get('/salesCASH',async function(req, res, next){
+router.get('/ordersCASH',async function(req, res, next){
     Order.aggregate([
         {
             $match: {
@@ -67,13 +69,13 @@ router.get('/salesCASH',async function(req, res, next){
             if (result.length > 0) {
                 res.send({ totalSalesCASH: result[0].totalSalesCASH });
             } else {
-                res.status(404).send('No sales for CASH payment method found.');
+                res.status(404).send('No orders for CASH payment method found.');
             }
         } else {
-            console.log('No sales for CASH payment method found.');
+            console.log('No orders for CASH payment method found.');
         }
     }).catch(err => {
-        console.error('Error calculating total sales for CASH:', err);
+        console.error('Error calculating total orders for CASH:', err);
     });
 })
 router.get('/count', async function(req,res, next){
@@ -132,6 +134,38 @@ router.get('/countToppings',async function(req,res, next){
     });
     
 })
+router.get('/getCrunchTime', async function (req, res, next) {
+    // if (req.body.name){
+    //     var orders = await Order.find({client_name: req.body.name})
+    // }
+    // else{
+    // }
+    var orders = await Order.find({});
+
+    // Group by hour
+    let hourlyCounts = {};
+
+    orders.forEach(order => {
+        let hour = moment(order.Date).tz('America/Puerto_Rico').format('hh A'); // "01 PM", "02 PM"
+        
+        if (hourlyCounts[hour]) {
+            hourlyCounts[hour]++;
+        } else {
+            hourlyCounts[hour] = 1;
+        }
+    });
+
+    // Convert to array for chart
+    let formattedData = Object.keys(hourlyCounts).map(hour => ({
+        hour,
+        count: hourlyCounts[hour]
+    }));
+
+    // Sort by time order (AM/PM)
+    formattedData.sort((a, b) => moment(a.hour, 'hh A') - moment(b.hour, 'hh A'));
+
+    res.send(formattedData);
+});
 router.post('/', async function (req, res) {
     const name = req.body.name;
     const items = req.body.items;
@@ -140,7 +174,7 @@ router.post('/', async function (req, res) {
 
     console.log(items)
 
-    let newOrder = new Order({client_name: name, items:items, payment_method: payment,total: total_to_pay})
+    let newOrder = new Order({client_name: name, items:items, payment_method: payment,total: total_to_pay, })
     /**
      * This function below allows us to verify that both
      * the username and password for the user are correct. 
@@ -198,7 +232,7 @@ router.post('/copy_orders', async (req, res) => {
     try {
 
         const sale_id = req.body.sale_id
-        console.log(typeof(req.body.sale_id))
+        console.log("COPYING",req.body.sale_id)
 
         // Fetch all orders
         const orders = await Order.find();
@@ -207,12 +241,14 @@ router.post('/copy_orders', async (req, res) => {
             return res.status(404).json({ message: "No orders found to copy" });
         }
 
-        // const saleIdObject = new ObjectId(sale_id);
-        // Attach sale_id to each order
+        // const orderIdObject = new ObjectId(order_id);
+        // Attach order_id to each order
         const ordersWithSaleId = orders.map(order => ({
             ...order.toObject(),
             sale_id
         }));
+
+        console.log("Orders with Sale ID", ordersWithSaleId)
 
         // Insert them into 'old_orders'
         const result = await OldOrder.insertMany(ordersWithSaleId);

@@ -11,6 +11,10 @@ const mongoose = require("mongoose");
 
 
 const OrderSchema = new mongoose.Schema({
+    Date: {
+        type: Date,
+        default: Date.now
+    },
     client_name : String,
     items: Object,
     payment_method: String,

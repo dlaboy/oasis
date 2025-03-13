@@ -35,7 +35,9 @@ function Sales(){
     const [ingredientLabels , setIngredientLabels] = useState([])
     const [ingredientData , setIngredientData] = useState([])
     const [toppingLabels , setToppingLabels] = useState([])
+    const [crunchTimeLabels,setCrunchTimeLabels] = useState([])
     const [toppingData , setToppingData] = useState([])
+    const [crunchTimeData,setCrunchTimeData] = useState([])
     const timestamp = moment().format('YYYY-MM-DD hh:mm:ss'); // Gets current time in ISO format
     const {renderOrdersKey, setRenderOrdersKey} = useContext( ItemContext )
 
@@ -43,6 +45,7 @@ function Sales(){
     const [itemsPerType,setItemsPerType] = useState(false)
     const [top5Ings,setTop5Ings] = useState(false)
     const [top5Tops,setTop5Tops] = useState(false)
+    const [crunchTime,setCrunchTime] = useState(false)
     const [today,setToday] = useState(true )
     const [allSales,setAllSales] = useState([])
     const [day,setDay] = useState("")
@@ -66,6 +69,9 @@ function Sales(){
             else if (top5Tops == true){
                 setTop5Tops(false)
             }
+            else if (crunchTime == true){
+                setCrunchTime(false)
+            }
         }
         else if (selectedItem == 'Top 5 Ingredients'){
             setTop5Ings(true)
@@ -74,6 +80,9 @@ function Sales(){
             }
             else if (top5Tops == true){
                 setTop5Tops(false)
+            }
+            else if (crunchTime == true){
+                setCrunchTime(false)
             }
         }
         else if (selectedItem == 'Top 5 Toppings'){
@@ -84,11 +93,27 @@ function Sales(){
             else if (top5Ings == true){
                 setTop5Ings(false)
             }
+            else if (crunchTime == true){
+                setCrunchTime(false)
+            }
+        }
+        else if (selectedItem == 'Crunch Time'){
+            setCrunchTime(true)
+            if (itemsPerType == true){
+                setItemsPerType(false)
+            }
+            else if (top5Ings == true){
+                setTop5Ings(false)
+            }
+            else if (top5Tops == true){
+                setTop5Tops(false)
+            }
         }
         else{
             setItemsPerType(false)
             setTop5Ings(false)
             setTop5Tops(false)
+            setCrunchTime(false)
         }
         
     },[selectedItem])
@@ -234,15 +259,16 @@ function Sales(){
 
         const intervalId = setInterval(() => {
             
+          
             
             // Place your logic here that you want to execute every 5 seconds
-            axios.get('/orders/salesATH').then(response=>{
-                console.log("Response", typeof(response.data))
+            axios.get('/orders/ordersATH').then(response=>{
+                console.log("Response ATH", response.data.totalSalesATH)
                 setATHsales(response.data.totalSalesATH)
               }).catch(error =>{
                 console.log("Error", error)
               })
-            axios.get('/orders/salesCASH').then(response=>{
+            axios.get('/orders/ordersCASH').then(response=>{
                 console.log("Response", typeof(response.data))
                 setCASHsales(response.data.totalSalesCASH)
     
@@ -319,6 +345,21 @@ function Sales(){
                 setToppingLabels(labels)
                 setToppingData(data)
                 
+            }).catch(error =>{
+                console.log("Error", error)
+            })
+            axios.get('/orders/getCrunchTime').then(response=>{
+                console.log("Response",response)
+                var labels=[]
+                var data=[]
+                response.data.forEach(object =>{
+                    labels.push(object.hour)
+                    data.push(object.count)
+                })
+                console.log("Labels: ",labels)
+                console.log("Data: ", data)
+                setCrunchTimeLabels(labels)
+                setCrunchTimeData(data)
             }).catch(error =>{
                 console.log("Error", error)
             })
@@ -598,7 +639,8 @@ function Sales(){
         const chartUrls = [
         generateChartUrl(ingredientData.map(ing=>ing), ingredientLabels,"Top 5 Ingredients"),
         generateChartUrl(toppingData.map(top=>top), toppingLabels,"Top 5 Toppings"),
-        generateChartUrl([rolls,shakes,banana,perro], ['Rolls','Shakes','Banana','Puppy'],"Ice Creams by type")
+        generateChartUrl([rolls,shakes,banana,perro], ['Rolls','Shakes','Banana','Puppy'],"Ice Creams by type"),
+        generateChartUrl(crunchTimeData.map(cT =>cT), crunchTimeLabels,"Crunch Time")
         ];
 
         let currentY = doc.previousAutoTable.finalY + 20;
@@ -725,13 +767,13 @@ function Sales(){
 
     
     const handleReport = event => {
-        axios.get('/orders/salesATH').then(response=>{
+        axios.get('/orders/ordersATH').then(response=>{
             console.log("Response", typeof(response.data))
             setATHsales(response.data.totalSalesATH)
           }).catch(error =>{
             console.log("Error", error)
           })
-        axios.get('/orders/salesCASH').then(response=>{
+        axios.get('/orders/ordersCASH').then(response=>{
             console.log("Response", typeof(response.data))
             setCASHsales(response.data.totalSalesCASH)
 
@@ -1082,12 +1124,14 @@ function Sales(){
                         <option value="Ice Creams per type">Ice Creams per type</option>
                         <option value="Top 5 Ingredients">Top 5 Ingredients</option>
                         <option value="Top 5 Toppings">Top 5 Toppings</option>
+                        <option value="Crunch Time">Crunch Time</option>
                     </select>
                 </div>
                 <div className='container d-flex '>
                     { itemsPerType && <BarChart  className='m-2' keys={['Rolls','Shakes','Banana','Puppy']} values={[rolls,shakes,banana,perro]}/>}
                     { top5Ings &&<BarChart  className='m-2' keys={ingredientLabels} values={ingredientData} />}
                     { top5Tops &&<BarChart  className='m-2' keys={toppingLabels} values={toppingData} />}
+                    { crunchTime &&<BarChart  className='m-2' keys={crunchTimeLabels} values={crunchTimeData} />}
                 </div>
                 {/* <FileUpload></FileUpload> */}
                 {isUploaded && <>{alert("File Uploaded!")}</>}
