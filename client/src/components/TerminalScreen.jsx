@@ -5,8 +5,6 @@ import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
 import { ItemContext } from '../../context/ItemContext';
 import './TerminalScreen.css'
-// import { ToastContainer, toast } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css';
 import { Toaster, toast } from 'react-hot-toast';
 
 
