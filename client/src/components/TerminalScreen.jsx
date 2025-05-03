@@ -5,6 +5,10 @@ import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
 import { ItemContext } from '../../context/ItemContext';
 import './TerminalScreen.css'
+// import { ToastContainer, toast } from 'react-toastify';
+// import 'react-toastify/dist/ReactToastify.css';
+import { Toaster, toast } from 'react-hot-toast';
+
 
 
 
@@ -22,6 +26,9 @@ const LOCAL_TOTAL_KEY = import.meta.env.VITE_REACT_APP_LOCAL_TOTAL_KEY;
 
 
 function TerminalScreen() {
+    // const notify = () => toast.success('Item saved successfully!');
+
+
     const [required,setRequired] = useState(false)
     const [ingredientsButtons, showIngredients] = useState(false);
     const [toppingsButtons, showToppings] = useState(false);
@@ -192,6 +199,12 @@ function TerminalScreen() {
     useEffect(()=>{
        console.log('Current state of ingsFlag:', ingsFlag);
     },[listaDeIngredientes])
+
+
+    const playSound = () => {
+        const audio = new Audio('/sounds/success.mp3'); // path is relative to public/
+        audio.play();
+    };
 
    
                
@@ -1039,11 +1052,26 @@ function TerminalScreen() {
       }
 
     const handleNewItem = (event) =>{
+        // alert('Item Added!');
+        // toast.success('Item added successfully!');
+        // toast.dismiss()
+        // toast.success('This is a success message!', {
+        //     position: 'top-right',
+        //     autoClose: 3000,
+        //   });
+
+
         if (type == ""){
             setRequired(true)   
+            toast.error("Escoge un Type (Rolls, Shakes, Banana, Puppy o Drinks")
+
         }
         else if(qty == 0 && type != 'drinks'){
             setRequired(true)   
+            if (qty == 0){
+                toast.error("Cantidad no puede ser cero")
+            }
+
 
         }
         else{
@@ -1101,6 +1129,9 @@ function TerminalScreen() {
                     return resetFlags;
                 });
             }
+            toast.success('Item añadido a la orden!')
+            // playSound()
+
         }
         
 
@@ -1296,8 +1327,11 @@ function TerminalScreen() {
             
                 </div>
                 <div className="col w-100 d-flex justify-content-center align-items-center flex-column">
-                    { required && <div className='text-danger text-center'>Missing fields</div> }
+                    {/* { required && <div className='text-danger text-center'>Missing fields</div> } */}
                     <button className='btn btn-primary p-3 rounded-pill' onClick={handleNewItem}>Add Item to Order</button>
+                    {/* <ToastContainer/> */}
+                    <Toaster position="top-right" />
+
                 </div>
             </div>
         </div>

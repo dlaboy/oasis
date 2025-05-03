@@ -78,7 +78,7 @@ const server  = app.listen(PORT, async () =>{
   if (PORT == 3000){
     const open = await import('open');
 
-    open.default(`http://127.0.0.1:${PORT}`);
+    // open.default(`http://127.0.0.1:${PORT}`);
 
   }
 

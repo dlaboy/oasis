@@ -8,6 +8,8 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import CurrencyFormatter from '../tools/CurrencyFormatter';
 import './OrderScreen.css'
+import { Toaster, toast } from 'react-hot-toast';
+
 
 
 const LOCAL_NAME_KEY = import.meta.env.VITE_REACT_APP_LOCAL_NAME_KEY;
@@ -232,11 +234,14 @@ function OrderScreen() {
   // DELETE ITEM FROM ORDER IN DB
   const handleDelete = async (orderId) => {
     try{
+      
       console.log(orderId)
       const response = await axios.delete('/orders',{data:{ id: orderId}})
       console.log('Item deleted:', response.data);
+      toast.success('Orden borrada')
     }
     catch(error){
+      toast.error('Order failed to delete!')
       console.log('error:', error)
     }
     setDeleteShow(false)
@@ -245,9 +250,15 @@ function OrderScreen() {
   }
 
   const [adviceMessage, setAdviceMessage] = useState("")
+
+  const playSound = () => {
+    const audio = new Audio('/sounds/success.mp3'); // path is relative to public/
+    audio.play();
+  };
  
   // POST ORDER TO DB
   const handleOrder = async (event) =>{
+    
     setOrder(previous => ({
         ...previous,
         name: JSON.parse(localStorage.getItem(LOCAL_NAME_KEY)),
@@ -261,10 +272,12 @@ function OrderScreen() {
 
     if (JSON.parse(localStorage.getItem(LOCAL_NAME_KEY)) == null || JSON.parse(localStorage.getItem(LOCAL_NAME_KEY)) == ""){
       console.log("Order needs to be under a name")
-      setAdviceMessage("Orden debe estar bajo un nombre")
+      // setAdviceMessage("Orden debe estar bajo un nombre")
+      toast.error("Orden debe estar bajo un nombre")
     }
     else if(JSON.parse(localStorage.getItem(LOCAL_PM_KEY)) == null || JSON.parse(localStorage.getItem(LOCAL_PM_KEY)) == ""){
-      setAdviceMessage("Orden debe tener método de pago")
+      // setAdviceMessage("Orden debe tener método de pago")
+      toast.error("Orden debe tener método de pago")
     }
     else{
       setAdviceMessage("")
@@ -276,6 +289,10 @@ function OrderScreen() {
             'payment_method': JSON.parse(localStorage.getItem(LOCAL_PM_KEY)),
             'total': totalToPay
         })
+        toast.success("Orden añadida a la cola")
+
+        playSound()
+
         showMetodoModal(false)
 
         setTotalToPay(0)
@@ -315,6 +332,8 @@ function OrderScreen() {
         localStorage.setItem(LOCAL_ITEM_KEY, JSON.stringify({}))
         setSumtoSubstract(itemCosts[i.type] * i.qty)
         console.log("Total Updated")
+        toast.success('Item borrado')
+
       }
       else{
         console.log('item not found')
@@ -323,6 +342,8 @@ function OrderScreen() {
   }
   // DELETE ORDER FROM CURRENT ORDER IN LOCALSTORAGE
   const handleClear = () => {
+    
+    toast.success('Orden limpia!')
     setNewItem({})
     localStorage.setItem(LOCAL_ITEM_KEY, JSON.stringify({}))
     setOrder({})
@@ -332,9 +353,9 @@ function OrderScreen() {
     setName("")
     setTypeCounter(typeCounter -1)
     setFavCounter(favCounter -1)
-
+    
     setRenderOrdersKey(prevKey => prevKey + 1);
-
+    
     location.reload()
     
   }
@@ -363,12 +384,24 @@ function OrderScreen() {
     // }
   };
 
+  // useEffect(()=>{
+  //   if totalToPay == 
+  //   console.log("Total To Pay",parseInt(totalToPay,10) + charge)
+  //   localStorage.setItem(LOCAL_TOTAL_KEY,parseInt(totalToPay,10) + charge)
+  // },totalToPay)
+
   const añadirCargo = () =>{
-    console.log("Type of totalToPay", typeof(totalToPay))
-    console.log("Parsed totalToPay", typeof(parseInt(totalToPay,10)))
-    console.log("Type of charge", typeof(charge))
-    setTotalToPay(parseInt(totalToPay,10) + charge)
-    localStorage.setItem(LOCAL_TOTAL_KEY,parseInt(totalToPay,10) + charge)
+    toast.success("Cargo añadido")
+    // console.log("Type of totalToPay", typeof(totalToPay))
+    // console.log("Parsed totalToPay", typeof(parseInt(totalToPay,10)))
+    // console.log("Type of charge", typeof(charge))
+    console.log("Total",parseFloat(totalToPay,10))
+    console.log("Charge",charge)
+    console.log("Total To Pay",parseFloat(totalToPay,10) + charge)
+    setTotalToPay(parseFloat(totalToPay,10) + charge)
+    localStorage.setItem(LOCAL_TOTAL_KEY,parseFloat(totalToPay,10) + charge)
+
+    setCharge(0)
     
     setChargeShow(false)
   }
@@ -500,6 +533,8 @@ function OrderScreen() {
     };
 
   const updateItemValue = (itemss,itemId, key, newValue,past,nQ) => {
+    toast.success('Cambio guardado!')
+
     if (nQ != 0){
       const updatedItems = itemss.map((item) =>
         item.item_id === itemId ? { ...item, [key]: nQ } : item
@@ -546,6 +581,7 @@ function OrderScreen() {
       setNewIngs([])
       setNewTops([])
       setNewQty(0)
+
 
     }
     else{
@@ -875,7 +911,13 @@ const addActive = (event) =>{
                   <div className='fw-bold'> Type:  </div> 
                   <div className="">
                     <ul>
-                    {item.type}
+                    {/* {item.type} */}
+                    {item.type === 'rolls' && 'Rolls'}
+                    {item.type === 'banana' && 'Banana Split'}
+                    {item.type === 'shakes' && 'Shakes'}
+                    {item.type === 'puppy' && 'Puppy Rolls'}
+                    {item.type === 'drinks' && 'Drinks'}
+
                     </ul>
                   
                   {/* <div className="text-secondary">
@@ -1072,7 +1114,11 @@ const addActive = (event) =>{
                           Type: 
                         </div>
                         <ul className="">
-                          {item.type}
+                        {item.type === 'rolls' && 'Rolls'}
+                        {item.type === 'banana' && 'Banana Split'}
+                        {item.type === 'shakes' && 'Shakes'}
+                        {item.type === 'puppy' && 'Puppy Rolls'}
+                        {item.type === 'drinks' && 'Drinks'}
                         </ul>
                       </div>
                       {item && item.type !== 'drinks' && (
@@ -1163,7 +1209,11 @@ const addActive = (event) =>{
                           Type: 
                         </div>
                         <ul className="">
-                          {item.type}
+                        {item.type === 'rolls' && 'Rolls'}
+                    {item.type === 'banana' && 'Banana Split'}
+                    {item.type === 'shakes' && 'Shakes'}
+                    {item.type === 'puppy' && 'Puppy Rolls'}
+                    {item.type === 'drinks' && 'Drinks'}
                         </ul>
                       </div>
                       <div style={ (editType && itemsIDtoEdit === item.item_id )? {display:'flex'}: {display:'none'}} className='mt-3 mb-3 flex-column  w-100 justify-content-center align-items-center bg-primary-subtle'>
