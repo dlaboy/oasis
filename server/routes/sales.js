@@ -24,6 +24,15 @@ router.get('/sum',async function (req, res, next) {
         if (month || day || year) {
             query.Date = {};
             if (year) {
+                if (year && month == "" && day == ""){
+                    const { startYearUtc, endYearUtc } = getLocalToUtcYearRange(year);
+                    console.log(startYearUtc)
+                    console.log(endYearUtc)
+                    query.Date = {
+                    $gte: startYearUtc,
+                    $lt: endYearUtc
+                    };
+                }
                 if (month) {
                     console.log("Month", month)
     
@@ -43,6 +52,7 @@ router.get('/sum',async function (req, res, next) {
                     query.Date.$gte = startDay;
                     query.Date.$lt = endDay;
                 }
+
             }
         }
     
@@ -84,6 +94,7 @@ router.get('/sum',async function (req, res, next) {
         // }));
         // res.send(formattedSales);
 } catch (error) {
+    console.log(error)
     res.status(500).send(error);
 }
 });
@@ -100,6 +111,15 @@ router.get('/avg_week_sales',async function (req,res,next) {
         if (month || day || year) {
             query.Date = {};
             if (year) {
+                if (year && month == "" && day == ""){
+                    const { startYearUtc, endYearUtc } = getLocalToUtcYearRange(year);
+                    console.log(startYearUtc)
+                    console.log(endYearUtc)
+                    query.Date = {
+                    $gte: startYearUtc,
+                    $lt: endYearUtc
+                    };
+                }
                 if (month) {
                     console.log("Month", month)
     
