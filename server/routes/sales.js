@@ -212,6 +212,15 @@ function getLocalToUtcMonthRange(year, month, timeZone = 'America/Puerto_Rico') 
     endUtc: new Date(end.toDate()),
   };
 }
+function getLocalToUtcYearRange(year, timeZone = 'America/Puerto_Rico') {
+  const moment = require('moment-timezone');
+  const start = moment.tz({ year, month: 0, day: 1 }, timeZone).startOf('day');
+  const end = start.clone().add(12,'month');
+  return {
+    startYearUtc: new Date(start.toDate()),
+    endYearUtc: new Date(end.toDate()),
+  };
+}
 
 // /* GET users listing. */
 router.get('/', async function (req, res, next) {
@@ -230,15 +239,20 @@ router.get('/', async function (req, res, next) {
     if (month || day || year) {
         query.Date = {};
 
-        if (year) {
+        // if (year) {
+            if (year && month == "" && day == ""){
+                const { startYearUtc, endYearUtc } = getLocalToUtcYearRange(year);
+                console.log(startYearUtc)
+                console.log(endYearUtc)
+                query.Date = {
+                $gte: startYearUtc,
+                $lt: endYearUtc
+                };
+            }
             if (month && day === "") {
-                console.log("Month", month)
-                console.log("Year", year)
                 const { startUtc, endUtc } = getLocalToUtcMonthRange(year, month);
-
-                console.log("Start UTC:", startUtc.toISOString());
-                console.log("End UTC:", endUtc.toISOString());
-
+                console.log(startUtc)
+                console.log(endUtc)
                 query.Date = {
                 $gte: startUtc,
                 $lt: endUtc
@@ -247,19 +261,10 @@ router.get('/', async function (req, res, next) {
             }
             if (day) {
                 console.log(typeof day)
-                
                 if (typeof day === 'string'){
                     let dia = Number(day)
-                    console.log("Dia",dia) 
-
                     let startDay = moment.tz({ year, month: month - 1, day: dia }, 'America/Puerto_Rico').startOf('day');
-                    console.log(`By Day: ${startDay}`)
-                    
                     let endDay = startDay.clone().add(1,'day');
-
-                    console.log("Start UTC:", startDay.toISOString());
-                    console.log("End UTC:", endDay.toISOString());
-
                     query.Date = {
                     $gte: startDay,
                     $lt: endDay
@@ -277,7 +282,7 @@ router.get('/', async function (req, res, next) {
             //     query.Date.$lt = endDay;
                 
             // }
-        }
+        // }
     }
 
     const sales = await Sales.find(query);
