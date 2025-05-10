@@ -248,14 +248,16 @@ function Sales(){
     
         })
         const intervalSales = setInterval(() => {
-            axios.get('/sales').then(response=>{
-                console.log("Response", response.data)
-                setAllSales(response.data)
-            }).catch(error =>{
-                console.log("Error", error)
-        
+        axios.get('/sales')
+            .then(response => {
+            console.log("Response", response.data);
+            setAllSales(response.data);
             })
-        }, 15000);
+            .catch(error => {
+            console.log("Error", error);
+            });
+        }, 600000); // 10 minutes
+
 
         const intervalId = setInterval(() => {
             
@@ -867,6 +869,9 @@ function Sales(){
     }
 
     const handleSearch = event =>{
+        console.log("Month",month)
+        console.log("Year",year)
+        console.log("Day",day)
 
         axios.get('/sales',{
             params: {
@@ -1170,7 +1175,7 @@ function Sales(){
                             <option value="12">December</option>
                     </select>
                     <select value={year}className='p-2' onChange={handleYear}>
-                            {/* <option value="">Year</option> */}
+                            <option value="">Year</option>
                             <option value="2024">2024</option>
                             <option value="2025">2025</option>
                     </select>
@@ -1192,7 +1197,14 @@ function Sales(){
                 </tr>
             </thead>
             <tbody>
-                {allSales.map((sale) => (
+                {allSales.length === 0 ? (
+                        <tr>
+                        <td colSpan={4} className="text-center text-muted py-3">
+                            No sales found
+                        </td>
+                        </tr>
+                    ) : (
+                    allSales.map((sale) => (
                     <tr className='text-center' key={sale._id}>
                         <td>{sale.Date}</td>
                         {/* <td>{sale.IceCreams}</td> */}
@@ -1218,7 +1230,8 @@ function Sales(){
                             </button>
                         </td>
                     </tr>
-                ))}
+                )))
+            }
             </tbody>
             </Table>
             <button className='btn btn-outline-dark rounded-pill p-3 m-2' onClick={handleSearchReport}>Generate Report of Search</button>

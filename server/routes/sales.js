@@ -209,6 +209,11 @@ router.get('/', async function (req, res, next) {
     const {month, day,year } = req.query;
     // const year = "2024"
 
+    console.log("Month",month)
+    console.log("Year",year)
+    console.log("Day",day)
+
+
     // Build the date query dynamically based on provided params
     let query = {};
     if (month || day || year) {
@@ -227,17 +232,28 @@ router.get('/', async function (req, res, next) {
                 query.Date.$lt = endMonth;
             }
             if (day) {
-                let startDay = new Date(year,month-1,day);
+                let startDay = new Date(year,month-1,1);
                 console.log(`By Day: ${startDay}`)
                 
                 let endDay = new Date(startDay.getFullYear(), startDay.getMonth(), startDay.getDate() + 1);
                 query.Date.$gte = startDay;
                 query.Date.$lt = endDay;
             }
+            // else{
+            //     let startDay = new Date(year,month-1,day);
+            //     console.log(`By Day: ${startDay}`)
+
+            //     let endDay = new Date(startDay.getFullYear(), startDay.getMonth(), startDay.getDate() + 1);
+            //     query.Date.$gte = startDay;
+            //     query.Date.$lt = endDay;
+                
+            // }
         }
     }
 
     const sales = await Sales.find(query);
+
+    // console.log("Sales Report",sales[0])
 
     const formattedSales = sales.map(sale => ({
         ...sale,
@@ -250,6 +266,12 @@ router.get('/', async function (req, res, next) {
         Total:sale.Total,
         Report:sale.Report
     }));
+
+    formattedSales.reverse()
+
+    // console.log("Formated Sales Report",formattedSales.reverse())
+    console.log("Formated Sales Report",formattedSales.length)
+
 
     res.send(formattedSales);
 } catch (error) {
