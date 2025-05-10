@@ -1031,6 +1031,20 @@ function Sales(){
         setCharts((prevState) => !prevState);
     };
 
+      const [currentPage, setCurrentPage] = useState(1);
+    const rowsPerPage = 10;
+
+    const totalPages = Math.ceil(allSales.length / rowsPerPage);
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    const currentRows = allSales.slice(startIndex, startIndex + rowsPerPage);
+
+    const nextPage = () => {
+        if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+    };
+
+    const prevPage = () => {
+        if (currentPage > 1) setCurrentPage(currentPage - 1);
+    };
   
 
     return (
@@ -1204,7 +1218,7 @@ function Sales(){
                         </td>
                         </tr>
                     ) : (
-                    allSales.map((sale) => (
+                    currentRows.map((sale) => (
                     <tr className='text-center' key={sale._id}>
                         <td>{sale.Date}</td>
                         {/* <td>{sale.IceCreams}</td> */}
@@ -1234,6 +1248,16 @@ function Sales(){
             }
             </tbody>
             </Table>
+            {/* Pagination controls */}
+            <div className="d-flex justify-content-around align-items-center mt-3 w-100">
+                <button onClick={prevPage} disabled={currentPage === 1} className="btn btn-outline-dark rounded-pill p-3">
+                Previous
+                </button>
+                <span>Page {currentPage} of {totalPages}</span>
+                <button onClick={nextPage} disabled={currentPage === totalPages} className="btn btn-outline-dark rounded-pill p-3">
+                Next
+                </button>
+            </div>
             <button className='btn btn-outline-dark rounded-pill p-3 m-2' onClick={handleSearchReport}>Generate Report of Search</button>
 
                     </>:<div className=" d-flex flex-column justify-content-around align-items-center w-100 ">
