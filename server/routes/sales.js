@@ -223,15 +223,13 @@ router.get('/', async function (req, res, next) {
             if (month) {
                 console.log("Month", month)
                 console.log("Year", year)
-                let startMonth = new Date(year,month-1,1);
+                let startMonth = new Date(Date.UTC(year,month-1,1));
                 console.log(`By Start Month: ${formatEventDate(startMonth)}`)
-                let endMonth = new Date(startMonth.getFullYear(), startMonth.getMonth() + 1,1);
+                let endMonth = new Date(Date.UTC(startMonth.getFullYear(), startMonth.getMonth() + 1,1));
                 console.log(`By End Month: ${formatEventDate(endMonth)}`)
                 
-                query.Date = {
-                $gte: startMonth.toISOString(),
-                $lt: endMonth.toISOString()
-                };
+                query.Date.$gte = startMonth;
+                query.Date.$lt = endMonth;
             }
             if (day) {
                 let startDay = new Date(year,month-1,1);
