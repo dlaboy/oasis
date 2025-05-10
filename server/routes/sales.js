@@ -5,6 +5,8 @@ var Sales = require('../models/sales.js')
 var db = require("../db.js");
 const moment = require('moment-timezone'); // Ensure this is installed
 
+const { Resend } = require('resend');
+const resend = new Resend(process.env.RESEND);
 
 function formatEventDate(date) {
     return moment(date)
@@ -335,6 +337,51 @@ router.get('/', async function (req, res, next) {
    
 });
 
+const generateSaleEmailHTML = ({ ice_creams, drinks, ath, cash, total, report }) => {
+  return `
+    <div style="font-family: Arial, sans-serif; padding: 16px;">
+      <h2 style="color: #333;">🧾 Resumen de Venta del Día</h2>
+      <table style="width: 100%; border-collapse: collapse; margin-top: 12px;">
+        <thead>
+          <tr>
+            <th style="border: 1px solid #ccc; padding: 8px; text-align: left;">Item</th>
+            <th style="border: 1px solid #ccc; padding: 8px; text-align: left;">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="border: 1px solid #ccc; padding: 8px;">🍦 Ice Creams</td>
+            <td style="border: 1px solid #ccc; padding: 8px;">${ice_creams}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #ccc; padding: 8px;">🥤 Drinks</td>
+            <td style="border: 1px solid #ccc; padding: 8px;">${drinks}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #ccc; padding: 8px;">💳 ATH</td>
+            <td style="border: 1px solid #ccc; padding: 8px;">$${ath.toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #ccc; padding: 8px;">💵 Cash</td>
+            <td style="border: 1px solid #ccc; padding: 8px;">$${cash.toFixed(2)}</td>
+          </tr>
+          <tr style="font-weight: bold;">
+            <td style="border: 1px solid #ccc; padding: 8px;">🧮 Total</td>
+            <td style="border: 1px solid #ccc; padding: 8px;">$${total.toFixed(2)}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      ${
+        report
+          ? `<p style="margin-top: 16px;">📎 <a href="${report}" target="_blank">View Report</a></p>`
+          : `<p style="margin-top: 16px;">📎 No report attached</p>`
+      }
+    </div>
+  `;
+};
+
+
 router.post('/', async function (req, res) {
     const ice_creams = req.body.ice_creams
     const drinks = req.body.drinks
@@ -356,7 +403,34 @@ router.post('/', async function (req, res) {
 
     // console.log(verifyUser)
     await newSale.save();
-    res.status(200).json({ message: 'Sale Added', sale_id:id });
+
+    // Send email
+    // const { to, subject, html } = req.body;
+    const to = 'jeylaboy22@icloud.com'
+    const subject = "Venta de Hoy 🍨"
+    const html = generateSaleEmailHTML({ice_creams,drinks,ath,cash,total,report})
+    try {
+        await resend.emails.send({
+            from: 'info@dldevhouse.com',
+            to,
+            subject,
+            html,
+            });
+        await resend.emails.send({
+            from: 'info@dldevhouse.com',
+            to:'laboydiego23@gmail.com',
+            subject,
+            html,
+        });
+        // res.status(200).json({ success: true, data });
+        console.log("Email sent")
+
+  } catch (error) {
+    console.log("Error sending email",error)
+    // res.status(500).json({ success: false, error: error.message });
+  }
+  
+    res.status(200).json({ message: 'Sale Added', sale_id:id});
     // res.send("Sale Added").status(200)
 
 })
