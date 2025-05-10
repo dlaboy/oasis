@@ -228,8 +228,10 @@ router.get('/', async function (req, res, next) {
                 let endMonth = new Date(startMonth.getFullYear(), startMonth.getMonth() + 1,1);
                 console.log(`By End Month: ${formatEventDate(endMonth)}`)
                 
-                query.Date.$gte = startMonth;
-                query.Date.$lt = endMonth;
+                query.Date = {
+                $gte: startMonth.toISOString(),
+                $lt: endMonth.toISOString()
+                };
             }
             if (day) {
                 let startDay = new Date(year,month-1,1);
