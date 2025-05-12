@@ -5,6 +5,7 @@ import Terminal from './pages/Terminal'
 import Home from './pages/Home'
 import Queue from './pages/Queue'
 import Sales from './pages/Sales'
+import Cameras from './pages/Cameras'
 import { Routes, Route } from 'react-router-dom'
 import './App.css'
 
@@ -51,6 +52,7 @@ function App() {
         <Route path="/terminal" element={<Terminal/>}/>
         <Route path="/queue" element={<Queue/>}/>
         <Route path="/ventas" element={<Sales/>}/>
+        <Route path="/cameras" element={<Cameras/>}/>
       </Routes>
     </ItemContext.Provider>
   )
