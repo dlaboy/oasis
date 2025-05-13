@@ -406,16 +406,16 @@ router.post('/', async function (req, res) {
 
     // Send email
     // const { to, subject, html } = req.body;
-    const to = 'jeylaboy22@icloud.com'
+    // const to = 'jeylaboy22@icloud.com'
     const subject = "Venta de Hoy 🍨"
     const html = generateSaleEmailHTML({ice_creams,drinks,ath,cash,total,report})
     try {
-        await resend.emails.send({
-            from: 'info@dldevhouse.com',
-            to,
-            subject,
-            html,
-            });
+        // await resend.emails.send({
+        //     from: 'info@dldevhouse.com',
+        //     to,
+        //     subject,
+        //     html,
+        //     });
         await resend.emails.send({
             from: 'info@dldevhouse.com',
             to:'laboydiego23@gmail.com',

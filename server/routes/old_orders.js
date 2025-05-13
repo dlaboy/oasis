@@ -1,8 +1,11 @@
 var express = require('express');
 var mongoose = require("mongoose");
 var router = express.Router();
-var OldOrder = require('../models/order.js')
+var Order = require('../models/order.js')
+var OldOrder = require('../models/old_order.js')
 var db = require("../db.js");
+const moment = require('moment-timezone'); // Ensure this is installed
+
 
 
 /* GET users listing. */
@@ -188,5 +191,45 @@ router.put('/', async function (req, res){
         res.status(500).json({ message: 'Internal Server Error' });
       }
 })
+
+router.get('/avgICperHour', async function (req, res, next) {
+    // if (req.body.name){
+    //     var orders = await Order.find({client_name: req.body.name})
+    // }
+    // else{
+    // }
+    var orders = await OldOrder.find({});
+
+
+    // Group by hour
+    let hourlyCounts = {};
+
+
+    orders.forEach(order => {
+        console.log(order.Date)
+        if (order.Date != undefined){
+            let hour = moment(order.Date).tz('America/Puerto_Rico').format('hh A'); // "01 PM", "02 PM"
+            
+            if (hourlyCounts[hour]) {
+                hourlyCounts[hour]++;
+            } else {
+                hourlyCounts[hour] = 1;
+            }
+        }
+    });
+
+    // Convert to array for chart
+    let formattedData = Object.keys(hourlyCounts).map(hour => ({
+        hour,
+        avg: hourlyCounts[hour]/orders.length
+    }));
+
+    // Sort by time order (AM/PM)
+    formattedData.sort((a, b) => moment(a.hour, 'hh A') - moment(b.hour, 'hh A'));
+
+    console.log(formattedData)
+
+    res.send(formattedData);
+});
 
 module.exports = router;

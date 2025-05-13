@@ -6,6 +6,7 @@ import CurrencyFormatter from '../tools/CurrencyFormatter';
 import moment from 'moment';
 import Table from 'react-bootstrap/Table';
 import BarChart from '../tools/BarChart';
+import DotChart from '../tools/DotChart';
 import React from 'react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -57,6 +58,7 @@ function Sales(){
     const [stat,setStat] = useState("0")
 
     const doc = new jsPDF();
+
 
     
 
@@ -129,6 +131,12 @@ function Sales(){
     //         // <BarChart  className='m-2' keys={['Ice Creams','Drinks','ATH','Cash','Total']} values={[s.IceCreams,s.Drinks,s.ATH,s.Cash,s.Total]} />
     //     })
     // }
+    if (stat == '2'){
+        saleCharts.map((sale)=>{
+            setHoursKeys(prevArray => [...prevArray, sale.hour])
+            setHoursCounts(prevArray => [...prevArray, sale.count])
+        })
+    }
 
 
 
@@ -200,6 +208,34 @@ function Sales(){
                 
               })
         })
+
+    }
+    else if (stat === "2") {
+        console.log("Average")
+        axios.get('/old_orders/avgICperHour',{}).then(response=>{
+            console.log("Response", response.data)
+
+
+            // let sum = response.data.totals
+            
+            // console.log("SUMMMMMMMMMMMM",sum)
+            setSaleCharts(response.data)
+            // setSaleCharts(saleCharts.push(sum))
+
+
+
+
+
+
+
+    
+            // setAllSales(response.data)
+        }).catch(error =>{
+            console.log("Error", error)
+        })
+                
+              
+        
 
     }
    
@@ -1045,6 +1081,9 @@ function Sales(){
     const prevPage = () => {
         if (currentPage > 1) setCurrentPage(currentPage - 1);
     };
+    const [hoursKeys,setHoursKeys] = useState([])
+    const [hoursCount,setHoursCounts] = useState([])
+
   
 
     return (
@@ -1266,13 +1305,13 @@ function Sales(){
 
                             <option value="0">Total Sales</option>
                             <option value="1">Average sale by day of the week</option>
-                            {/* <option value="2">2024</option> */}
+                            <option value="2">Average Ice Creams per hour</option> 
                     </select> 
-                    <select value={chartYear}className='p-2 m-4' onChange={handleChartYear}>
+                    {saleCharts.length > 0 && stat == "2" ?(<></>):(<select value={chartYear}className='p-2 m-4' onChange={handleChartYear}>
                             {/* <option value="">Year</option> */}
                             <option value="2025">2025</option>
                             <option value="2024">2024</option>
-                    </select>
+                    </select>)}
                     {/* <div className="">Currently Displaying Stat {stat}</div>     */}
                     </div>
   {
@@ -1357,6 +1396,19 @@ function Sales(){
             </div>): (<></>)
           ))
         }
+      </div>
+    ) : saleCharts.length > 0 && stat == "2" ? (
+           <div className=' d-flex flex-wrap w-100 justify-content-around '>
+        {
+           
+            <DotChart
+                className="m-5"
+                dataPoints={saleCharts}
+              />
+        
+            
+        }
+        
       </div>
     ) : (<>No Sales</>)
     

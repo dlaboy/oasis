@@ -13,6 +13,10 @@ const { ObjectId } = mongoose.Types;
 
 
 const OldOrderSchema = new mongoose.Schema({
+    Date: {
+        type: Date,
+        default: Date.now
+    },
     client_name : String,
     items: Object,
     payment_method: String,

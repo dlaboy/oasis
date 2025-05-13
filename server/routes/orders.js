@@ -237,6 +237,10 @@ router.post('/copy_orders', async (req, res) => {
         // Fetch all orders
         const orders = await Order.find();
 
+        orders.map((order)=>{
+            console.log(order.Date)
+        })
+
         if (!orders.length) {
             return res.status(404).json({ message: "No orders found to copy" });
         }
