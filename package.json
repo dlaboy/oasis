@@ -16,6 +16,8 @@
         "vite": "^5.2.9"
     },
     "dependencies": {
+        "@heroicons/react": "^2.2.0",
+        "bootstrap-icons": "^1.13.1",
         "chart.js": "^4.4.2",
         "googleapis": "^144.0.0",
         "hls.js": "^1.6.2",

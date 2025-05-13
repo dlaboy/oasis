@@ -3,17 +3,18 @@ import { Nav, Modal, Button } from 'react-bootstrap'
 import axios from 'axios';
 import { useEffect, useState, useContext } from 'react';
 import CurrencyFormatter from '../tools/CurrencyFormatter';
-import moment from 'moment';
+// import moment from 'moment';
 import Table from 'react-bootstrap/Table';
 import BarChart from '../tools/BarChart';
 import DotChart from '../tools/DotChart';
-import React from 'react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import Chart from 'chart.js/auto';
 import { ItemContext } from '../../context/ItemContext';
 import FileUpload from '../components/FileUploadTest';
-
+import { Toaster, toast } from 'react-hot-toast';
+import Calendar from '../tools/Calendar';
+import moment from 'moment';
 
 const formatCurrency = (value) => {
     return new Intl.NumberFormat('en-US', {
@@ -1062,9 +1063,13 @@ function Sales(){
     };
 
     const [charts,setCharts] = useState(false);
+    const [list,setList] = useState(true);
 
     const toggleCharts = () => {
         setCharts((prevState) => !prevState);
+    };
+     const toggleList = () => {
+        setList((prevState) => !prevState);
     };
 
       const [currentPage, setCurrentPage] = useState(1);
@@ -1086,7 +1091,7 @@ function Sales(){
     const [hoursKeys,setHoursKeys] = useState([])
     const [hoursCount,setHoursCounts] = useState([])
 
-  
+    
 
     return (
         <div>
@@ -1194,17 +1199,21 @@ function Sales(){
                     { crunchTime &&<BarChart  className='m-2' keys={crunchTimeLabels} values={crunchTimeData} />}
                 </div>
                 {/* <FileUpload></FileUpload> */}
-                {isUploaded && <>{alert("File Uploaded!")}</>}
+                {isUploaded && <>{toast.success('File Uploaded')}</>}
+                <Toaster position="top-right" />
 
                 </div>  }
             </div> :
             <div className='container w-100 text-center d-flex flex-column justify-content-center align-items-center'>
                   <div className="">
                         <button className='btn btn-outline-primary rounded-pill p-3 m-2' onClick={toggleCharts}>{charts ?'Charts':'Reports'}</button>
-
+                           
                     </div>
                     {charts ? <>
-                        <div className='m-3 container w-100 text-center d-flex flex-row justify-content-around'>
+                    <button className='btn btn-outline-primary rounded-pill p-3 m-2' onClick={toggleList}>{list ?'List View':'Calendar View'}</button>
+
+                {list ? <>
+                <div className='m-3 container w-100 text-center d-flex flex-row justify-content-around'>
                     <select value={day} onChange={handleDay} className='p-2'>
                             <option value="">Day</option>
                             {Array.from({ length: 31 }, (_, i) => (
@@ -1236,9 +1245,9 @@ function Sales(){
                     </select>
                     <button className="p-2 btn" onClick={handleSearch}>Search</button>
                     
+                    
                 </div>
-                
-            <Table className='' striped bordered hover  >
+                 <Table className='' striped bordered hover  >
             <thead>
                 <tr className='text-center'>
                     <th>Date</th>
@@ -1269,8 +1278,13 @@ function Sales(){
         <td colSpan={1} className="text-center text-muted py-3">
           {sale._doc.Name || 'Anónimo'}
         </td>
-        <td colSpan={2} className="text-center text-muted py-3">
+        <td colSpan={1} className="text-center text-muted py-3">
           {sale._doc.Message || 'Día cerrado'}
+        </td>
+        <td colSpan={1}>
+          <button className='btn text-secondary' onClick={() => handleDeleteShow(sale._id)}>
+            Delete
+          </button>
         </td>
       </tr>
     ) : (
@@ -1317,6 +1331,28 @@ function Sales(){
             </div>
             <button className='btn btn-outline-dark rounded-pill p-3 m-2' onClick={handleSearchReport}>Generate Report of Search</button>
 
+                </>:<>
+        
+                <div className="text-center">
+                    <div className="d-flex flex-wrap align-items-center ms-auto gap-3">
+                        <Calendar className="me-2" tasks={allSales} />
+                        {/* 
+                        <button
+                        onClick={toggleList}
+                        className="btn btn-outline-secondary btn-sm"
+                        >
+                        {list === true ? 'Calendar View' : 'List View'}
+                        </button> 
+                        */}
+                    </div>
+                </div>
+
+                </>
+
+                }
+
+            
+           
                     </>:<div className=" d-flex flex-column justify-content-around align-items-center w-100 ">
                     <div className="">
                     <select value={stat}lassName='p-2 m-4' onChange={handleStat}>
