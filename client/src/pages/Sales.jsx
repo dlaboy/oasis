@@ -1074,6 +1074,8 @@ function Sales(){
     const startIndex = (currentPage - 1) * rowsPerPage;
     const currentRows = allSales.slice(startIndex, startIndex + rowsPerPage);
 
+    console.log("Current Rows", currentRows[1])
+
     const nextPage = () => {
         if (currentPage < totalPages) setCurrentPage(currentPage + 1);
     };
@@ -1257,34 +1259,50 @@ function Sales(){
                         </td>
                         </tr>
                     ) : (
-                    currentRows.map((sale) => (
-                    <tr className='text-center' key={sale._id}>
-                        <td>{sale.Date}</td>
-                        {/* <td>{sale.IceCreams}</td> */}
-                        {/* <td>{sale.Drinks}</td> */}
-                        {/* <td>{<CurrencyFormatter value={sale.ATH} />}</td> */}
-                        {/* <td>{<CurrencyFormatter value={sale.CASH} />}</td> */}
-                        <td>{<CurrencyFormatter value={sale.Total} />}</td>
-                        <td>
-                            {sale.Report ? (
-                                <button
-                                    className='btn text-secondary'
-                                    onClick={() => handleDownload(sale.Report)}
-                                >
-                                    Open
-                                </button>
-                            ) : (
-                                'No Report'
-                            )}
-                        </td>
-                        <td>
-                            <button className='btn text-secondary' onClick={() => handleDeleteShow(sale._id)}>
-                                Delete
-                            </button>
-                        </td>
-                    </tr>
-                )))
-            }
+                    currentRows.length > 0 ? (  
+                        currentRows.map((sale) => (
+              sale._doc.Closed === true ?(
+      <tr key={sale._id}>
+         <td colSpan={1} className="text-center text-muted py-3">
+          {sale.Date || 'No hay fecha'}
+        </td>
+        <td colSpan={1} className="text-center text-muted py-3">
+          {sale._doc.Name || 'Anónimo'}
+        </td>
+        <td colSpan={2} className="text-center text-muted py-3">
+          {sale._doc.Message || 'Día cerrado'}
+        </td>
+      </tr>
+    ) : (
+      <tr className='text-center' key={sale._id}>
+        <td>{sale.Date}</td>
+        <td>{<CurrencyFormatter value={sale.Total} />}</td>
+        <td>
+          {sale.Report ? (
+            <button
+              className='btn text-secondary'
+              onClick={() => handleDownload(sale.Report)}
+            >
+              Open
+            </button>
+          ) : (
+            'No Report'
+          )}
+        </td>
+        <td>
+          <button className='btn text-secondary' onClick={() => handleDeleteShow(sale._id)}>
+            Delete
+          </button>
+        </td>
+      </tr>
+            )
+        ))
+        ) : (
+        <tr>
+            <td colSpan={4} className="text-center text-muted py-3">
+            No data found
+            </td>
+        </tr>))}
             </tbody>
             </Table>
             {/* Pagination controls */}

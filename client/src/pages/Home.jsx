@@ -1,8 +1,12 @@
 import React, {useEffect, useState} from 'react'
 import { NavLink } from 'react-router-dom'
-import { Nav } from 'react-bootstrap'
+import { Nav, Button, Modal } from 'react-bootstrap'
 import Form from 'react-bootstrap/Form';
 import './Home.css'
+import axios from 'axios';
+import { Toaster, toast } from 'react-hot-toast';
+
+
 
 const ADMIN_USERNAME = import.meta.env.VITE_REACT_APP_ADMIN_USERNAME
 const ADMIN_PASSWORD = import.meta.env.VITE_REACT_APP_ADMIN_PASSWORD
@@ -70,8 +74,33 @@ function Home() {
 
   const handlePasswordChange = (event) =>{
     setPassword(event.target.value)
-    
+
   }
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // Do something with form data
+     const form = e.target;
+  const formData = new FormData(form);
+
+  const name = formData.get('name');
+  const message = formData.get('message');
+    console.log({ name, message });
+    console.log('Form submitted!');
+    toast.success("Mensaje sometido, Puedes cerrar el menu")
+    const response = await axios.post('/sales', {
+                        'nombre': name,
+                        'mensaje': message, 
+    })
+    console.log(response)
+    
+    handleClose();
+  };
+    
   
   return (
     <div className='  justify-content-center  align-items-center d-flex flex-column home' style={{height:"100vh"}}>
@@ -92,6 +121,45 @@ function Home() {
 
         </Nav>
         <button className='btn rounded-pill btn-outline-light' onClick={handleSignOut}>Sign Out</button>
+        
+        { admin &&     <div className='mt-5'style={{
+  position: 'fixed',
+  bottom: '20px',
+  left: '50%',
+  transform: 'translateX(-50%)',
+  zIndex: 1050 // ensures it's above other content
+}}>
+      <Button variant="primary" onClick={handleShow}>
+        No vas a abrir hoy? Deja registrado porque
+      </Button>
+
+      <Modal show={show} onHide={handleClose}>
+        <Toaster position="top-right" />
+        
+        <Modal.Header closeButton>
+          <Modal.Title>Motivo de cierre</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group  className="mb-3" controlId="formName">
+              <Form.Label>Nombre</Form.Label>
+              <Form.Control name="name" type="text" placeholder="Nombre" required />
+            </Form.Group>
+
+            <Form.Group name="name" className="mb-3" controlId="formMessage">
+              <Form.Label>Mensaje</Form.Label>
+              <Form.Control name="message" type="text" placeholder="Mensaje" required />
+            </Form.Group>
+
+            <Button variant="primary" type="submit">
+              Someter
+            </Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
+    </div>
+      }
+        
         </div> : 
         <div className='d-flex flex-column'> 
             { incorrect && <div className='text-danger text-center'>Incorrect Credentials</div> }

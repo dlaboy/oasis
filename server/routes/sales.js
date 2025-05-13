@@ -57,7 +57,8 @@ router.get('/sum',async function (req, res, next) {
 
             }
         }
-    
+        query.Closed = { $ne: true };
+
         const sales = await Sales.find(query);
 
         // Complete the code here
@@ -143,7 +144,8 @@ router.get('/avg_week_sales',async function (req,res,next) {
                 }
             }
         }
-    
+        query.Closed = { $ne: true };
+        
         const sales = await Sales.find(query);
 
         // console.log("Sale 1", sales[0].Date)
@@ -244,6 +246,7 @@ function getLocalToUtcYearRange(year, timeZone = 'America/Puerto_Rico') {
   };
 }
 
+
 // /* GET users listing. */
 router.get('/', async function (req, res, next) {
    // Build the date query dynamically based on provided params
@@ -306,22 +309,33 @@ router.get('/', async function (req, res, next) {
             // }
         // }
     }
+    // query.Closed = { $ne: true };
+
 
     const sales = await Sales.find(query);
 
     // console.log("Sales Report",sales[0])
 
-    const formattedSales = sales.map(sale => ({
-        ...sale,
-        _id:sale._id,
-        Date: moment(sale.Date).tz('America/Puerto_Rico').format('YYYY-MM-DD hh:mm A'),
-        IceCreams:sale.IceCreams,
-        Drinks:sale.Drinks,
-        ATH:sale.ATH,
-        CASH:sale.CASH,
-        Total:sale.Total,
-        Report:sale.Report
-    }));
+
+    
+
+   const formattedSales = sales.map(sale => {
+  const isClosed = sale._doc?.Closed === true;
+
+  const rawDate = isClosed ? sale._doc.Date : sale.Date;
+
+  return {
+    ...sale,
+    _id: sale._id,
+    Date: moment(rawDate).tz('America/Puerto_Rico').format('YYYY-MM-DD hh:mm A'),
+    IceCreams: sale.IceCreams,
+    Drinks: sale.Drinks,
+    ATH: sale.ATH,
+    CASH: sale.CASH,
+    Total: sale.Total,
+    Report: sale.Report
+  };
+});
 
     formattedSales.reverse()
 
@@ -380,10 +394,34 @@ const generateSaleEmailHTML = ({ ice_creams, drinks, ath, cash, total, report })
     </div>
   `;
 };
+const generateCierreEmailHTML = ({name, message }) => {
+  return `
+    <div style="font-family: Arial, sans-serif; padding: 16px;">
+      <h2 style="color: #333;">🧾 Notificación de Cierre</h2>
+      <table style="width: 100%; border-collapse: collapse; margin-top: 12px;">
+        <thead>
+          <tr>
+            <th style="border: 1px solid #ccc; padding: 8px; text-align: left;">Nombre</th>
+            <th style="border: 1px solid #ccc; padding: 8px; text-align: left;">Mensaje</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="border: 1px solid #ccc; padding: 8px;">${name}</td>
+            <td style="border: 1px solid #ccc; padding: 8px;">${message}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  `;
+};
 
 
 router.post('/', async function (req, res) {
-    const ice_creams = req.body.ice_creams
+  console.log("Name",req.body.nombre)
+  console.log("Message",req.body.mensaje)
+    if (req.body.nombre == undefined && req.body.mensaje == undefined){
+         const ice_creams = req.body.ice_creams
     const drinks = req.body.drinks
     const ath = req.body.ath
     const cash = req.body.cash;
@@ -432,39 +470,90 @@ router.post('/', async function (req, res) {
   
     res.status(200).json({ message: 'Sale Added', sale_id:id});
     // res.send("Sale Added").status(200)
+    }
+    else if (req.body.nombre != undefined && req.body.mensaje != undefined){
+      const name = req.body.nombre
+      const message = req.body.mensaje
+
+      let newCierre = await Sales.create({
+        Date: new Date(),
+        Closed: true,
+        Message: message,
+        Name: name
+      });
+
+      await newCierre.save();
+      
+      const subject = "Venta de Hoy 🍨"
+      const html = generateCierreEmailHTML({name,message})
+      try {
+          // await resend.emails.send({
+          //     from: 'info@dldevhouse.com',
+          //     to,
+          //     subject,
+          //     html,
+          //     });
+          await resend.emails.send({
+              from: 'info@dldevhouse.com',
+              to:'laboydiego23@gmail.com',
+              subject,
+              html,
+          });
+          // res.status(200).json({ success: true, data });
+          console.log("Email sent")
+
+      } catch (error) {
+        console.log("Error sending email",error)
+        // res.status(500).json({ success: false, error: error.message });
+      }
+        
+
+
+
+
+    }
 
 })
 
 router.delete('/', async function (req, res){
-    if(req.body.id != undefined){
-        try{
-            console.log(typeof(req.body.id))
-            await Sales.findByIdAndDelete(req.body.id);
-            res.status(200).json({ success: true, msg: 'Sales Deleted' });
-        }
-        catch(error){
-            console.log('Error:', error)
-        }
-    }
-    else{
-        await Sales.deleteMany({})
+    if (req.body.id !== undefined) {
+  try {
+    const sale = await Sales.findOne({ _id: req.body.id, Closed: { $ne: true } });
 
+    if (!sale) {
+      return res.status(404).json({ success: false, msg: 'Sale not found or it is a cierre (closed day)' });
     }
+
+    await Sales.findByIdAndDelete(req.body.id);
+    res.status(200).json({ success: true, msg: 'Sale deleted' });
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ success: false, msg: 'Server error' });
+  }
+}
+
 
 })
 
 router.put('/', async function (req, res){
-    try{
-        console.log(req.body.id)
-        const updatedSale= await Sales.findByIdAndUpdate(req.body.id, req.body.data, { new: true })
+  try {
+    const updatedSale = await Sales.findOneAndUpdate(
+      { _id: req.body.id, Closed: { $ne: true } }, // Only update if not a cierre
+      req.body.data,
+      { new: true }
+    );
 
-        if (!updatedSale) {
-            return res.status(404).json({ message: 'Field not found' });
-          }
-    } catch (error) {
-        console.error('Error updating field:', error);
-        res.status(500).json({ message: 'Internal Server Error' });
-      }
-})
+    if (!updatedSale) {
+      return res.status(404).json({ message: 'Sale not found or is a cierre (closed day)' });
+    }
+
+    res.status(200).json({ success: true, updated: updatedSale });
+
+  } catch (error) {
+    console.error('Error updating field:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
 
 module.exports = router;
