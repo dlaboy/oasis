@@ -6,7 +6,7 @@ import { NavLink } from 'react-router-dom';
 const Cameras = () => {
   const videoRef = useRef(null);
   const hlsRef = useRef(null); // store HLS instance
-  const streamUrl = `https://a1df3ae8801a.ngrok.app/hls/stream.m3u8`; // replace with your IP
+  const streamUrl = `https://9da07970fb41.ngrok.app/hls/stream.m3u8`; // replace with your IP
   const [connected, setConnected] = useState(false);
 
   const initStream = () => {
