@@ -6,10 +6,14 @@ import Home from './pages/Home'
 import Queue from './pages/Queue'
 import Sales from './pages/Sales'
 import Cameras from './pages/Cameras'
+import NameForm from './pages/Customer/NameForm'
+import ShoppingCart from './pages/Customer/ShoppingCart'
+import ProductSelector from './pages/Customer/ProductSelector'
 import { Routes, Route } from 'react-router-dom'
 import './App.css'
 
 import { ItemContext } from "../context/ItemContext"
+import IceCreamRollForm from './pages/Customer/IceCreamRollForm'
 
 
 function App() {
@@ -53,6 +57,10 @@ function App() {
         <Route path="/queue" element={<Queue/>}/>
         <Route path="/ventas" element={<Sales/>}/>
         <Route path="/cameras" element={<Cameras/>}/>
+        <Route path="/customer" element={<NameForm/>}/>
+        <Route path="/shopping" element={<ShoppingCart/>}/>
+        <Route path="/product" element={<ProductSelector/>}/>
+        <Route path="/icrform" element={<IceCreamRollForm/>}/>
       </Routes>
     </ItemContext.Provider>
   )
