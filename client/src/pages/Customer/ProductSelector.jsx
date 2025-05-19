@@ -33,18 +33,18 @@ export default function ProductSelector() {
       setError('Product Unavailable');
       return;
     }
-    window.location.href = 'http://localhost/orders/ice-cream-rolls.php';
+    window.location.href = 'http://localhost:3000/icrform';
   };
 
   return (
     <div>
       <nav className="nave navbar navbar-expand navbar-dark bg-black w-100 d-flex align-items-center justify-content-between">
-        <a href="/customer">
-          <img className="ima m-4" src="./img/left-arrow.png" alt="Back" />
+        <a href="/customer" className='ms-3'>
+            <i className="bi bi-chevron-left"></i>
         </a>
-        <img className="logo" src="./img/logo1.png" alt="Logo" />
-        <a href="/shopping">
-          <img className="ima m-4" src="./img/shopping-cart(1).png" alt="Cart" />
+        <img className="logo" src="/logo.png" alt="Logo" />
+        <a href="/shopping" className='me-3'>
+          <i className="bi bi-cart"></i>
         </a>
       </nav>
 
@@ -68,11 +68,14 @@ export default function ProductSelector() {
                   <option value="0" disabled>
                     Select Product
                   </option>
-                  {Object.keys(productDetails).map((product, i) => (
+                  <option value="Ice Cream Rolls">
+                    Ice Cream Rolls
+                  </option>
+                  {/* {Object.keys(productDetails).map((product, i) => (
                     <option key={i} value={product}>
                       {product}
                     </option>
-                  ))}
+                  ))} */}
                 </select>
               </div>
 
@@ -81,10 +84,10 @@ export default function ProductSelector() {
                   <h4>Product Information</h4>
                   <div className="flechas">
                     <button className="btn" onClick={() => setExpanded(false)}>
-                      <img className="up" src="./img/upload.png" alt="Less" />
+                          <i className="bi bi-chevron-up"></i>
                     </button>
                     <button className="btn" onClick={() => setExpanded(true)}>
-                      <img className="ima" src="./img/down-arrow (2).png" alt="More" />
+                        <i className="bi bi-chevron-down"></i>
                     </button>
                   </div>
                 </div>
@@ -102,7 +105,7 @@ export default function ProductSelector() {
                   <div className="form-group">
                     <div className="text-center error text-danger">{error}</div>
                   </div>
-                  <button className="btn btn-dark rounded-3 btn-lg" type="submit">
+                  <button className="btn btn-dark rounded-3 btn-lg" type="submit" >
                     Continue
                   </button>
                 </form>

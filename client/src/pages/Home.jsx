@@ -118,7 +118,7 @@ function Home() {
             <Nav.Link to='https://oasis-i2.herokuapp.com' as={NavLink} className='btn btn-outline-primary text-light m-3'>Inventory</Nav.Link>
             { admin && <Nav.Link to='/ventas' as={NavLink} className='btn btn-outline-primary text-light m-3'>Sales</Nav.Link>}
             {admin && <Nav.Link to='/cameras' as={NavLink} className='btn btn-outline-primary text-light m-3'>Cameras</Nav.Link>}
-
+            {admin && <Nav.Link to='/customer' as={NavLink} className='btn btn-outline-primary text-light m-3'>Customers</Nav.Link>}
         </Nav>
         <button className='btn rounded-pill btn-outline-light' onClick={handleSignOut}>Sign Out</button>
         

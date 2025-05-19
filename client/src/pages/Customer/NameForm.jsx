@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState,useContext } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { ItemContext } from '../../../context/ItemContext';
 // import './style.css';
 
 export default function NameForm() {
@@ -23,21 +24,9 @@ export default function NameForm() {
     setError('');
 
     try {
-      // Assuming you have a backend endpoint for handling this logic
-      const res = await fetch('http://localhost:5000/submit-name', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ nombre: name }),
-      });
+      localStorage.setItem('selfName',JSON.stringify(name))
+      window.location.href = 'http://localhost:3000/product';
 
-      if (res.ok) {
-        window.location.href = 'http://localhost/orders/new-order.php';
-      } else {
-        const data = await res.json();
-        setError(data.message || 'Something went wrong');
-      }
     } catch (err) {
       console.error(err);
       setError('Failed to submit name');
@@ -46,8 +35,13 @@ export default function NameForm() {
 
   return (
     <div>
-      <nav className="nave navbar navbar-expand navbar-dark bg-black w-100 d-flex align-items-center justify-content-center">
-        <img className="logo" src="./img/logo1.png" alt="Logo" />
+      <nav className="nave navbar navbar-expand navbar-dark bg-black w-100 d-flex align-items-center justify-content-between">
+         {/* <a href="#" onClick={() => window.history.back()} className='ms-3'> */}
+         <a href="/" className='ms-3'>
+            <i className="bi bi-chevron-left"></i>
+          </a>
+        <img className="logo" src="/logo.png" alt="Logo" />
+        <div></div>
       </nav>
       <div className="container conta">
         <div className="row welcome mt-5 rounded-4 d-flex flex-column">
@@ -68,7 +62,8 @@ export default function NameForm() {
                 {error && <div className="text-light bg-danger p-1 mt-2">{error}</div>}
               </div>
               <button className="btn" type="submit" name="submit">
-                <img className="ima" src="./img/right-arrow(1).png" alt="Submit" />
+                {/* <img className="ima" src="./img/right-arrow(1).png" alt="Submit" /> */}
+                <i className="bi bi-chevron-right"></i>
               </button>
             </form>
           </div>

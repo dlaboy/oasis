@@ -32,10 +32,10 @@ export default function ShoppingCart() {
   return (
     <div>
       <nav className="nave navbar navbar-expand navbar-dark bg-black w-100 d-flex align-items-center justify-content-between">
-        <a href="/product">
-          <img className="ima m-3" src="./img/left-arrow.png" alt="Back" />
+        <a href="#" onClick={() => window.history.back()} className='ms-3'>
+            <i className="bi bi-chevron-left"></i>
         </a>
-        <img className="logo" src="./img/logo1.png" alt="Logo" />
+        <img className="logo" src="/logo.png" alt="Logo" />
         <img className="ima m-4" src="" alt="" />
       </nav>
 
