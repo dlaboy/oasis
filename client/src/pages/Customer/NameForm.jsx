@@ -25,7 +25,8 @@ export default function NameForm() {
 
     try {
       localStorage.setItem('selfName',JSON.stringify(name))
-      window.location.href = 'http://localhost:3000/product';
+      console.log(process.env.VITE_REACT_APP_DYNAMIC_URL)
+      window.location.href = `/product`;
 
     } catch (err) {
       console.error(err);

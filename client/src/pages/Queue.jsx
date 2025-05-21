@@ -33,8 +33,11 @@ export default function Queue() {
       // }).catch(error =>{
       //   console.log("Error", error)
       // })
+
       const intervalId = setInterval(() => {
         console.log('This will run every 5 seconds');
+        fetchPendingOrders();
+
         axios.get('/orders').then(response=>{
           console.log("Response", response.data)
           setCurrentOrders(response.data)
@@ -187,20 +190,21 @@ export default function Queue() {
   const [pendingOrders, setPendingOrders] = useState([]);
 
   const fetchPendingOrders = async () => {
-    const res = await axios.get('http://localhost:3000/orders/pending_orders');
+    const res = await axios.get(`${process.env.VITE_REACT_APP_DYNAMIC_URL}/orders/pending_orders`);
     setPendingOrders(res.data);
   };
 
   const confirmOrder = async (orderId) => {
-    await axios.patch(`http://localhost:3000/orders/pending_orders/${orderId}/confirm`);
+    await axios.patch(`${process.env.VITE_REACT_APP_DYNAMIC_URL}/orders/pending_orders/${orderId}/confirm`);
     fetchPendingOrders(); // refrescar lista
+    setShowModal(false)
   };
 
-  useEffect(() => {
-    if (showModal) {
-      fetchPendingOrders();
-    }
-  }, [showModal]);
+  // useEffect(() => {
+  //   if (showModal) {
+  //     fetchPendingOrders();
+  //   }
+  // }, [showModal]);
 
   const [editingOrderId, setEditingOrderId] = useState(null);
 const [editedOrder, setEditedOrder] = useState(null);
@@ -235,10 +239,15 @@ const [editedOrder, setEditedOrder] = useState(null);
             <h6>
                 Pending Orders
             </h6>
-            </div>
-             <button className="btn btn-success " onClick={() => setShowModal(true)}>
-        Confirmar Órdenes
-      </button>
+          </div>
+             <button className="btn btn-success position-relative w-25" onClick={() => setShowModal(true)}>
+                  {pendingOrders.filter(order => !order.paymentConfirmed).length > 0 && (
+              <span className="badge top-0 bg-danger ms-2">
+            {pendingOrders.filter(order => !order.paymentConfirmed).length}
+          </span>
+            )}
+         Órdenes de Kiosko
+            </button>
 
       <Modal show={showModal} onHide={() => setShowModal(false)} centered size="lg">
         <Modal.Header closeButton>

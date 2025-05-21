@@ -103,7 +103,7 @@ const handleSubmit = async e => {
   setCombination('');
 
   // Redirigir si deseas
-  window.location.href = 'http://localhost:3000/product';
+  window.location.href = `/product`;
 };
 
 

@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // import './shopping-cart.css';
 import { Nav, Modal, Button } from 'react-bootstrap'
 import axios from 'axios';
+import { NavLink } from 'react-router-dom';
 
 
 
@@ -101,6 +102,37 @@ useEffect(() => {
         if (res.data.paymentConfirmed) {
           setIsPaymentConfirmed(true);
           clearInterval(interval);
+
+
+          try {
+            
+            const transformedItems = itemsInCart.map(item => ({
+              ...item,
+              ings: item.ingredients,
+              tops: item.toppings,
+              item_id: Math.floor(Math.random() * 100000), // random number
+            })).map(({ ingredients, toppings, price, ...rest }) => rest); // rem
+            
+            console.log("Items in Cart", itemsInCart)
+              const response = await axios.post('/orders', {
+                name: JSON.parse(localStorage.getItem('selfName')),
+                items: transformedItems,
+                payment_method: paymentMethod,
+                total: total
+              });
+
+              // Guarda el ID de la orden creada
+              const orderId = response.data._id;
+              setCurrentOrderId(orderId);
+              localStorage.setItem('currentOrderId', orderId);
+              console.log('Orden enviada con ID:', orderId);
+              localStorage.removeItem('selfName')
+              localStorage.removeItem('selfItems')
+            } catch (error) {
+              console.error('Error', error);
+            }
+
+
         }
       } catch (err) {
         console.error('Error polling order status:', err);
@@ -110,6 +142,12 @@ useEffect(() => {
 
   return () => clearInterval(interval);
 }, [showPendingModal, currentOrderId]);
+
+const handleClose = ()=>{
+setShowPendingModal(false)
+window.location.href = `/customer`;
+
+}
 
 
 
@@ -220,7 +258,10 @@ useEffect(() => {
             </Modal.Header>
             <Modal.Body className="text-center">
               {isPaymentConfirmed ? (
+                <>
                 <i className="bi bi-check-circle-fill text-success display-1 d-block mb-3"></i>
+                </>
+                
               ) : (
                 <i className="bi bi-clock-history display-1 d-block mb-3"></i>
               )}
@@ -231,8 +272,8 @@ useEffect(() => {
               </p>
             </Modal.Body>
             <Modal.Footer>
-              <button className="btn btn-secondary" onClick={() => setShowPendingModal(false)}>
-                Close
+              <button className="btn btn-dark" onClick={handleClose}>
+                Back to Home Page
               </button>
             </Modal.Footer>
           </Modal>

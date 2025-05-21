@@ -33,7 +33,7 @@ export default function ProductSelector() {
       setError('Product Unavailable');
       return;
     }
-    window.location.href = 'http://localhost:3000/icrform';
+    window.location.href = `/icrform`;
   };
 
   return (
