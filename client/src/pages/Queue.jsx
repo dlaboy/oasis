@@ -24,6 +24,12 @@ export default function Queue() {
     const {renderOrdersKey, setRenderOrdersKey} = useContext( ItemContext );
     const {newOrderCounter, increaseNewOrderCounter} = useContext(ItemContext);
 
+      const fetchPendingOrders = async () => {
+        const res = await axios.get(`/orders/pending_orders`);
+        setPendingOrders(res.data);
+      };
+
+
     
 
     useEffect(()=>{
@@ -189,13 +195,9 @@ export default function Queue() {
    const [showModal, setShowModal] = useState(false);
   const [pendingOrders, setPendingOrders] = useState([]);
 
-  const fetchPendingOrders = async () => {
-    const res = await axios.get(`${process.env.VITE_REACT_APP_DYNAMIC_URL}/orders/pending_orders`);
-    setPendingOrders(res.data);
-  };
 
   const confirmOrder = async (orderId) => {
-    await axios.patch(`${process.env.VITE_REACT_APP_DYNAMIC_URL}/orders/pending_orders/${orderId}/confirm`);
+    await axios.patch(`/orders/pending_orders/${orderId}/confirm`);
     fetchPendingOrders(); // refrescar lista
     setShowModal(false)
   };
@@ -209,8 +211,12 @@ export default function Queue() {
   const [editingOrderId, setEditingOrderId] = useState(null);
 const [editedOrder, setEditedOrder] = useState(null);
 
+console.log(pendingOrders)
 
 
+const unconfirmedOrders = pendingOrders?.filter(order =>
+  order.paymentConfirmed !== undefined && order.paymentConfirmed === false
+);
 
 
 
@@ -241,18 +247,11 @@ const [editedOrder, setEditedOrder] = useState(null);
             </h6>
           </div>
      <button className="btn btn-success position-relative w-25" onClick={() => setShowModal(true)}>
-  {Array.isArray(pendingOrders) &&
-    pendingOrders.filter(order =>
-      order.paymentConfirmed !== undefined && order.paymentConfirmed === false
-    ).length > 0 && (
-      <span className="badge top-0 bg-danger ms-2">
-        {
-          pendingOrders.filter(order =>
-            order.paymentConfirmed !== undefined && order.paymentConfirmed === false
-          ).length
-        }
-      </span>
-  )}
+  {unconfirmedOrders.length > 0 && (
+  <span className="badge top-0 bg-danger ms-2">
+    {unconfirmedOrders.length}
+  </span>
+)}
   Órdenes de Kiosko
 </button>
 
@@ -264,7 +263,7 @@ const [editedOrder, setEditedOrder] = useState(null);
           <Modal.Title>Órdenes Pendientes</Modal.Title>
         </Modal.Header>
      <Modal.Body style={{ maxHeight: '60vh', overflowY: 'auto' }}>
-{Array.isArray(pendingOrders) &&  pendingOrders.map(order => (
+{pendingOrders.map(order => (
   <div key={order._id} className="border rounded p-3 mb-3">
     <p><strong>Cliente:</strong> {order.client_name}</p>
     <p><strong>Total:</strong> ${order.total}</p>
@@ -282,7 +281,7 @@ const [editedOrder, setEditedOrder] = useState(null);
                 type="text"
                 value={editedOrder?.items[idx]?.toppings?.join(', ') || ''}
                 onChange={(e) => {
-                  const newToppings = e.target.value.split(',')?.map(t => t.trim());
+                  const newToppings = e.target.value.split(',').map(t => t.trim());
                   const updatedItems = [...editedOrder.items];
                   updatedItems[idx].toppings = newToppings;
                   setEditedOrder({ ...editedOrder, items: updatedItems });
