@@ -240,21 +240,31 @@ const [editedOrder, setEditedOrder] = useState(null);
                 Pending Orders
             </h6>
           </div>
-             <button className="btn btn-success position-relative w-25" onClick={() => setShowModal(true)}>
-                  {pendingOrders.filter(order => !order.paymentConfirmed).length > 0 && (
-              <span className="badge top-0 bg-danger ms-2">
-            {pendingOrders.filter(order => !order.paymentConfirmed).length}
-          </span>
-            )}
-         Órdenes de Kiosko
-            </button>
+     <button className="btn btn-success position-relative w-25" onClick={() => setShowModal(true)}>
+  {Array.isArray(pendingOrders) &&
+    pendingOrders.filter(order =>
+      order.paymentConfirmed !== undefined && order.paymentConfirmed === false
+    ).length > 0 && (
+      <span className="badge top-0 bg-danger ms-2">
+        {
+          pendingOrders.filter(order =>
+            order.paymentConfirmed !== undefined && order.paymentConfirmed === false
+          ).length
+        }
+      </span>
+  )}
+  Órdenes de Kiosko
+</button>
+
+
+
 
       <Modal show={showModal} onHide={() => setShowModal(false)} centered size="lg">
         <Modal.Header closeButton>
           <Modal.Title>Órdenes Pendientes</Modal.Title>
         </Modal.Header>
      <Modal.Body style={{ maxHeight: '60vh', overflowY: 'auto' }}>
-{pendingOrders.map(order => (
+{Array.isArray(pendingOrders) &&  pendingOrders.map(order => (
   <div key={order._id} className="border rounded p-3 mb-3">
     <p><strong>Cliente:</strong> {order.client_name}</p>
     <p><strong>Total:</strong> ${order.total}</p>
@@ -262,7 +272,7 @@ const [editedOrder, setEditedOrder] = useState(null);
 
     <div className="mt-2">
       <strong>Helados:</strong>
-      {order.items.map((item, idx) => (
+      {order.items?.map((item, idx) => (
         <div key={idx} className="border rounded p-2 mt-2">
           <p><strong>#{idx + 1}:</strong> {item.combination || 'Helado'}</p>
           <p><strong>Toppings:</strong> {
@@ -272,7 +282,7 @@ const [editedOrder, setEditedOrder] = useState(null);
                 type="text"
                 value={editedOrder?.items[idx]?.toppings?.join(', ') || ''}
                 onChange={(e) => {
-                  const newToppings = e.target.value.split(',').map(t => t.trim());
+                  const newToppings = e.target.value.split(',')?.map(t => t.trim());
                   const updatedItems = [...editedOrder.items];
                   updatedItems[idx].toppings = newToppings;
                   setEditedOrder({ ...editedOrder, items: updatedItems });
