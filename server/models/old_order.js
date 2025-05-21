@@ -17,6 +17,10 @@ const OldOrderSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    paymentConfirmed: {
+    type: Boolean,
+    default: false
+    },
     client_name : String,
     items: Object,
     payment_method: String,

@@ -10,7 +10,7 @@ const mongoose = require("mongoose");
 // });
 
 
-const OrderSchema = new mongoose.Schema({
+const PendingOrderSchema = new mongoose.Schema({
     Date: {
         type: Date,
         default: Date.now
@@ -29,6 +29,6 @@ const OrderSchema = new mongoose.Schema({
     },
 })
 
-const Order = mongoose.model('Order', OrderSchema);
+const PendingOrder = mongoose.model('PendingOrder', PendingOrderSchema);
 
-module.exports = Order;
+module.exports = PendingOrder;

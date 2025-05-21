@@ -74,7 +74,7 @@ app.get('*', (req, res) => {
 
 const server  = app.listen(PORT, async () =>{
   console.log("server started")
-  console.log("127.0.0.1:3000")
+  console.log("http://127.0.0.1:3000")
   if (PORT == 3000){
     const open = await import('open');
 

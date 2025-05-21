@@ -83,6 +83,7 @@ const handleSubmit = async e => {
   // Agregar cada helado individualmente
   for (let i = 1; i <= formData.quantity; i++) {
     const heladoItem = {
+      combination, // ✅ nuevo campo
       ingredients: formData.ingredients,
       toppings: formData.toppings[i] || []
     };
@@ -92,7 +93,8 @@ const handleSubmit = async e => {
 
   // Guardar de nuevo en localStorage
   localStorage.setItem('selfItems', JSON.stringify(selfItems));
-    // ✅ Limpiar formulario
+
+  // ✅ Limpiar formulario
   setFormData({
     ingredients: ['', '', ''],
     quantity: 0,
@@ -225,7 +227,10 @@ const handleSubmit = async e => {
     <h5>Tu selección:</h5>
     <ul className="list-group mb-3">
       <li className="list-group-item d-flex justify-content-between align-items-center">
-        Ice Cream: {combination}
+        <strong>
+        Ice Cream: 
+        </strong>
+        {combination}
         <button
           type="button"  // ✅ <-- ESTO es lo importante
           className="btn btn-sm btn-danger"
@@ -237,26 +242,43 @@ const handleSubmit = async e => {
           Quitar
         </button>
       </li>
-      {Object.entries(formData.toppings).map(([key, tSet]) => (
-        <li key={key} className="list-group-item d-flex justify-content-between align-items-center">
-          Toppings Helado #{key}: {tSet.join(', ') || 'Ninguno'}
-          <button
-            type="button"  // ✅ <-- ESTO es lo importante
-            className="btn btn-sm btn-danger"
-            onClick={() => {
-              setFormData(prev => ({
-                ...prev,
-                toppings: {
-                  ...prev.toppings,
-                  [key]: [],
-                },
-              }));
-            }}
-          >
-            Quitar
-          </button>
-        </li>
-      ))}
+  {Object.entries(formData.toppings).map(([key, tSet]) => (
+  <li key={key} className="list-group-item">
+    <strong>Toppings Helado #{key}:</strong>
+    <div className="d-flex flex-wrap gap-2 mt-2">
+      {tSet.length > 0 ? (
+        tSet.map((topping, i) => (
+          <span key={i} className="badge bg-primary d-flex align-items-center p-2">
+            {topping}
+            <button
+              type="button"
+              className="btn btn-sm btn-light ms-2 py-0 px-1"
+              onClick={() => {
+                setFormData(prev => {
+                  const updated = [...prev.toppings[key]];
+                  updated.splice(i, 1);
+                  return {
+                    ...prev,
+                    toppings: {
+                      ...prev.toppings,
+                      [key]: updated
+                    }
+                  };
+                });
+              }}
+            >
+              ✕
+            </button>
+          </span>
+        ))
+      ) : (
+        <span className="text-muted">Ninguno</span>
+      )}
+    </div>
+  </li>
+))}
+
+
       <li className="list-group-item d-flex justify-content-between align-items-center">
         Cantidad: {formData.quantity}
         {/* <button

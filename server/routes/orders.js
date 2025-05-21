@@ -3,6 +3,7 @@ var mongoose = require("mongoose");
 var router = express.Router();
 var Order = require('../models/order.js')
 var OldOrder = require('../models/old_order.js')
+var PendingOrder = require('../models/pending_order.js')
 var db = require("../db.js");
 const moment = require('moment-timezone'); // Ensure this is installed
 
@@ -19,6 +20,61 @@ router.get('/', async function (req, res, next) {
     
     res.send(orders);
 });
+router.get('/pending_orders', async function (req, res, next) {
+  try {
+    let query = { paymentConfirmed: false };
+
+    if (req.body.name) {
+      query.client_name = req.body.name;
+    }
+
+    const orders = await PendingOrder.find(query);
+    res.status(200).json(orders);
+  } catch (error) {
+    console.error('Error fetching pending orders:', error);
+    res.status(500).json({ message: 'Error fetching orders' });
+  }
+});
+
+router.patch('/pending_orders/:id/confirm', async (req, res) => {
+  try {
+    const order = await PendingOrder.findByIdAndUpdate(
+      req.params.id,
+      { paymentConfirmed: true },
+      { new: true }
+    );
+    res.status(200).json(order);
+  } catch (error) {
+    console.error('Error confirming payment:', error);
+    res.status(500).json({ message: 'Error confirming payment' });
+  }
+});
+router.get('/pending_orders/:id', async (req, res) => {
+  try {
+    const order = await PendingOrder.findById(req.params.id);
+    if (!order) return res.status(404).json({ message: 'Order not found' });
+    res.status(200).json(order);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching order' });
+  }
+});
+
+
+router.patch('/pending_orders/:id/edit', async (req, res) => {
+  try {
+    const updatedOrder = await PendingOrder.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    res.status(200).json(updatedOrder);
+  } catch (err) {
+    console.error('Error updating order:', err);
+    res.status(500).json({ message: 'Error updating order' });
+  }
+});
+
+
 // GET all totalATHs orders
 // Use the aggregate function to calculate the sum
 router.get('/ordersATH',async function(req, res, next){
@@ -187,6 +243,25 @@ router.post('/', async function (req, res) {
     res.send("order sent").status(200)
 
 })
+router.post('/pending_order', async function (req, res) {
+  const name = req.body.name;
+  const items = req.body.items;
+  const payment = req.body.payment_method;
+  const total_to_pay = req.body.total;
+
+  let newOrder = new PendingOrder({
+    client_name: name,
+    items: items,
+    payment_method: payment,
+    total: total_to_pay,
+    paymentConfirmed: false // Asegúrate que esto exista en tu schema
+  });
+
+  await newOrder.save();
+
+  res.status(200).json(newOrder); // ✅ Devolver el objeto guardado (incluye el _id)
+});
+
 
 router.delete('/', async function (req, res){
     if(req.body.id != undefined){

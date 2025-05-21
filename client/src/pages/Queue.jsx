@@ -183,6 +183,29 @@ export default function Queue() {
     setIDtoDelete(orderId)
   }
 
+   const [showModal, setShowModal] = useState(false);
+  const [pendingOrders, setPendingOrders] = useState([]);
+
+  const fetchPendingOrders = async () => {
+    const res = await axios.get('http://localhost:3000/orders/pending_orders');
+    setPendingOrders(res.data);
+  };
+
+  const confirmOrder = async (orderId) => {
+    await axios.patch(`http://localhost:3000/orders/pending_orders/${orderId}/confirm`);
+    fetchPendingOrders(); // refrescar lista
+  };
+
+  useEffect(() => {
+    if (showModal) {
+      fetchPendingOrders();
+    }
+  }, [showModal]);
+
+  const [editingOrderId, setEditingOrderId] = useState(null);
+const [editedOrder, setEditedOrder] = useState(null);
+
+
 
 
 
@@ -213,7 +236,117 @@ export default function Queue() {
                 Pending Orders
             </h6>
             </div>
-            <div className=""><img src="" alt="" /></div>
+             <button className="btn btn-success " onClick={() => setShowModal(true)}>
+        Confirmar Órdenes
+      </button>
+
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Órdenes Pendientes</Modal.Title>
+        </Modal.Header>
+     <Modal.Body style={{ maxHeight: '60vh', overflowY: 'auto' }}>
+{pendingOrders.map(order => (
+  <div key={order._id} className="border rounded p-3 mb-3">
+    <p><strong>Cliente:</strong> {order.client_name}</p>
+    <p><strong>Total:</strong> ${order.total}</p>
+    <p><strong>Pago:</strong> {order.payment_method}</p>
+
+    <div className="mt-2">
+      <strong>Helados:</strong>
+      {order.items.map((item, idx) => (
+        <div key={idx} className="border rounded p-2 mt-2">
+          <p><strong>#{idx + 1}:</strong> {item.combination || 'Helado'}</p>
+          <p><strong>Toppings:</strong> {
+            editingOrderId === order._id ? (
+              <input
+                className="form-control"
+                type="text"
+                value={editedOrder?.items[idx]?.toppings?.join(', ') || ''}
+                onChange={(e) => {
+                  const newToppings = e.target.value.split(',').map(t => t.trim());
+                  const updatedItems = [...editedOrder.items];
+                  updatedItems[idx].toppings = newToppings;
+                  setEditedOrder({ ...editedOrder, items: updatedItems });
+                }}
+              />
+            ) : (
+              item.toppings && item.toppings.length > 0 ? item.toppings.join(', ') : 'Ninguno'
+            )
+          }</p>
+        </div>
+      ))}
+    </div>
+
+    <p><strong>¿Confirmado?:</strong> {order.paymentConfirmed ? 'Sí' : 'No'}</p>
+
+    {!order.paymentConfirmed && editingOrderId === order._id ? (
+      <>
+        <div className="d-flex gap-2 mt-3">
+          <select
+            className="form-select"
+            value={editedOrder.payment_method}
+            onChange={e => setEditedOrder({ ...editedOrder, payment_method: e.target.value })}
+          >
+            <option value="ATH">ATH</option>
+            <option value="CASH">CASH</option>
+          </select>
+          <button
+            className="btn btn-success"
+            onClick={async () => {
+              await axios.patch(`/orders/pending_orders/${order._id}/edit`, editedOrder);
+              setEditingOrderId(null);
+              fetchPendingOrders();
+            }}
+          >
+            Guardar cambios
+          </button>
+          <button
+            className="btn btn-secondary"
+            onClick={() => setEditingOrderId(null)}
+          >
+            Cancelar
+          </button>
+        </div>
+      </>
+    ) : (
+      !order.paymentConfirmed && (
+        <div className="d-flex gap-2 mt-3">
+          <button
+            className="btn btn-primary"
+            onClick={() => confirmOrder(order._id)}
+          >
+            Confirmar
+          </button>
+          <button
+            className="btn btn-warning"
+            onClick={() => {
+              setEditingOrderId(order._id);
+              setEditedOrder(JSON.parse(JSON.stringify(order))); // deep clone
+            }}
+          >
+            Modificar
+          </button>
+        </div>
+      )
+    )}
+  </div>
+))}
+
+</Modal.Body>
+
+
+        <Modal.Footer>
+          <button className="btn btn-secondary" onClick={() => setShowModal(false)}>
+            Cerrar
+          </button>
+        </Modal.Footer>
+      </Modal>
+            <div className=""><img src="" alt="" />
+             <div className="container mt-5">
+     
+    </div>
+
+            </div>
             {/* <button className='btn btn-outline-secondary p-2' onClick={handleOrderClear}>Clear</button> */}
 
         </div>
