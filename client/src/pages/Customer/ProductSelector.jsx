@@ -1,8 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import './new-order.css';
+import './style.css';
+import { Toaster, toast } from 'react-hot-toast';
+
+
+
 
 export default function ProductSelector() {
+  useEffect(() => {
+    // Solo si vengo de /customer
+    if (document.referrer.includes('/customer')) {
+      const nombre = JSON.parse(localStorage.getItem('selfName') || '""');
+      toast.success(`¡Bienvenido ${nombre}! 🍦`);
+    }
+  }, []); // el array vacío asegura que solo se ejecute en mount
+
   const [selectedProduct, setSelectedProduct] = useState('');
   const [error, setError] = useState('');
   const [expanded, setExpanded] = useState(false);
@@ -38,21 +51,23 @@ export default function ProductSelector() {
 
   return (
     <div>
+      <Toaster position="bottom-center" />
+      
       <nav className="nave navbar navbar-expand navbar-dark bg-black w-100 d-flex align-items-center justify-content-between">
         <a href="/customer" className='ms-3'>
-            <i className="bi bi-chevron-left"></i>
+            <i className="bi bi-chevron-left fs-2 nav-icon"></i>
         </a>
         <img className="logo" src="/logo.png" alt="Logo" />
         <a href="/shopping" className='me-3'>
-          <i className="bi bi-cart"></i>
+          <i className="bi bi-cart fs-2 nav-icon"></i>
         </a>
       </nav>
 
       <div className="conta container mt-3 rounded-3">
         <div className="row d-flex flex-column justify-content-center align-items-center">
           <div className="col d-flex justify-content-center align-item-center gy-3">
-            <button type="button" className="rosa btn rounded-3 btn-lg" onClick={() => setShowForm(!showForm)}>
-              New +
+            <button type="button" className="rosa btn rounded-3 btn-lg boton-nuevo" onClick={() => setShowForm(!showForm)}>
+              Nuevo +
             </button>
           </div>
 
@@ -113,7 +128,7 @@ export default function ProductSelector() {
             </div>
           ) : (
             <div id="d" className="nuevo col d-flex justify-content-center gy-5">
-              <p>Press button to add product to order</p>
+              <p className='lead'>Presiona <strong className='fw-bold'>Nuevo</strong> para comenzar.</p>
             </div>
           )}
         </div>

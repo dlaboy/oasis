@@ -1,0 +1,98 @@
+/* 
+    font-family: 'Homemade Apple', cursive;
+
+    font-family: 'Josefin Sans', sans-serif;
+
+    font-family: 'Raleway', sans-serif; */
+
+
+
+
+.nave{
+    width: 100vw;
+}
+.logo{
+    height: 4rem;
+    width: 4rem;
+
+    
+}
+body{
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 500;
+    height: 100vh;
+    background: linear-gradient(rgb(0, 0, 0) ,transparent),url("/fondo.png");
+    /* background-color: beige; */
+    background-size: cover;
+    background-repeat: repeat-y;
+    background-position: center;
+    color: beige;
+
+    
+}
+
+.welcome{
+    min-height: 65vh;
+    /* background: linear-gradient(rgb(33, 33, 33),transparent);  */
+    /* background-color: white; */
+    background-size: cover;
+    background-repeat: no-repeat;
+  
+}
+
+h1, p , h3, h4, .boton-nuevo{
+    color: beige;
+}
+
+h1{
+    font-size: 3rem;
+}
+p{
+    font-weight: 300;
+}
+.ima{
+    height: 1.5rem;
+
+}
+/* 1) Anula transiciones/animaciones al hacer hover */
+.btn,
+button {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* 2) Quita estilo de hover en botones */
+.btn:hover,
+button:hover {
+  background-color: transparent !important; /* quita el fondo */
+  color: inherit            !important;     /* mantiene el color de texto */
+  box-shadow: none         !important;     /* quita sombras */
+  transform: none          !important;     /* quita escalados/movimientos */
+  cursor: default          !important;     /* quita la mano al pasar por encima */
+  text-decoration: none    !important;     /* quita subrayados, etc */
+}
+
+/* Sobrescribimos el estilo de focus de Bootstrap */
+/* .form-control:focus {
+  border: 2px solid red !important;  
+  box-shadow: none !important;        
+  outline: none !important;          
+} */
+
+/* estilos para cuando loading = true */
+.btn-loading {
+  background-color: beige !important;
+  color: black !important;
+  border-color: beige !important;
+}
+
+.btn-loading .spinner-border {
+  border-top-color: black !important;
+  border-right-color: black !important;
+}
+
+/* name.css */
+
+.nav-icon {
+  color: beige !important;
+}
