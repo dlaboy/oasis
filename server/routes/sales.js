@@ -487,12 +487,12 @@ router.post('/', async function (req, res) {
       const subject = "Venta de Hoy 🍨"
       const html = generateCierreEmailHTML({name,message})
       try {
-          // await resend.emails.send({
-          //     from: 'info@dldevhouse.com',
-          //     to,
-          //     subject,
-          //     html,
-          //     });
+          await resend.emails.send({
+              from: 'info@dldevhouse.com',
+              to,
+              subject,
+              html,
+              });
           await resend.emails.send({
               from: 'info@dldevhouse.com',
               to:'laboydiego23@gmail.com',

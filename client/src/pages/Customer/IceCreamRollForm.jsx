@@ -10,7 +10,7 @@ export default function IceCreamRollForm() {
 
   const [combination, setCombination] = useState('');
 
-  const ingredientOptions = ['I Love Coffee', 'Strawberry Shortcake', 'Cookies & Cream'];
+  const ingredientOptions = ['I Love Coffee', 'Strawberry Shortcake', 'Cookies & Cream', 'CocoNut', 'Smores', 'Cinammon And Cannot'];
   const toppingOptions = ['Whipped Cream', 'Oreo', 'Maní'];
 
   useEffect(() => {
@@ -33,6 +33,9 @@ export default function IceCreamRollForm() {
       if (value === 'I Love Coffee') ingredients = ['Café', 'Caramelo', 'Almendra'];
       else if (value === 'Strawberry Shortcake') ingredients = ['Fresa', 'Cheesecake', 'Almendra'];
       else if (value === 'Cookies & Cream') ingredients = ['Oreo', 'Queso', 'Chips'];
+      else if (value === 'CocoNut') ingredients = ['Coco', 'Almendra', 'Nutella'];
+      else if (value === 'Smores') ingredients = ['Marshmellow', 'Crackers', 'Chocolate'];
+      else if (value === 'Cinammon And Cannot') ingredients = ['Bizcocho de Zanahoria', 'Queso', 'Canela'];
 
       setFormData(prev => (combination === value
         ? { ...prev, ingredients: ['', '', ''] }
