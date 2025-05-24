@@ -1,20 +1,15 @@
 import { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import './new-order.css';
 import './style.css';
 import { Toaster, toast } from 'react-hot-toast';
 
-
-
-
 export default function ProductSelector() {
   useEffect(() => {
-    // Solo si vengo de /customer
     if (document.referrer.includes('/customer')) {
       const nombre = JSON.parse(localStorage.getItem('selfName') || '""');
       toast.success(`¡Bienvenido ${nombre}! 🍦`);
     }
-  }, []); // el array vacío asegura que solo se ejecute en mount
+  }, []);
 
   const [selectedProduct, setSelectedProduct] = useState('');
   const [error, setError] = useState('');
@@ -22,40 +17,44 @@ export default function ProductSelector() {
   const [showForm, setShowForm] = useState(false);
 
   const productDetails = {
-    "Ice Cream Rolls": "Ice Cream Rolls description...",
-    "Waffle Bowls": "Waffle Bowls description...",
-    "Cone Rolls": "Cone Rolls description...",
-    "Banana Split": "Banana Split description...",
-    "To-Go Bowls": "To-Go Bowls description...",
-    "Puppy Rolls": "Puppy Rolls description...",
+    "Ice Cream Rolls": "Helado artesanal, 8 onzas preparado al momento. Escoge entre nuestras combinaciones favoritas (siguiente página) y toppings para el mismo."
+    // "Waffle Bowls": "Waffle en forma de bowl, base perfecta para helado y toppings.",
+    // "Cone Rolls": "Rollos de helado servidos dentro de conos crujientes.",
+    // "Banana Split": "Clásico Banana Split con tres bolas de helado, frutas y toppings.",
+    // "To-Go Bowls": "Opción para llevar, 8 onzas de helado en envase desechable.",
+    // "Puppy Rolls": "Helado sin azúcar y sin lactosa, seguro para mascotas.",
   };
 
   const handleSelection = (e) => {
     const value = e.target.value;
     setSelectedProduct(value);
-    if (value === 'Ice Cream Rolls') setError('');
+    setError('');
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!selectedProduct) {
-      setError('A product has to be selected');
+      setError('Debe seleccionar un producto');
       return;
     }
-    if (selectedProduct !== 'Ice Cream Rolls') {
-      setError('Product Unavailable');
+    if (!productDetails[selectedProduct]) {
+      setError('Producto no disponible');
       return;
     }
     window.location.href = `/icrform`;
   };
 
+  useEffect(() => {
+    if (selectedProduct) setExpanded(true);
+  }, [selectedProduct]);
+
   return (
-    <div>
+    <div className='prod-selector'>
       <Toaster position="bottom-center" />
-      
+
       <nav className="nave navbar navbar-expand navbar-dark bg-black w-100 d-flex align-items-center justify-content-between">
         <a href="/customer" className='ms-3'>
-            <i className="bi bi-chevron-left fs-2 nav-icon"></i>
+          <i className="bi bi-chevron-left fs-2 nav-icon"></i>
         </a>
         <img className="logo" src="/logo.png" alt="Logo" />
         <a href="/shopping" className='me-3'>
@@ -66,69 +65,60 @@ export default function ProductSelector() {
       <div className="conta container mt-3 rounded-3">
         <div className="row d-flex flex-column justify-content-center align-items-center">
           <div className="col d-flex justify-content-center align-item-center gy-3">
-            <button type="button" className="rosa btn rounded-3 btn-lg boton-nuevo" onClick={() => setShowForm(!showForm)}>
+            <button type="button" className="rosa btn  text-light rounded-3 btn-lg boton-nuevo" onClick={() => setShowForm(!showForm)}>
               Nuevo +
             </button>
           </div>
 
           {showForm ? (
             <div className="col bg-white contenido rounded-3 p-3 d-flex align-items-center flex-column text-secondary gy-4">
-              <div className="col col-12 p-4 d-flex flex-column justify-content-center align-items-center gy-5">
-                <h4 className="w-100">Product Type</h4>
+              <section className="card shadow-sm p-4 mt-3 w-100">
+                <h5 className="text-secondary mb-3">Tipo de Producto</h5>
                 <select
-                  className="form-select w-100 m-3"
+                  className="form-select fs-4"
                   onChange={handleSelection}
                   value={selectedProduct || '0'}
+                  aria-label="Selecciona tipo de producto"
                 >
-                  <option value="0" disabled>
-                    Select Product
-                  </option>
-                  <option value="Ice Cream Rolls">
-                    Ice Cream Rolls
-                  </option>
-                  {/* {Object.keys(productDetails).map((product, i) => (
-                    <option key={i} value={product}>
-                      {product}
-                    </option>
-                  ))} */}
+                  <option value="0" disabled>Selecciona el producto</option>
+                  {Object.keys(productDetails).map((product, i) => (
+                    <option key={i} value={product}>{product}</option>
+                  ))}
                 </select>
-              </div>
+              </section>
 
-              <div className="col more-info p-4 w-100">
-                <div className="col d-flex flex-row justify-content-between" id="prohe">
-                  <h4>Product Information</h4>
-                  <div className="flechas">
-                    <button className="btn" onClick={() => setExpanded(false)}>
-                          <i className="bi bi-chevron-up"></i>
-                    </button>
-                    <button className="btn" onClick={() => setExpanded(true)}>
-                        <i className="bi bi-chevron-down"></i>
-                    </button>
-                  </div>
+              <section className="card shadow-sm p-4 mt-3 w-100">
+                <div className="d-flex justify-content-between align-items-center">
+                  <h5 className="text-secondary">Información del Producto</h5>
+                  <button className="btn" onClick={() => setExpanded(prev => !prev)}>
+                    <i className={`bi ${expanded ? 'bi-chevron-up' : 'bi-chevron-down'}`}></i>
+                  </button>
                 </div>
 
                 {expanded && selectedProduct && (
                   <div className="mt-4">
-                    <h5>{selectedProduct}</h5>
-                    <p className="ms-3">{productDetails[selectedProduct]}</p>
+                    <h5 className="fw-bold">{selectedProduct}</h5>
+                    <p className="text-secondary">{productDetails[selectedProduct]}</p>
                   </div>
                 )}
-              </div>
+              </section>
 
-              <div className="col d-flex align-items-center justify-content-center">
-                <form className="d-flex flex-column justify-content-center" onSubmit={handleSubmit}>
-                  <div className="form-group">
-                    <div className="text-center error text-danger">{error}</div>
+              <section className="mt-4 w-100">
+                {error && (
+                  <div className="alert alert-danger text-center" role="alert">
+                    {error}
                   </div>
-                  <button className="btn btn-dark rounded-3 btn-lg" type="submit" >
-                    Continue
+                )}
+                <form onSubmit={handleSubmit} className="d-flex justify-content-center">
+                  <button className="btn btn-dark btn-lg fs-4 py-3 w-100 mt-4 rounded-4" type="submit">
+                    Continuar
                   </button>
                 </form>
-              </div>
+              </section>
             </div>
           ) : (
-            <div id="d" className="nuevo col d-flex justify-content-center gy-5">
-              <p className='lead'>Presiona <strong className='fw-bold'>Nuevo</strong> para comenzar.</p>
+            <div id="d" className="nuevo col d-flex justify-content-center gy-5 mt-4">
+              <p className='lead presiona-nuevo'>Presiona <strong className='fw-bold'>Nuevo</strong> para comenzar.</p>
             </div>
           )}
         </div>

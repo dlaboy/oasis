@@ -17,18 +17,27 @@
 
     
 }
-body{
+.name-form{
     font-family: 'Josefin Sans', sans-serif;
     font-weight: 500;
     height: 100vh;
-    /* background: linear-gradient(rgb(0, 0, 0) ,transparent),url("/fondo.png"); */
-    /* background-color: beige; */
+    background: linear-gradient(rgb(0, 0, 0) ,transparent),url("/fondo.png");
+    background-color: black;
     background-size: cover;
     background-repeat: repeat-y;
     background-position: center;
-    /* color: beige; */
+    color: beige;
 
     
+}
+.prod-selector{
+  /* background: linear-gradient(rgb(0, 0, 0) ,transparent),url("/fondo.png"); */
+  background-color: black;
+  height: 100vh;
+  /* color: beige; */
+  border: 1 solid black;
+
+
 }
 
 .welcome{
@@ -40,7 +49,7 @@ body{
   
 }
 
-h1, p , h3, h4, .boton-nuevo{
+.boton-nuevo{
     color: beige;
 }
 
@@ -95,4 +104,8 @@ button:hover {
 
 .nav-icon {
   color: beige !important;
+}
+.presiona-nuevo{
+  color: beige !important;
+
 }

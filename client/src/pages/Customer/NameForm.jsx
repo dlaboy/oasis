@@ -46,7 +46,7 @@ export default function NameForm() {
   };
 
   return (
-    <div>
+    <div className='name-form'>
       <Toaster position="bottom-center" />
 
       <nav className="nave navbar navbar-expand navbar-dark bg-black w-100 d-flex align-items-center justify-content-center">
