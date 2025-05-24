@@ -26,7 +26,7 @@ body{
     background-size: cover;
     background-repeat: repeat-y;
     background-position: center;
-    color: beige;
+    /* color: beige; */
 
     
 }
@@ -55,22 +55,22 @@ p{
 
 }
 /* 1) Anula transiciones/animaciones al hacer hover */
-.btn,
+/* .btn,
 button {
   transition: none !important;
   animation: none !important;
-}
+} */
 
 /* 2) Quita estilo de hover en botones */
-.btn:hover,
+/* .btn:hover,
 button:hover {
-  background-color: transparent !important; /* quita el fondo */
-  color: inherit            !important;     /* mantiene el color de texto */
-  box-shadow: none         !important;     /* quita sombras */
-  transform: none          !important;     /* quita escalados/movimientos */
-  cursor: default          !important;     /* quita la mano al pasar por encima */
-  text-decoration: none    !important;     /* quita subrayados, etc */
-}
+  background-color: transparent !important; 
+  color: inherit            !important;     
+  box-shadow: none         !important;     
+  transform: none          !important;     
+  cursor: default          !important;     
+  text-decoration: none    !important;     
+} */
 
 /* Sobrescribimos el estilo de focus de Bootstrap */
 /* .form-control:focus {
