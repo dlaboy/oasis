@@ -1469,7 +1469,7 @@ function Sales(){
             
            
                     </>:<div className=" d-flex flex-column justify-content-around align-items-center w-100 ">
-                    <div className="">
+                    <div className="mt-4 mb-4">
                     <select value={stat}lassName='p-2 m-4' onChange={handleStat}>
 
                             <option value="0">Total Sales</option>
