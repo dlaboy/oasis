@@ -188,15 +188,15 @@ export default function Calendar({ tasks }) {
 
   {/* Calendar Grid */}
   <div className="shadow border">
-    <div className="row text-center border-bottom fw-semibold text-muted">
+    <div className="text-center border-bottom fw-semibold text-muted d-flex flex-row w-100">
         {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d) => (
-          <div className="col py-2 border-end" key={d}>
+          <div className="py-2 border-end w-100" key={d}>
             {d}
           </div>
         ))}
-      </div>
+     </div>
 
-    <div className="d-none d-lg-flex flex-wrap">
+    <div className="d-none d-md-flex flex-wrap">
       {days.map((day) => (
         <div
           key={day.date}

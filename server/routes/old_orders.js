@@ -192,44 +192,52 @@ router.put('/', async function (req, res){
       }
 })
 
-router.get('/avgICperHour', async function (req, res, next) {
-    // if (req.body.name){
-    //     var orders = await Order.find({client_name: req.body.name})
-    // }
-    // else{
-    // }
-    var orders = await OldOrder.find({});
+router.get('/avgICperHourPerDay', async function (req, res) {
+  const orders = await OldOrder.find({});
 
+  // Structure: { 'Monday': { '01 PM': { total: X, days: Set() }, ... } }
+  const stats = {};
 
-    // Group by hour
-    let hourlyCounts = {};
+  orders.forEach(order => {
+    if (order.Date) {
+      const date = moment(order.Date).tz('America/Puerto_Rico');
+      const hour = date.format('hh A');
+      const dayName = date.format('dddd');
+      const day = date.format('YYYY-MM-DD');
 
+      if (!stats[dayName]) {
+        stats[dayName] = {};
+      }
 
-    orders.forEach(order => {
-        console.log(order.Date)
-        if (order.Date != undefined){
-            let hour = moment(order.Date).tz('America/Puerto_Rico').format('hh A'); // "01 PM", "02 PM"
-            
-            if (hourlyCounts[hour]) {
-                hourlyCounts[hour]++;
-            } else {
-                hourlyCounts[hour] = 1;
-            }
-        }
-    });
+      if (!stats[dayName][hour]) {
+        stats[dayName][hour] = { total: 0, days: new Set() };
+      }
 
-    // Convert to array for chart
-    let formattedData = Object.keys(hourlyCounts).map(hour => ({
-        hour,
-        avg: hourlyCounts[hour]/orders.length
-    }));
+      stats[dayName][hour].total += 1;
+      stats[dayName][hour].days.add(day);
+    }
+  });
 
-    // Sort by time order (AM/PM)
-    formattedData.sort((a, b) => moment(a.hour, 'hh A') - moment(b.hour, 'hh A'));
+  // Format for frontend: [ { day: 'Monday', hour: '01 PM', avg: X }, ... ]
+  const formattedData = [];
+  for (const [day, hourMap] of Object.entries(stats)) {
+    for (const [hour, data] of Object.entries(hourMap)) {
+      if (hour !== '12 AM' && hour !== '11 PM') {
+        formattedData.push({
+          day,
+          hour,
+          avg: parseFloat((data.total / data.days.size).toFixed(2))
+        });
+      }
+    }
+  }
+  console.log("Response bro",formattedData)
 
-    console.log(formattedData)
-
-    res.send(formattedData);
+  res.send(formattedData);
 });
+
+module.exports = router;
+
+
 
 module.exports = router;

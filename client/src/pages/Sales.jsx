@@ -213,23 +213,14 @@ function Sales(){
     }
     else if (stat === "2") {
         console.log("Average")
-        axios.get('/old_orders/avgICperHour',{}).then(response=>{
+        axios.get('/old_orders/avgICperHourPerDay',{}).then(response=>{
             console.log("Response", response.data)
 
 
             // let sum = response.data.totals
-            
             // console.log("SUMMMMMMMMMMMM",sum)
             setSaleCharts(response.data)
             // setSaleCharts(saleCharts.push(sum))
-
-
-
-
-
-
-
-    
             // setAllSales(response.data)
         }).catch(error =>{
             console.log("Error", error)
@@ -1153,20 +1144,69 @@ function Sales(){
         </Modal.Footer>
       </Modal>
         <div className="w-100 d-flex flex-row justify-content-between" style={{height:"10vh"}}>
-            <div className="d-flex pt-3 w-25 pb-3 text-center">
+            <div className="d-flex pt-3 w-25 pb-3 text-center align-items-center justify-content-center">
             <Nav>
-            <Nav.Link to='/' as={NavLink} className='btn '>Home</Nav.Link>
+            <Nav.Link to='/' as={NavLink} className='btn 'style={{ fontSize: '1rem' }}>Home</Nav.Link>
             </Nav>
             </div>
-            <div className="pt-3 pb-3 d-flex w-75 text-center justify-content-center align-items-center">
-                        Sales
+            <div className="pt-3 pb-3 d-flex w-75 text-center justify-content-center align-items-center display-6">
+                        Ventas
             </div>
-            <div className="pt-3 pb-3 d-flex w-25 text-center"></div>
+            <div className="d-flex justify-content-center pt-3 pb-3 w-25">
+                {/* <div
+                    className="btn-group rounded-pill border border-dark overflow-hidden"
+                    style={{ width: '350px', height: '60px' }}
+                >
+                    <button
+                    className={`btn w-50 ${
+                        today ? 'btn-dark text-white' : 'btn-outline-dark'
+                    }`}
+                    onClick={() => setToday(true)}
+                    style={{ fontSize: '1rem' }}
+                    >
+                    Ventas de Hoy
+                    </button>
+                    <button
+                    className={`btn w-50 ${
+                        !today ? 'btn-dark text-white' : 'btn-outline-dark'
+                    }`}
+                    onClick={() => setToday(false)}
+                    style={{ fontSize: '1rem' }}
+                    >
+                    Todas las Ventas
+                    </button>
+                </div> */}
+            </div>
+
+
 
         </div>
         <div className='d-flex justify-content-start align-items-center flex-column' >
             <div className="d-flex flex-row">
-                <button className='btn btn-outline-dark rounded-pill p-3 m-2' onClick={handleToday}>{today ?'Today Sales':'All Sales'}</button>
+                 <div
+                    className="btn-group rounded-pill border border-dark overflow-hidden"
+                    style={{ width: '350px', height: '60px' }}
+                >
+                    <button
+                    className={`btn w-50 ${
+                        today ? 'btn-dark text-white' : 'btn-outline-dark'
+                    }`}
+                    onClick={() => setToday(true)}
+                    style={{ fontSize: '1rem' }}
+                    >
+                    Ventas de Hoy
+                    </button>
+                    <button
+                    className={`btn w-50 ${
+                        !today ? 'btn-dark text-white' : 'btn-outline-dark'
+                    }`}
+                    onClick={() => setToday(false)}
+                    style={{ fontSize: '1rem' }}
+                    >
+                    Todas las Ventas
+                    </button>
+                </div>
+                {/* <button className='btn btn-outline-dark rounded-pill p-3 m-2' onClick={handleToday}>{today ?'Today Sales':'All Sales'}</button> */}
             </div>
           
             { today ? <div className="text-center">
@@ -1178,8 +1218,8 @@ function Sales(){
                     } */}
                 </div>
             
-                {generate &&  <div className="d-flex text-center flex-column align-items-center justify-content-center">
-                <Table className=' ' striped bordered hover size='sm' responsive='md'>
+                {generate &&  <div className="w-100 d-flex text-center flex-column align-items-center justify-content-center w-100 mt-5">
+                <Table className='w-100' striped bordered hover size='lg' responsive='md'>
                     <thead>
                         <tr className='text-center'>
                             <th>Date</th>
@@ -1233,14 +1273,62 @@ function Sales(){
             </div> :
             <div className='container w-100 text-center d-flex flex-column justify-content-center align-items-center'>
                   <div className="">
-                        <button className='btn btn-outline-primary rounded-pill p-3 m-2' onClick={toggleCharts}>{charts ?'Charts':'Reports'}</button>
-                           
+                        {/* <button className='btn btn-outline-primary rounded-pill p-3 m-2' onClick={toggleCharts}>{charts ?'Charts':'Reports'}</button> */}
+                    <div className="d-flex justify-content-center m-3">
+                        <div
+                            className="btn-group rounded-pill border border-success overflow-hidden"
+                            style={{ width: '350px', height: '60px' }}
+                        >
+                            <button
+                            className={`btn w-50 ${
+                                charts ? 'btn-success text-white' : 'btn-outline-success'
+                            }`}
+                            onClick={() => setCharts(true)}
+                            style={{ fontSize: '1rem' }}
+                            >
+                            Reportes
+                            </button>
+                            <button
+                            className={`btn w-50 ${
+                                !charts ? 'btn-success text-white' : 'btn-outline-success'
+                            }`}
+                            onClick={() => setCharts(false)}
+                            style={{ fontSize: '1rem' }}
+                            >
+                            Gráficas
+                            </button>
+                        </div>
+                    </div>
                     </div>
                     {charts ? <>
-                    <button className='btn btn-outline-primary rounded-pill p-3 m-2' onClick={toggleList}>{list ?'List View':'Calendar View'}</button>
+                        <div className="d-flex justify-content-center ">
+                        <div
+                            className="btn-group rounded-pill border border-primary overflow-hidden"
+                            style={{ width: '350px', height: '60px' }}
+                        >
+                            <button
+                            className={`btn w-50 ${
+                                list ? 'btn-primary text-white' : 'btn-outline-primary'
+                            }`}
+                            onClick={() => setList(true)}
+                            style={{ fontSize: '1rem' }}
+                            >
+                            Vista de Lista
+                            </button>
+                            <button
+                            className={`btn w-50 ${
+                                !list ? 'btn-primary text-white' : 'btn-outline-primary'
+                            }`}
+                            onClick={() => setList(false)}
+                            style={{ fontSize: '1rem' }}
+                            >
+                            Vista de Calendario
+                            </button>
+                        </div>
+                        </div>
 
                 {list ? <>
-                <div className='m-3 container w-100 text-center d-flex flex-row justify-content-around'>
+                <div className='m-5 container w-100 text-center d-flex flex-row justify-content-around'>
                     <select value={day} onChange={handleDay} className='p-2'>
                             <option value="">Day</option>
                             {Array.from({ length: 31 }, (_, i) => (
@@ -1360,7 +1448,7 @@ function Sales(){
 
                 </>:<>
         
-                <div className="text-center">
+                <div className="text-center m-2">
                     <div className="d-flex flex-wrap align-items-center ms-auto gap-3">
                         <Calendar className="me-2" tasks={allSales} />
                         {/* 
