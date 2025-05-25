@@ -421,7 +421,7 @@ function Sales(){
             const alreadySubmitted = localStorage.getItem('reportSubmittedDate');
         
         // Trigger at 11:45 only once per day
-            if (puertoRicoTime.startsWith('23:30:00') && alreadySubmitted != today) { 
+            if (puertoRicoTime.startsWith('23:30') && alreadySubmitted != today) { 
                 handleSubmitShow()               
                 toast.success(`its time!${puertoRicoTime}`)
                 submitRef.current.click(); // simulates the user click
