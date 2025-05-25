@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import { Nav, Modal, Button } from 'react-bootstrap'
 import axios from 'axios';
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useRef } from 'react';
 import CurrencyFormatter from '../tools/CurrencyFormatter';
 // import moment from 'moment';
 import Table from 'react-bootstrap/Table';
@@ -242,6 +242,9 @@ function Sales(){
    
   },[stat])
 
+  const submitRef = useRef();
+
+
     useEffect(()=>{
         // let months = ['01','02','03','04','05','06','07','08','09','10','11','12']
         // let year = ['2025','2024']
@@ -405,13 +408,34 @@ function Sales(){
             generateReport(true)
           }, 500);
 
-          
-         
+
+        const intervalDailySales = setInterval(() => {
+            const now = new Date();
+            const puertoRicoTime = now.toLocaleTimeString('en-US', {
+            hour12: true,
+            timeZone: 'America/Puerto_Rico'
+            });
+
+            const today = now.toLocaleDateString('en-US', { timeZone: 'America/Puerto_Rico' });
+
+            const alreadySubmitted = localStorage.getItem('reportSubmittedDate');
+        
+        // Trigger at 11:45 only once per day
+            if (puertoRicoTime.startsWith('9:55') && alreadySubmitted != today) { 
+                handleSubmitShow()               
+                toast.success(`its time!${puertoRicoTime}`)
+                submitRef.current.click(); // simulates the user click
+                localStorage.setItem('reportSubmittedDate', today);
+                clearInterval(intervalDailySales);
+                handleSubmitClose()               
+            }
+        }, 1000); // check every 1 minute 
       
           // Cleanup function to clear the interval when the component unmounts
           return () => {
             clearInterval(intervalId);
             clearInterval(intervalSales);
+            clearInterval(intervalDailySales);
 
 
               
@@ -804,6 +828,8 @@ function Sales(){
    
     }
 
+
+
     
     const handleReport = event => {
         axios.get('/orders/ordersATH').then(response=>{
@@ -1106,7 +1132,7 @@ function Sales(){
           <Button variant="secondary" onClick={handleSubmitClose}>
             Cancel
           </Button>
-          <button className='btn btn-primary' onClick={handleSubmit}>
+          <button ref={submitRef} className='btn btn-primary' style={{ display: 'none' }} onClick={handleSubmit}>
             Submit
           </button>
         </Modal.Footer>
@@ -1146,9 +1172,10 @@ function Sales(){
             { today ? <div className="text-center">
                 <div className="d-flex justify-content-around align-items-center flex-row">
                     {/* <button className='btn btn-outline-primary rounded-pill p-3 m-2' onClick={handleReport}> Generate Today's Report</button> */}
-                    {generate && 
+                    {/* {generate && 
                         <button className='btn btn-outline-dark rounded-pill p-3 m-2' onClick={handleSubmitShow}> Submit Today's Report</button>
-                    }
+
+                    } */}
                 </div>
             
                 {generate &&  <div className="d-flex text-center flex-column align-items-center justify-content-center">
