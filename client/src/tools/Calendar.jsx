@@ -245,41 +245,52 @@ export default function Calendar({ tasks }) {
       ))}
     </div>
 
-    {/* Mobile Grid */}
-    <div className="d-lg-none d-grid" style={{ gridTemplateColumns: 'repeat(7, 1fr)' }}>
-      {days.map((day) => (
-        <button
-          key={day.date}
-          onClick={() => setSelectedDate(day.date)}
-          type="button"
-          className={`btn p-2 d-flex flex-column align-items-start ${
-            day.isSelected ? 'text-white bg-dark' :
-            day.isToday ? 'text-primary fw-semibold' :
-            !day.isCurrentMonth ? 'text-muted' : 'text-dark'
-          }`}
-          style={{ 
-            cursor: 'pointer',
-            minHeight: '80px',
-            border: day.isSelected ? '2px solid #0d6efd' : '', // Bootstrap primary border
-            borderRadius: day.isSelected ? '0.25rem' : '',
-            backgroundColor: day.isSelected ? '#0d6efd' : '',
-            color: day.isSelected ? 'white' : '',
-            height: '90px' }}
-        >
-          <time className={`${day.isSelected ? 'bg-dark rounded-circle d-flex justify-content-center align-items-center text-white' : ''}`}>
-            {parseInt(day.date.split('-')[2])}
-          </time>
-          <span className="visually-hidden">{day.events.length} events</span>
-          {day.events.length > 0 && (
-            <div className="d-flex flex-wrap-reverse mt-auto">
-              {day.events.map((event) => (
-                <span key={event.id} className="me-1 mb-1 rounded-circle bg-secondary" style={{ width: '6px', height: '6px' }} />
-              ))}
-            </div>
-          )}
-        </button>
-      ))}
-    </div>
+   {/* Mobile Grid */}
+<div
+  className="d-lg-none"
+  style={{
+    display: 'grid',
+    gridTemplateColumns: 'repeat(7, minmax(80vw, 1fr))',
+    gap: '4px', // Espacio entre días
+    padding: '0 8px' // margen lateral opcional
+  }}
+>
+  {days.map((day) => (
+    <button
+      key={day.date}
+      onClick={() => setSelectedDate(day.date)}
+      type="button"
+      className={`btn p-2 d-flex flex-column align-items-start ${
+        day.isSelected ? 'text-white bg-dark' :
+        day.isToday ? 'text-primary fw-semibold' :
+        !day.isCurrentMonth ? 'text-muted' : 'text-dark'
+      }`}
+      style={{ 
+        cursor: 'pointer',
+        minHeight: '80px',
+        border: day.isSelected ? '2px solid #0d6efd' : '',
+        borderRadius: day.isSelected ? '0.25rem' : '',
+        backgroundColor: day.isSelected ? '#0d6efd' : '',
+        color: day.isSelected ? 'white' : '',
+        height: '90px',
+        width: '100%' // fuerza a ocupar la celda completa
+      }}
+    >
+      <time className={`${day.isSelected ? 'bg-dark rounded-circle d-flex justify-content-center align-items-center text-white' : ''}`}>
+        {parseInt(day.date.split('-')[2])}
+      </time>
+      <span className="visually-hidden">{day.events.length} events</span>
+      {day.events.length > 0 && (
+        <div className="d-flex flex-wrap-reverse mt-auto">
+          {day.events.map((event) => (
+            <span key={event.id} className="me-1 mb-1 rounded-circle bg-secondary" style={{ width: '6px', height: '6px' }} />
+          ))}
+        </div>
+      )}
+    </button>
+  ))}
+</div>
+
   </div>
 
  
