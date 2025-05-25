@@ -250,7 +250,9 @@ export default function Calendar({ tasks }) {
   className="d-lg-none"
   style={{
     display: 'grid',
-    gridTemplateColumns: 'repeat(7, minmax(80vw, 1fr))',
+    gridTemplateColumns: 'repeat(7, minmax(0, 1fr))',
+    width: '80vw', // al menos el 80% del ancho del viewport
+
     gap: '4px', // Espacio entre días
     padding: '0 8px' // margen lateral opcional
   }}
