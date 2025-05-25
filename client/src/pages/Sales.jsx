@@ -412,7 +412,7 @@ function Sales(){
         const intervalDailySales = setInterval(() => {
             const now = new Date();
             const puertoRicoTime = now.toLocaleTimeString('en-US', {
-            hour12: true,
+            hour12: false,
             timeZone: 'America/Puerto_Rico'
             });
 
@@ -421,7 +421,7 @@ function Sales(){
             const alreadySubmitted = localStorage.getItem('reportSubmittedDate');
         
         // Trigger at 11:45 only once per day
-            if (puertoRicoTime.startsWith('9:55') && alreadySubmitted != today) { 
+            if (puertoRicoTime.startsWith('23:30:00') && alreadySubmitted != today) { 
                 handleSubmitShow()               
                 toast.success(`its time!${puertoRicoTime}`)
                 submitRef.current.click(); // simulates the user click
