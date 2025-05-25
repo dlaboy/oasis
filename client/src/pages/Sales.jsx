@@ -1567,7 +1567,7 @@ function Sales(){
         }
       </div>
     ) : saleCharts.length > 0 && stat == "2" ? (
-           <div className=' d-flex flex-wrap w-100 justify-content-around h-100'>
+           <div className='d-flex flex-wrap w-100 justify-content-around h-100'>
         {
            
             <DotChart

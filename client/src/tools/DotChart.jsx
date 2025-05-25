@@ -59,6 +59,7 @@ function DotChart({ dataPoints }) {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     scales: {
       x: {
         type: 'category',
@@ -89,7 +90,10 @@ function DotChart({ dataPoints }) {
     }
   };
 
-  return <Scatter data={data} options={options} />;
+  return <div style={{ width: '100%', height: '500px' }}>
+  <Scatter data={data} options={options} />
+</div>
+
 }
 
 export default DotChart;
