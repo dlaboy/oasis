@@ -20,6 +20,9 @@ ChartJS.register(
 );
 
 function DotChart({ dataPoints }) {
+  // Orden deseado de horas
+  const hourOrder = ['02 PM','03 PM','04 PM','05 PM','06 PM','07 PM','08 PM','09 PM'];
+
   // Agrupar por día
   const groupedByDay = dataPoints.reduce((acc, point) => {
     if (!acc[point.day]) acc[point.day] = [];
@@ -27,14 +30,21 @@ function DotChart({ dataPoints }) {
     return acc;
   }, {});
 
+  // Ordenar internamente los puntos por hora
+  Object.keys(groupedByDay).forEach(day => {
+    groupedByDay[day].sort((a, b) => {
+      return hourOrder.indexOf(a.x) - hourOrder.indexOf(b.x);
+    });
+  });
+
   const colors = [
-    'rgba(255, 99, 132, 0.7)',
-    'rgba(54, 162, 235, 0.7)',
-    'rgba(255, 206, 86, 0.7)',
-    'rgba(75, 192, 192, 0.7)',
-    'rgba(153, 102, 255, 0.7)',
-    'rgba(255, 159, 64, 0.7)',
-    'rgba(199, 199, 199, 0.7)'
+    'rgba(255, 99, 132, 0.7)',   // Monday
+    'rgba(54, 162, 235, 0.7)',   // Tuesday
+    'rgba(255, 206, 86, 0.7)',   // Wednesday
+    'rgba(75, 192, 192, 0.7)',   // Thursday
+    'rgba(153, 102, 255, 0.7)',  // Friday
+    'rgba(255, 159, 64, 0.7)',   // Saturday
+    'rgba(201, 203, 207, 0.7)'   // Sunday
   ];
 
   const daysOfWeek = [
@@ -48,6 +58,7 @@ function DotChart({ dataPoints }) {
   ];
 
   const data = {
+    labels: hourOrder, // 👈 Aquí defines el orden explícito
     datasets: daysOfWeek.map((day, index) => ({
       label: day,
       data: groupedByDay[day] || [],
@@ -63,7 +74,6 @@ function DotChart({ dataPoints }) {
     scales: {
       x: {
         type: 'category',
-        offset: true,
         title: {
           display: true,
           text: 'Hora'
@@ -90,10 +100,11 @@ function DotChart({ dataPoints }) {
     }
   };
 
-  return <div style={{ width: '100%', height: '500px' }}>
-  <Scatter data={data} options={options} />
-</div>
-
+  return (
+    <div style={{ width: '100%', height: '500px' }}>
+      <Scatter data={data} options={options} />
+    </div>
+  );
 }
 
 export default DotChart;

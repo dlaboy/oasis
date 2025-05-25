@@ -231,6 +231,12 @@ router.get('/avgICperHourPerDay', async function (req, res) {
       }
     }
   }
+  // Ordenar por hora
+    formattedData.sort((a, b) => {
+    const aHour = moment(a.hour, 'hh A').hour();
+    const bHour = moment(b.hour, 'hh A').hour();
+    return aHour - bHour;
+    });
   console.log("Response bro",formattedData)
 
   res.send(formattedData);
