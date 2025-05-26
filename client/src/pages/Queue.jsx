@@ -218,6 +218,12 @@ const unconfirmedOrders = pendingOrders?.filter(order =>
   order.paymentConfirmed !== undefined && order.paymentConfirmed === false
 );
 
+const [visibleOrders, setVisibleOrders] = useState({});
+
+
+
+
+
 
 
     return (
@@ -236,24 +242,34 @@ const unconfirmedOrders = pendingOrders?.filter(order =>
             </Button>
           </Modal.Footer>
         </Modal>
-        <div className="w-100 d-flex flex-row justify-content-between">
+        <div className="w-100 d-flex flex-row justify-content-between m-2">
+             <div className="d-flex pt-3 w-25 pb-3 text-center align-items-center justify-content-center">
             <Nav>
-            <Nav.Link to='/' as={NavLink} className='btn  p-3 w-25  text-center'>Home</Nav.Link>
+            <Nav.Link to='/' as={NavLink} className='btn 'style={{ fontSize: '1rem' }}>Home</Nav.Link>
             </Nav>
-            <div className="p-3  w-100 text-center">
+            </div>
+             <div className="pt-3 pb-3 d-flex w-75 text-center justify-content-center align-items-center display-6">
+                       Órdenes Pendientes
+            </div>
+            <button
+              className="btn btn-dark w-25 rounded-pill shadow-sm py-3 px-4 fw-semibold text-white d-flex align-items-center justify-content-center gap-2"
+              style={{ maxWidth: '400px', fontSize: '1rem', letterSpacing: '0.3px' }}
+              onClick={() => setShowModal(true)}
+            >
+              {unconfirmedOrders.length > 0 && (
+                <span
+                  className="badge rounded-pill bg-danger"
+                  style={{ fontSize: '1rem' }}
+                >
+                  {unconfirmedOrders.length}
+                </span>
+              )}
+              Órdenes de Kiosko
+            </button>
 
-            <h6>
-                Pending Orders
-            </h6>
-          </div>
-     <button className="btn btn-success position-relative w-25" onClick={() => setShowModal(true)}>
-  {unconfirmedOrders.length > 0 && (
-  <span className="badge top-0 bg-danger ms-2">
-    {unconfirmedOrders.length}
-  </span>
-)}
-  Órdenes de Kiosko
-</button>
+
+
+
 
 
 
@@ -371,25 +387,47 @@ const unconfirmedOrders = pendingOrders?.filter(order =>
          {currentOrders ? (
         <div className='list-group h-100'> 
             {currentOrders.map(order =>(
-                <div className={order.status == 'done' ? "d-flex bg-success-subtle  justify-content-between align-items-center flex-column list-group-item list-group-item-action p-3":"d-flex justify-content-between align-items-center flex-column list-group-item list-group-item-action p-3"}>
+<div
+  className={`d-flex justify-content-center align-items-center flex-column list-group-item list-group-item-action p-3 border rounded-2 m-2 ${
+    order.status === 'done' ? 'bg-success-subtle' : ''
+  }`}
+>
                     <div className="d-flex flex-row w-100 justify-content-between align-items-center">
 
-                    <button key={order._id} className='btn fs-4' onClick={() => toggleVisibility(order._id)}>{order.client_name}</button>
-                    <button  className="btn text-secondary fs-4" onClick={()=>handleDeleteShow(order._id)}>Delete</button>
+                    {/* <button key={order._id} className='btn fs-4' onClick={() => toggleVisibility(order._id)}>{order.client_name}</button> */}
+                    <button key={order._id} className='btn fs-4' style={{ width: '100px' }}>{order.client_name}</button>
+                    <div className="">
+                        Status: {order.status}
+                    </div>
+                    <button 
+                      key={order._id} 
+                      className="btn fs-4" 
+                      onClick={() => toggleVisibility(order._id)}
+                    >
+                      <i className={`bi ${itemVisibility[order._id] == true ? 'bi-eye-slash' : 'bi-eye'}`}></i>
+                    </button>
+
+                    <button  className="btn text-secondary fs-4" onClick={()=>handleDeleteShow(order._id)}>  <i className="bi bi-trash"></i></button>
                     
                     {/* <button className="btn text-secondary" onClick={()=>handleDelete(order._id)}>
                         Delete
                     </button> */}
-                    <button className="btn text-secondary fs-4" onClick={()=>handleDone(order)}>
-                        Toggle Status
+                    <button
+                      className={`btn fs-5 px-3 py-2 fw-semibold d-flex align-items-center gap-2 
+                        ${order.status === 'done' ? 'btn-success text-white' : 'btn-outline-secondary'}`}
+                      onClick={() => handleDone(order)}
+                    >
+                      <i className={`bi ${order.status === 'done' ? 'bi-check-circle-fill' : 'bi-hourglass-split'}`}></i>
+                      {order.status === 'done' ? 'Done' : 'In Progress'}
                     </button>
+
                     </div>
                     <div className={itemVisibility[order._id] ? 'd-flex flex-column bg-secondary-subtle p-3 w-100':'d-none bg-secondary-subtle '}>
                     <div className="d-flex flex-column w-100 ">
                       {order.items.map(item =>(
                       <div className=" border-bottom border-dark w-100">
                         <div className="d-flex flex-row bg-danger-subtle p-3">
-                           <div className='fw-bold fs-4'> Type:  </div> 
+                           <div className='fw-bold fs-4'> Tipo:  </div> 
                            <div className="fs-4">
                            {item.type}
                            {/* <div className="text-secondary">
@@ -400,7 +438,7 @@ const unconfirmedOrders = pendingOrders?.filter(order =>
                         <div className="d-flex flex-column bg-warning-subtle p-3">
                         {item && item.type !== 'drinks' && (
                             <div className="fw-bold fs-4">
-                              Ingredients:
+                              Ingredientes:
                             </div>
                           )}
                           <ul className="d-flex flex-column">
@@ -432,7 +470,7 @@ const unconfirmedOrders = pendingOrders?.filter(order =>
                         </div>
                         <div className="d-flex flex-column bg-info-subtle p-3">
                           <div className="fw-bold fs-4">
-                            Quantity: 
+                            Cantidad: 
                           </div>
                           <ul className="col d-flex flex-row w-100 justify-content-between fs-4">
                             {item.qty}
@@ -447,7 +485,7 @@ const unconfirmedOrders = pendingOrders?.filter(order =>
                         </div>
                         <div className="d-flex flex-column pb-2 bg-success-subtle p-3">
                           <div className="fw-bold fs-4">
-                            Comments: 
+                            Comentarios: 
                           </div>
                           <ul className="d-flex flex-column fs-4">
                             
@@ -464,7 +502,7 @@ const unconfirmedOrders = pendingOrders?.filter(order =>
                     <div className="d-flex flex-column">
                       <div className="fw-bold d-flex flex-row w-100">
                         <div className="fs-4">
-                          Payment Method:
+                          Método de Pago:
                         </div>
                         <div className="fw-normal d-flex justify-content-center align-items-center fs-4">
                           {order.payment_method}
@@ -478,14 +516,14 @@ const unconfirmedOrders = pendingOrders?.filter(order =>
                               <CurrencyFormatter value={order.total} />
                         </div>
                       </div>
-                      <div className="fw-bold d-flex flex-row w-100">
+                      {/* <div className="fw-bold d-flex flex-row w-100">
                         <div className="fs-4">
                           Status:
                         </div>
                         <div className="fw-normal d-flex justify-content-center align-items-center fs-4">
                           {order.status}
                         </div>
-                      </div>
+                      </div> */}
                       <div className={editEnable[order._id] ? 'd-flex justify-content-center align-items-center h-100':'d-none'}>
                         <div className="">
                           <button className='btn btn-primary'onClick={()=>handleUpdate(order._id, order.name, order.items, order.payment_method)} >Save</button>
@@ -499,7 +537,7 @@ const unconfirmedOrders = pendingOrders?.filter(order =>
                 </div>
             ))}
         </div>):(
-            <p>No Orders</p>
+            <p>No hay órdenes</p>
         )
         }
     </div>
