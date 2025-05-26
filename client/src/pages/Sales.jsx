@@ -1123,12 +1123,12 @@ function Sales(){
           <Button variant="secondary" onClick={handleSubmitClose}>
             Cancel
           </Button>
-          {/* <button ref={submitRef} className='btn btn-primary' style={{ display: 'none' }} onClick={handleSubmit}>
-            Submit
-          </button> */}
-          <button ref={submitRef} className='btn btn-primary' onClick={handleSubmit}>
+          <button ref={submitRef} className='btn btn-primary' style={{ display: 'none' }} onClick={handleSubmit}>
             Submit
           </button>
+          {/* <button className='btn btn-primary' onClick={handleSubmit}>
+            Submit
+          </button> */}
         </Modal.Footer>
         </>}
         </Modal>
