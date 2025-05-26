@@ -1123,7 +1123,10 @@ function Sales(){
           <Button variant="secondary" onClick={handleSubmitClose}>
             Cancel
           </Button>
-          <button ref={submitRef} className='btn btn-primary' style={{ display: 'none' }} onClick={handleSubmit}>
+          {/* <button ref={submitRef} className='btn btn-primary' style={{ display: 'none' }} onClick={handleSubmit}>
+            Submit
+          </button> */}
+          <button ref={submitRef} className='btn btn-primary' onClick={handleSubmit}>
             Submit
           </button>
         </Modal.Footer>
@@ -1212,10 +1215,10 @@ function Sales(){
             { today ? <div className="text-center">
                 <div className="d-flex justify-content-around align-items-center flex-row">
                     {/* <button className='btn btn-outline-primary rounded-pill p-3 m-2' onClick={handleReport}> Generate Today's Report</button> */}
-                    {/* {generate && 
+                    {generate && 
                         <button className='btn btn-outline-dark rounded-pill p-3 m-2' onClick={handleSubmitShow}> Submit Today's Report</button>
 
-                    } */}
+                    }
                 </div>
             
                 {generate &&  <div className="w-100 d-flex text-center flex-column align-items-center justify-content-center w-100 mt-5">

@@ -1163,32 +1163,21 @@ function TerminalScreen() {
                 </div>
                 <div className="d-flex flex-column align-items-center " >
                         { typeAlert && <div className='text-danger text-center'>Only One Type per Item</div> }
-                    <div className='mt-3 mb-3 d-flex flex-row  w-100 justify-content-center align-items-center '>
-                        {/* <div className="col w-25 type-text text-start">Type</div> */}
-                        <div className=" d-flex flex-row w-100 justify-content-around align-items-center "  style={{pointerEvents : 'none'}}>
-                            <div className=" ms-1 me-1">
-                                <button style={{pointerEvents : 'auto'}} className={typeFlags.rolls ? 'btn btn-outline-secondary type active p-3' : 'btn btn-outline-secondary type p-3'} value={'rolls'} onClick={add}>Rolls</button>
-                            </div>
-                            <div className=" ms-1 me-1">
-                                <button style={{pointerEvents : 'auto'}} className= {typeFlags.shakes ? 'btn btn-outline-secondary type active p-3':'btn btn-outline-secondary type p-3'}  value={'shakes'} onClick={add}>Shakes</button>
-        
-        
-                            </div>
-                            <div className=" ms-1 me-1">
-                                <button style={{pointerEvents : 'auto'}} className={typeFlags.banana ? 'btn btn-outline-secondary type active p-3':'btn btn-outline-secondary type p-3'} value={'banana'} onClick={add}>Banana</button>
-        
-                                
-                            </div>
-                            <div className=" ms-1 me-1">
-                                <button style={{pointerEvents : 'auto'}} className={typeFlags.puppy ? 'btn btn-outline-secondary type active p-3':'btn btn-outline-secondary type p-3'} value={'puppy'} onClick={add}>Puppy</button>
-        
-                            </div>
-                            <div className=" ms-1 me-1">
-                                <button style={{pointerEvents : 'auto'}} className={typeFlags.drinks ? 'btn btn-outline-secondary type active p-3':'btn btn-outline-secondary type p-3'} value={'drinks'} onClick={add}>Drinks</button>
-        
-                            </div>
-                        </div>
+                    <div className="mt-3 mb-3 d-flex w-100 justify-content-center align-items-center">
+                    <select
+                        className="form-select w-75 p-3 fw-semibold"
+                        value={selectedType}
+                        onChange={(e) => add(e)}
+                    >
+                        <option value="">Selecciona un tipo</option>
+                        <option value="rolls">Rolls</option>
+                        <option value="shakes">Shakes</option>
+                        <option value="banana">Banana</option>
+                        <option value="puppy">Puppy</option>
+                        <option value="drinks">Drinks</option>
+                    </select>
                     </div>
+
                     <div  className="overflow-scroll d-flex justify-content-center flex-column">
                         {type !== 'drinks' && (
                     <div className='' style={{width:'90vw'}}>
