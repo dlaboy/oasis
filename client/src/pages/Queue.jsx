@@ -396,9 +396,9 @@ const [visibleOrders, setVisibleOrders] = useState({});
 
                     {/* <button key={order._id} className='btn fs-4' onClick={() => toggleVisibility(order._id)}>{order.client_name}</button> */}
                     <button key={order._id} className='btn fs-4' style={{ width: '100px' }}>{order.client_name}</button>
-                    <div className="">
+                    {/* <div className="">
                         Status: {order.status}
-                    </div>
+                    </div> */}
                     <button 
                       key={order._id} 
                       className="btn fs-4" 
