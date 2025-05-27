@@ -1216,7 +1216,7 @@ function Sales(){
                 <div className="d-flex justify-content-around align-items-center flex-row">
                     {/* <button className='btn btn-outline-primary rounded-pill p-3 m-2' onClick={handleReport}> Generate Today's Report</button> */}
                     {generate && 
-                        <button className='btn btn-outline-dark rounded-pill p-3 m-2' onClick={handleSubmitShow}> Submit Today's Report</button>
+                        <button className='btn btn-outline-dark rounded-pill p-3 m-2' onClick={handleSubmitShow}> Someter Reporte de Hoy</button>
 
                     }
                 </div>
