@@ -6,6 +6,8 @@ import axios from 'axios';
 import { ItemContext } from '../../context/ItemContext';
 import './TerminalScreen.css'
 import { Toaster, toast } from 'react-hot-toast';
+import ChooseType from './Choosetype';
+
 
 
 
@@ -279,7 +281,12 @@ function TerminalScreen() {
             if(storeType){
                 if (storeType != type){
                     setType(storeType)
-                }
+                    setButtons((prev) =>
+                        prev.map((item) =>
+                        item.ruta === 'tipo' ? { ...item, selected: true } : item
+                        )
+                    );
+                                    }
                 if (storeType === 'rolls'){
                     typeFlags['rolls'] = true;
                     
@@ -363,6 +370,7 @@ function TerminalScreen() {
             console.log("Error", error)
         })
 
+        setLoading(false);
 
 
         
@@ -762,13 +770,14 @@ function TerminalScreen() {
 
         if(buttonClasses.contains('ingredients')){
             if (buttonClasses.contains('favorite')){
-                // if (favCounter == 1){
-                //     console.log("only one type per item");
-                //     console.log(favCounter)
-                //     setFavAlert(true)
+                if (favCounter == 1){
+                    setFavCounter(0)
+                    console.log("only one type per item");
+                    console.log(favCounter)
+                    setFavAlert(true)
     
-                // }
-                // else{
+                }
+                else{
                     setFavAlert(false)
 
                     if (event.target.value == "CookiesAndCream"){
@@ -799,7 +808,7 @@ function TerminalScreen() {
                             }
                         })
 
-                        // setFavCounter(favCounter + 1)
+                        setFavCounter(favCounter + 1)
                  
     
                     }
@@ -825,7 +834,7 @@ function TerminalScreen() {
                 
                             }
                         })
-                        // setFavCounter(favCounter + 1)
+                        setFavCounter(favCounter + 1)
                         
     
                     }
@@ -851,7 +860,7 @@ function TerminalScreen() {
                 
                             }
                         })
-                        // setFavCounter(favCounter + 1)
+                        setFavCounter(favCounter + 1)
 
                  
     
@@ -878,7 +887,7 @@ function TerminalScreen() {
                 
                             }
                         })
-                        // setFavCounter(favCounter + 1)
+                        setFavCounter(favCounter + 1)
 
                  
     
@@ -905,7 +914,7 @@ function TerminalScreen() {
                 
                             }
                         })
-                        // setFavCounter(favCounter + 1)
+                        setFavCounter(favCounter + 1)
 
                  
     
@@ -932,12 +941,14 @@ function TerminalScreen() {
                 
                             }
                         })
-                        // setFavCounter(favCounter + 1)
+                        setFavCounter(favCounter + 1)
                         
                  
     
                     }
                 // }
+                }
+                    
                
             }
             else{
@@ -997,27 +1008,19 @@ function TerminalScreen() {
             }
         }
         else if((buttonClasses.contains('type'))){
-            if (typeCounter == 1 && type !== event.target.value ){
-                console.log("only one type per item");
-                console.log(typeCounter)
-                setTypeAlert(true)
-
-            }
-            else{
                 setTypeAlert(false)
 
-                if(type === event.target.value){
-                    setType("")
-                    setTypeCounter(typeCounter - 1)
-                    event.target.classList.remove('active')
-                }
-                else {
-                    setType(event.target.value)
-                    setTypeCounter(typeCounter + 1)
+                setType(event.target.value)
+                    // setTypeCounter(typeCounter + 1)
                     event.target.classList.add('active')
-                }
-            }
 
+                setTypeFlags((prevFlags) => {
+                        const updatedFlags = {};
+                        for (const key in prevFlags) {
+                        updatedFlags[key] = key === event.target.value;
+                        }
+                        return updatedFlags;
+                });     
         }
         
     };
@@ -1146,194 +1149,398 @@ function TerminalScreen() {
     toggleHideOrders(prev => !prev)
   }
 
+    // const buttons = ['Tipo', 'Ingredientes', 'Cantidad', 'Toppings', 'Comentarios'];
+
+    const [buttons,setButtons] = useState([
+        {label:'Tipo',ruta:'tipo', selected:false},
+        {label:'Ingredientes',ruta:'ingredientes', selected:false},
+        {label:'Cantidad',ruta:'cantidad', selected:false},
+        {label:'Toppings',ruta:'toppings', selected:false},   
+        // {label:'Comentarios',ruta:'comentarios',selected:false},   
+    ])
+    const [loading, setLoading] = useState(false);
+    const [ruta,setRuta] = useState('')
+    const choose = ((ruta)=>{
+        console.log(ruta)
+        setRuta(ruta)
+        setLoading(true);
+        setTimeout(() => {
+            // window.location.href = `/${ruta}`;
+            setLoading(false);
+
+        }, 500); // match animation duratio
+        
+
+    })
+    const [isSaved, setIsSaved] = useState(false);
+
+    const handleGuardado = () => {
+        setIsSaved(true);
+        // Optional: Reset to false after a few seconds
+        // setTimeout(() => setIsSaved(false), 3000);
+    };
+    const handleVolver = () => {
+    window.location.href = '/terminal'; // or use navigate() if using react-router
+    };
+
+    if (loading) {
+    return (
+      <div className="d-flex flex-column justify-content-center align-items-center vh-100 w-100">
+        <span
+            className="spinner-border spinner-border-lg ms-2"
+            role="status"
+            aria-hidden="true"
+        ></span>
+        <span className="display-3 mt-4 fw-bold">Cargando...</span>
+      </div>
+    );
+     }
+    else if(ruta == 'tipo') {
+        return (
+            <div className="container mt-4">
+                <h2 className="mb-4">Elige un Tipo</h2>
+                <div className="d-flex flex-wrap gap-3 justify-content-center align-items-center">
+                    {/* Your buttons or cards can go here */}
+                            { typeAlert && <div className='text-danger text-center'>Only One Type per Item</div> }
+                    <div className='mt-3 mb-3 d-flex flex-wrap w-100 justify-content-center align-items-center ' style={{height:'80vh'}}>
+                            {/* <div className="col w-25 type-text text-start">Type</div> */}
+                            <div className=" d-flex flex-wrap w-100 justify-content-around align-items-center gap-4"  >
+                                    <button style={{width: '300px', height: '175px'}} className={typeFlags.rolls ? 'btn btn-outline-secondary rounded-pill type active p-4' : 'rounded-pill btn btn-outline-secondary type p-4'} value={'rolls'} onClick={add}> <h4 className='display-4' style={{pointerEvents : 'none'}}>Rolls</h4> </button>
+                                    <button style={{width: '300px', height: '175px'}} className= {typeFlags.shakes ? 'btn btn-outline-secondary type rounded-pill active p-4':'rounded-pill btn btn-outline-secondary type p-4'}  value={'shakes'} onClick={add}> <h4 className='display-4' style={{pointerEvents : 'none'}}>Shakes</h4> </button>
+                                    <button style={{width: '300px', height: '175px'}} className={typeFlags.banana ? 'btn btn-outline-secondary rounded-pill type active p-4':'rounded-pill btn btn-outline-secondary type p-4'} value={'banana'} onClick={add}> <h4 className='display-4' style={{pointerEvents : 'none'}}>Banana</h4> </button>
+                                    <button style={{width: '300px', height: '175px'}} className={typeFlags.puppy ? 'btn btn-outline-secondary rounded-pill type active p-4':'rounded-pill btn btn-outline-secondary type p-4'} value={'puppy'} onClick={add}> <h4 className='display-4' style={{pointerEvents : 'none'}}>Puppy</h4> </button>
+                                    <button style={{width: '300px', height: '175px'}} className={typeFlags.drinks ? 'btn btn-outline-secondary rounded-pill type active p-4':'rounded-pill btn btn-outline-secondary type p-4'} value={'drinks'} onClick={add}> <h4 className='display-4' style={{pointerEvents : 'none'}}>Drinks</h4> </button>
+                            </div>
+                          <div className="d-flex flex-row align-items-center gap-4 mt-5">
+                            <button
+                                className={`btn ${isSaved ? 'btn-success' : 'btn-primary'} rounded-pill p-4 d-flex align-items-center justify-content-center gap-3`}
+                                onClick={handleGuardado}
+                            >
+                                {isSaved ? (
+                                <>
+                                    <i className="bi bi-check-circle-fill text-white display-5"></i>
+                                    <h4 className="display-4  p-4">Guardado</h4>
+                                </>
+                                ) : (
+                                <h4 className="display-4  p-4">Guardar</h4>
+                                )}
+                            </button>
+
+                            {isSaved && (
+                                <button
+                                className="btn btn-outline-dark rounded-pill px-5 py-3"
+                                onClick={handleVolver}
+                                >
+                                <h4 className=" display-4 p-4">Volver</h4>
+                                </button>
+                            )}
+                            </div>
+                   
+                    
+                    </div>
+                </div>
+
+            </div>
+        );
+                
+     }
+     else if(ruta == 'ingredientes') {
+        return (
+            <div className="container mt-4">
+            <h2 className="mb-4">Elige Ingredientes</h2>
+            <div className="d-flex flex-wrap gap-3 justify-content-center">
+                {/* Your buttons or cards can go here */}
+            </div>
+            </div>
+        );
+                
+     }
+     else if(ruta == 'toppings') {
+        return (
+            <div className="container mt-4">
+            <h2 className="mb-4">Elige Toppings</h2>
+            <div className="d-flex flex-wrap gap-3 justify-content-center">
+                {/* Your buttons or cards can go here */}
+            </div>
+            </div>
+        );
+                
+     }
+      else if(ruta == 'cantidad') {
+        return (
+            <div className="container mt-4">
+            <h2 className="mb-4">Elige Cantidad</h2>
+            <div className="d-flex flex-wrap gap-3 justify-content-center">
+                {/* Your buttons or cards can go here */}
+            </div>
+            </div>
+        );
+                
+     }
+     else if(ruta == 'comentarios') {
+        return (
+            <div className="container mt-4">
+            <h2 className="mb-4">Escribe Comentarios</h2>
+            <div className="d-flex flex-wrap gap-3 justify-content-center">
+                {/* Your buttons or cards can go here */}
+            </div>
+            </div>
+        );
+                
+     }
 
 
     return (
-        <div className=" bg-light terminal-screen" >
-            <div className=' d-flex flex-column terminal-screen-2' style={{height:'95vh',overflowY:'scroll'}} key={componentKey}>
-                <div className=" w-100 d-flex flex-row justify-content-around align-items-center" style={{width:'90vw'}}>
-                    <div className=" d-flex  align-items-center justify-content-center btn rounded-pill btn-outline-primary p-2" onClick={handleShowOrders}>Orders Screen</div>
+        <div className="bg-light terminal-screen">
+
+            <div className=" w-100 d-flex flex-row justify-content-around align-items-center" style={{width:'90vw'}}>
+                    <div className=" d-flex  align-items-center justify-content-center btn rounded-pill btn-outline-primary p-2 mt-4" onClick={handleShowOrders}>
+                        <div className="lead p-3">
+                            Orders Screen
+                        </div>
+                    </div>
                     <div className="  pt-4 ">
-                        {/* <label htmlFor="cliente">Nombre</label> */}
+                         {/* <label htmlFor="cliente">Nombre</label> */}
                         <div className=" ">
-                            <input type="text" name='cliente' className=' rounded-3 border-0 p-2' placeholder='Nombre del Ciente' value={name} onChange={handleName} />
-                            {/* <button type='button' className='btn btn-primary rounded-start-0 p-2 ' onClick={handleSave}>  {isInputDisabled ? 'Change' : 'Save '}</button> */}
+                             <input type="text" name='cliente'   className="form-control border p-3 border-dark rounded-3 fs-3" placeholder='Nombre del Ciente' value={name} onChange={handleName} />
+                             {/* <button type='button' className='btn btn-primary rounded-start-0 p-2 ' onClick={handleSave}>  {isInputDisabled ? 'Change' : 'Save '}</button> */}
                         </div>
                     </div>
+                   
+            </div>
+            <div className=" w-100 d-flex flex-wrap justify-content-around align-items-center" style={{width:'90vw',height:'80vh'}}>
+               <div className="d-flex flex-wrap gap-3 justify-content-center mt-4">
+                {buttons.map((but, idx) => {
+                let isDisabled = false;
+
+                // Define tu lógica por índice
+                if (idx === 1 && type === 0) {
+                    isDisabled = true; // botón 2 depende de `ings`
+                }
+
+                // Puedes seguir añadiendo más condiciones por índice:
+                // if (idx === 2 && otraCondición === false) isDisabled = true;
+                 if (idx === 2 && ings.length == 0) {
+                    isDisabled = true; // botón 2 depende de `ings`
+                }
+
+                 if (idx === 3 && qty == 0) {
+                    isDisabled = true; // botón 2 depende de `ings`
+                }
+               
+
+
+
+
+                return (
+                    <button
+                    key={idx}
+                    className={`btn btn-outline-dark rounded text-center d-flex flex-column align-items-center justify-content-center ${but.ruta}`}
+                    style={{
+                        width: '450px',
+                        height: '200px',
+                        backgroundColor: isDisabled ? '#dee2e6' : 'transparent',
+                        color: isDisabled ? '#6c757d' : 'inherit',
+                        cursor: isDisabled ? 'not-allowed' : 'pointer',
+                    }}
+                    onClick={() => choose(but.ruta)}
+                    disabled={isDisabled}
+                    >
+                    {but.selected && (
+                        <i className="me-3 bi bi-check-circle-fill text-success display-3"></i>
+                    )}
+                    <h4 className="display-3 m-0">{but.label}</h4>
+                    </button>
+                );
+                })}
+
                 </div>
-                <div className="d-flex flex-column align-items-center " >
-                        { typeAlert && <div className='text-danger text-center'>Only One Type per Item</div> }
-                 <div className='mt-3 mb-3 d-flex flex-row  w-100 justify-content-center align-items-center '>
-                        {/* <div className="col w-25 type-text text-start">Type</div> */}
-                        <div className=" d-flex flex-row w-100 justify-content-around align-items-center "  style={{pointerEvents : 'none'}}>
-                            <div className=" ms-1 me-1">
-                                <button style={{pointerEvents : 'auto'}} className={typeFlags.rolls ? 'btn btn-outline-secondary type active p-3' : 'btn btn-outline-secondary type p-3'} value={'rolls'} onClick={add}>Rolls</button>
-                            </div>
-                            <div className=" ms-1 me-1">
-                                <button style={{pointerEvents : 'auto'}} className= {typeFlags.shakes ? 'btn btn-outline-secondary type active p-3':'btn btn-outline-secondary type p-3'}  value={'shakes'} onClick={add}>Shakes</button>
+
+
+            </div>
+        </div>
+        // <div className=" bg-light terminal-screen" >
+        //     <div className=' d-flex flex-column terminal-screen-2' style={{height:'95vh',overflowY:'scroll'}} key={componentKey}>
+        //         <div className=" w-100 d-flex flex-row justify-content-around align-items-center" style={{width:'90vw'}}>
+        //             <div className=" d-flex  align-items-center justify-content-center btn rounded-pill btn-outline-primary p-2" onClick={handleShowOrders}>Orders Screen</div>
+        //             <div className="  pt-4 ">
+        //                 {/* <label htmlFor="cliente">Nombre</label> */}
+        //                 <div className=" ">
+        //                     <input type="text" name='cliente' className=' rounded-3 border-0 p-2' placeholder='Nombre del Ciente' value={name} onChange={handleName} />
+        //                     {/* <button type='button' className='btn btn-primary rounded-start-0 p-2 ' onClick={handleSave}>  {isInputDisabled ? 'Change' : 'Save '}</button> */}
+        //                 </div>
+        //             </div>
+        //         </div>
+        //         <div className="d-flex flex-column align-items-center " >
+        //                 { typeAlert && <div className='text-danger text-center'>Only One Type per Item</div> }
+        //          <div className='mt-3 mb-3 d-flex flex-row  w-100 justify-content-center align-items-center '>
+        //                 {/* <div className="col w-25 type-text text-start">Type</div> */}
+        //                 <div className=" d-flex flex-row w-100 justify-content-around align-items-center "  style={{pointerEvents : 'none'}}>
+        //                     <div className=" ms-1 me-1">
+        //                         <button style={{pointerEvents : 'auto'}} className={typeFlags.rolls ? 'btn btn-outline-secondary rounded-pill type active p-4' : 'rounded-pill btn btn-outline-secondary type p-4'} value={'rolls'} onClick={add}>Rolls</button>
+        //                     </div>
+        //                     <div className=" ms-1 me-1">
+        //                         <button style={{pointerEvents : 'auto'}} className= {typeFlags.shakes ? 'btn btn-outline-secondary type rounded-pill active p-4':'rounded-pill btn btn-outline-secondary type p-4'}  value={'shakes'} onClick={add}>Shakes</button>
         
         
-                            </div>
-                            <div className=" ms-1 me-1">
-                                <button style={{pointerEvents : 'auto'}} className={typeFlags.banana ? 'btn btn-outline-secondary type active p-3':'btn btn-outline-secondary type p-3'} value={'banana'} onClick={add}>Banana</button>
+        //                     </div>
+        //                     <div className=" ms-1 me-1">
+        //                         <button style={{pointerEvents : 'auto'}} className={typeFlags.banana ? 'btn btn-outline-secondary rounded-pill type active p-4':'rounded-pill btn btn-outline-secondary type p-4'} value={'banana'} onClick={add}>Banana</button>
         
                                 
-                            </div>
-                            <div className=" ms-1 me-1">
-                                <button style={{pointerEvents : 'auto'}} className={typeFlags.puppy ? 'btn btn-outline-secondary type active p-3':'btn btn-outline-secondary type p-3'} value={'puppy'} onClick={add}>Puppy</button>
+        //                     </div>
+        //                     <div className=" ms-1 me-1">
+        //                         <button style={{pointerEvents : 'auto'}} className={typeFlags.puppy ? 'btn btn-outline-secondary rounded-pill type active p-4':'rounded-pill btn btn-outline-secondary type p-4'} value={'puppy'} onClick={add}>Puppy</button>
         
-                            </div>
-                            <div className=" ms-1 me-1">
-                                <button style={{pointerEvents : 'auto'}} className={typeFlags.drinks ? 'btn btn-outline-secondary type active p-3':'btn btn-outline-secondary type p-3'} value={'drinks'} onClick={add}>Drinks</button>
+        //                     </div>
+        //                     <div className=" ms-1 me-1">
+        //                         <button style={{pointerEvents : 'auto'}} className={typeFlags.drinks ? 'btn btn-outline-secondary rounded-pill type active p-4':'rounded-pill btn btn-outline-secondary type p-4'} value={'drinks'} onClick={add}>Drinks</button>
         
-                            </div>
-                        </div>
-                    </div>
+        //                     </div>
+        //                 </div>
+        //             </div>
 
-                    <div  className="overflow-scroll d-flex justify-content-center flex-column">
-                        {type !== 'drinks' && (
-                    <div className='' style={{width:'90vw'}}>
+        //             <div  className="overflow-scroll d-flex justify-content-center flex-column">
+        //                 {type !== 'drinks' && (
+        //             <div className='' style={{width:'90vw'}}>
 
-                            <button className="rounded-3 w-100 col d-flex flex-row text-start justify-content-between border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light"  >
-                                { favAlert && <div className='text-danger text-center'>Only One Favorite combination can be chosen</div> }
+        //                     <button className="rounded-3 w-100 col d-flex flex-row text-start justify-content-between border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light"  >
+        //                         { favAlert && <div className='text-danger text-center'>Only One Favorite combination can be chosen</div> }
                                 
-                                <div className="" onClick={handleFavorites}>
-                                    Favorites
-                                </div>
-                                <div className="">
-                                    <input type="text" className='p-1' onChange={handleFavoritesSearch}/>
-                                </div>
-                            </button>
-                            <div className="overflow-scroll d-flex" >
-                                {listaDeFavoritos.map(fav=>(
-                                    <button className={favoriteFlag[`${fav.nombre}`]  ? 'btn btn-outline-secondary m-1 ingredients favorite active p-3 ' : 'btn btn-outline-secondary m-1 favorite ingredients p-3' }value={fav.nombre} onClick={add}  >{fav.nombre}</button>
-                                ))}
+        //                         <div className="" onClick={handleFavorites}>
+        //                             Favorites
+        //                         </div>
+        //                         <div className="">
+        //                             <input type="text" className='p-1' onChange={handleFavoritesSearch}/>
+        //                         </div>
+        //                     </button>
+        //                     <div className="overflow-scroll d-flex" >
+        //                         {listaDeFavoritos.map(fav=>(
+        //                             <button className={favoriteFlag[`${fav.nombre}`]  ? 'btn btn-outline-secondary m-1 ingredients rounded-pill favorite active p-4 ' : 'rounded-pill btn btn-outline-secondary m-1 favorite ingredients p-4' }value={fav.nombre} onClick={add}  >{fav.nombre}</button>
+        //                         ))}
+        //                     </div>
+        //                     {/* {favoritesButtons && <div className="overflow-scroll d-flex" >
+        //                         {listaDeFavoritos.map(fav=>(
+        //                             <button className={favoriteFlag[`${fav.nombre}`]  ? 'btn btn-outline-secondary m-1 ingredients favorite active p-3 ' : 'btn btn-outline-secondary m-1 favorite ingredients p-3' }value={fav.nombre} onClick={add}  >{fav.nombre}</button>
+        //                         ))}
                                
 
 
-                                </div>
-                            {/* {favoritesButtons && <div className="overflow-scroll d-flex" >
-                                {listaDeFavoritos.map(fav=>(
-                                    <button className={favoriteFlag[`${fav.nombre}`]  ? 'btn btn-outline-secondary m-1 ingredients favorite active p-3 ' : 'btn btn-outline-secondary m-1 favorite ingredients p-3' }value={fav.nombre} onClick={add}  >{fav.nombre}</button>
-                                ))}
-                               
+        //                         </div>} */}
+        //                 </div>
+        //                 )}
 
+        //                 {type !== 'drinks' && (
+        //                 <div className='' style={{width:'90vw'}}>
 
-                                </div>} */}
-                        </div>
-                        )}
-
-                        {type !== 'drinks' && (
-                        <div className='' style={{width:'90vw'}}>
-
-                            <button className="rounded-3 w-100 col d-flex flex-row text-start justify-content-between border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light"  >
-                                <div className="" onClick={handleIngredients}>
-                                    Ingredients
-                                </div>
-                                <div className="">
-                                    <input type="text" className='p-1' onChange={handleIngredientSearch}/>
-                                </div>
-                            </button>
-                            <div className="overflow-scroll d-flex " >
-                                {listaDeIngredientes.map(ing=>(
-                                    <button className={ingsFlag[`${ing.nombre}Ing`]  ? 'btn btn-outline-secondary m-1 ingredients active p-3 ' : 'btn btn-outline-secondary m-1 ingredients p-3' }value={ing.nombre} onClick={add}  >{ing.nombre}</button>
-                            ))}
+        //                     <button className="rounded-3 w-100 col d-flex flex-row text-start justify-content-between border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light"  >
+        //                         <div className="" onClick={handleIngredients}>
+        //                             Ingredients
+        //                         </div>
+        //                         <div className="">
+        //                             <input type="text" className='p-1' onChange={handleIngredientSearch}/>
+        //                         </div>
+        //                     </button>
+        //                     <div className="overflow-scroll d-flex " >
+        //                         {listaDeIngredientes.map(ing=>(
+        //                             <button className={ingsFlag[`${ing.nombre}Ing`]  ? 'btn btn-outline-secondary m-1 ingredients active p-3 ' : 'btn btn-outline-secondary m-1 ingredients p-3' }value={ing.nombre} onClick={add}  >{ing.nombre}</button>
+        //                     ))}
                                 
-                            </div>
-                            {/* {ingredientsButtons && <div className="overflow-scroll d-flex " >
-                                {listaDeIngredientes.map(ing=>(
-                                    <button className={ingsFlag[`${ing.nombre}Ing`]  ? 'btn btn-outline-secondary m-1 ingredients active p-3 ' : 'btn btn-outline-secondary m-1 ingredients p-3' }value={ing.nombre} onClick={add}  >{ing.nombre}</button>
-                            ))}
+        //                     </div>
+        //                     {/* {ingredientsButtons && <div className="overflow-scroll d-flex " >
+        //                         {listaDeIngredientes.map(ing=>(
+        //                             <button className={ingsFlag[`${ing.nombre}Ing`]  ? 'btn btn-outline-secondary m-1 ingredients active p-3 ' : 'btn btn-outline-secondary m-1 ingredients p-3' }value={ing.nombre} onClick={add}  >{ing.nombre}</button>
+        //                     ))}
                                 
-                            </div>} */}
-                        </div>
-                            )}
+        //                     </div>} */}
+        //                 </div>
+        //                     )}
 
-                    {type !== 'drinks' && (
+        //             {type !== 'drinks' && (
 
-                        <div className='mt-3' style={{width:'90vw'}}> 
-                            <button className="rounded-3 w-100 col text-start d-flex flex-row justify-content-between border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light" >
-                                <div className="" onClick={handleToppings}>
-                                    Toppings
-                                </div>
-                                <div className="">
-                                    <input type="text" className='p-1' onChange={handleToppingSearch}/>
-                                </div>
-                            </button>
-                            <div className="overflow-scroll d-flex" >
-                                {listaDeToppings.map(top=>(
-                                        <button className={topsFlag[`${top.nombre}Top`]  ? 'btn btn-outline-secondary m-1 toppings active p-3 ' : 'btn btn-outline-secondary m-1 toppings p-3' }value={top.nombre} onClick={add}  >{top.nombre}</button>
-                                    ))}
+        //                 <div className='mt-3' style={{width:'90vw'}}> 
+        //                     <button className="rounded-3 w-100 col text-start d-flex flex-row justify-content-between border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-3 bg-light" >
+        //                         <div className="" onClick={handleToppings}>
+        //                             Toppings
+        //                         </div>
+        //                         <div className="">
+        //                             <input type="text" className='p-1' onChange={handleToppingSearch}/>
+        //                         </div>
+        //                     </button>
+        //                     <div className="overflow-scroll d-flex" >
+        //                         {listaDeToppings.map(top=>(
+        //                                 <button className={topsFlag[`${top.nombre}Top`]  ? 'btn btn-outline-secondary m-1 toppings active p-3 ' : 'btn btn-outline-secondary m-1 toppings p-3' }value={top.nombre} onClick={add}  >{top.nombre}</button>
+        //                             ))}
                                
-                            </div>
-                            {/* {toppingsButtons && <div className="overflow-scroll d-flex" >
-                                {listaDeToppings.map(top=>(
-                                        <button className={topsFlag[`${top.nombre}Top`]  ? 'btn btn-outline-secondary m-1 toppings active p-3 ' : 'btn btn-outline-secondary m-1 toppings p-3' }value={top.nombre} onClick={add}  >{top.nombre}</button>
-                                    ))}
+        //                     </div>
+        //                     {/* {toppingsButtons && <div className="overflow-scroll d-flex" >
+        //                         {listaDeToppings.map(top=>(
+        //                                 <button className={topsFlag[`${top.nombre}Top`]  ? 'btn btn-outline-secondary m-1 toppings active p-3 ' : 'btn btn-outline-secondary m-1 toppings p-3' }value={top.nombre} onClick={add}  >{top.nombre}</button>
+        //                             ))}
                                
-                            </div>} */}
-                        </div>
+        //                     </div>} */}
+        //                 </div>
 
 
-                    )}
-                    </div>
+        //             )}
+        //             </div>
 
-                    {type !== 'drinks' && (
+        //             {type !== 'drinks' && (
           
-                    <div className='col d-flex flex-row m-2 p-3 ' style={{width:'90vw'}}>
-                        <div className="col">Quantity</div>
-                        <div className="col d-flex flex-row w-100 justify-content-between">
-                            <div className="col">
-                            {qty}
-                            </div>
-                            <div className="col">
-                                <button className='btn btn-outline-primary rounded-pill' onClick={handleDecrement}>-</button>
-                            </div>
-                            <div className="col">
-                                <button className='btn btn-outline-primary rounded-pill' onClick={handleIncrement}>+</button>
-                            </div>
-                        </div>
+        //             <div className='col d-flex flex-row m-2 p-3 ' style={{width:'90vw'}}>
+        //                 <div className="col">Quantity</div>
+        //                 <div className="col d-flex flex-row w-100 justify-content-between">
+        //                     <div className="col">
+        //                     {qty}
+        //                     </div>
+        //                     <div className="col">
+        //                         <button className='btn btn-outline-primary rounded-pill' onClick={handleDecrement}>-</button>
+        //                     </div>
+        //                     <div className="col">
+        //                         <button className='btn btn-outline-primary rounded-pill' onClick={handleIncrement}>+</button>
+        //                     </div>
+        //                 </div>
         
-                    </div>
-                        )}
-                    {type === 'drinks' && (
-                    <div className='col d-flex flex-row m-2 p-3' style={{ width: '90vw' }}>
-                        <div className="col">Agua</div>
-                        <div className="col d-flex flex-row w-100 justify-content-between">
-                        <div className="col">
-                            {agua}
-                        </div>
-                        <div className="col">
-                            <button className='btn btn-outline-primary rounded-pill' onClick={handleDecrementAgua}>-</button>
-                        </div>
-                        <div className="col">
-                            <button className='btn btn-outline-primary rounded-pill' onClick={handleIncrementAgua}>+</button>
-                        </div>
-                        </div>
-                    </div>
-                    )}
-                    {type !== 'drinks' && (
-                    <div className='col m-2 d-flex flex-row justify-content-between ps-3' style={{width:'90vw'}}>
-                        <div className="col">Comments</div>
-                        <div className="col">
-                            <textarea name="" id="" cols="30" rows="1" defaultValue={comments} onChange={handleComments} className='rounded'></textarea>
-                        </div>
-                    </div>
-                    )}
+        //             </div>
+        //                 )}
+        //             {type === 'drinks' && (
+        //             <div className='col d-flex flex-row m-2 p-3' style={{ width: '90vw' }}>
+        //                 <div className="col">Agua</div>
+        //                 <div className="col d-flex flex-row w-100 justify-content-between">
+        //                 <div className="col">
+        //                     {agua}
+        //                 </div>
+        //                 <div className="col">
+        //                     <button className='btn btn-outline-primary rounded-pill' onClick={handleDecrementAgua}>-</button>
+        //                 </div>
+        //                 <div className="col">
+        //                     <button className='btn btn-outline-primary rounded-pill' onClick={handleIncrementAgua}>+</button>
+        //                 </div>
+        //                 </div>
+        //             </div>
+        //             )}
+        //             {type !== 'drinks' && (
+        //             <div className='col m-2 d-flex flex-row justify-content-between ps-3' style={{width:'90vw'}}>
+        //                 <div className="col">Comments</div>
+        //                 <div className="col">
+        //                     <textarea name="" id="" cols="30" rows="1" defaultValue={comments} onChange={handleComments} className='rounded'></textarea>
+        //                 </div>
+        //             </div>
+        //             )}
                     
 
 
             
-                </div>
-                <div className="col w-100 d-flex justify-content-center align-items-center flex-column">
-                    {/* { required && <div className='text-danger text-center'>Missing fields</div> } */}
-                    <button className='btn btn-primary p-3 rounded-pill' onClick={handleNewItem}>Add Item to Order</button>
-                    {/* <ToastContainer/> */}
-                    <Toaster position="top-right" />
+        //         </div>
+        //         <div className="col w-100 d-flex justify-content-center align-items-center flex-column">
+        //             {/* { required && <div className='text-danger text-center'>Missing fields</div> } */}
+        //             <button className='btn btn-primary p-3 rounded-pill' onClick={handleNewItem}>Add Item to Order</button>
+        //             {/* <ToastContainer/> */}
+        //             <Toaster position="top-right" />
 
-                </div>
-            </div>
-        </div>
+        //         </div>
+        //     </div>
+        // </div>
 
 
   )

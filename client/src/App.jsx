@@ -14,6 +14,12 @@ import './App.css'
 
 import { ItemContext } from "../context/ItemContext"
 import IceCreamRollForm from './pages/Customer/IceCreamRollForm'
+import ChooseType from './components/Choosetype'
+import ChooseIngs from './components/ChooseIngs'
+import ChooseTops from './components/ChooseTops'
+import ChooseComentarios from './components/ChooseComentarios'
+import ChooseCantidad from './components/ChooseCantidad'
+
 
 
 function App() {
@@ -64,6 +70,11 @@ function App() {
         <Route path="/shopping" element={<ShoppingCart/>}/>
         <Route path="/product" element={<ProductSelector/>}/>
         <Route path="/icrform" element={<IceCreamRollForm/>}/>
+        <Route path="/tipo" element={<ChooseType/>}/>
+        <Route path="/ingredientes" element={<ChooseIngs/>}/>
+        <Route path="/toppings" element={<ChooseTops/>}/>
+        <Route path="/cantidad" element={<ChooseCantidad/>}/>
+        <Route path="/comentarios" element={<ChooseComentarios/>}/>
       </Routes>
     </ItemContext.Provider>
   )
