@@ -155,6 +155,7 @@ function TerminalScreen() {
     const {sumToSubstract,setSumtoSubstract} = useContext( ItemContext );
 
 
+    const [hideIngredients, setHideIngredients] = useState(false);
 
 
     
@@ -206,8 +207,16 @@ function TerminalScreen() {
         audio.play();
     };
 
+
+    useEffect(() => {
+    // Si al menos uno de los favoritos está activado, ocultar ingredientes
+    const shouldHide = Object.values(favoriteFlag).some(flag => flag === true);
+    setHideIngredients(shouldHide);
+    }, [favoriteFlag]);
+
    
                
+
 
     useEffect(()=>{
         
@@ -770,184 +779,176 @@ function TerminalScreen() {
 
         if(buttonClasses.contains('ingredients')){
             if (buttonClasses.contains('favorite')){
-                if (favCounter == 1){
-                    setFavCounter(0)
-                    console.log("only one type per item");
-                    console.log(favCounter)
-                    setFavAlert(true)
-    
-                }
-                else{
                     setFavAlert(false)
 
+                    // setType(event.target.value)
+                        // setTypeCounter(typeCounter + 1)
+                    event.target.classList.add('active')
+
+                    setFavFlag((prevFlags) => {
+                            const updatedFlags = {};
+                            for (const key in prevFlags) {
+                            updatedFlags[key] = key === event.target.value;
+                            }
+                            return updatedFlags;
+                    });     
                     if (event.target.value == "CookiesAndCream"){
                         const ingre = ["Oreo","Chips","Queso"]
-
-                    
-    
-                        ingre.map(ingredient=>{
-                            if (ings.includes(ingredient)){
-                                const updatedIngs = ings.filter(ing => !ingre.includes(ing))
-                                setIngs(updatedIngs)
-                                console.log('removed '+ ingredient + ' from ingredient')
-                                event.target.classList.remove('active')
-                                var key = ingredient + 'Ing'
-                                localStorage.setItem(key,'0')
-                                // localStorage.setItem(LOCAL_INGS_KEY,updatedIngs)
-                                
-                            }
-                            else {
-                                setIngs(prevIngs =>[...prevIngs,ingredient])
-                                console.log('added '+ ingredient + ' to ingredient')
-                                event.target.classList.add('active')
-                                var key = ingredient + 'Ing'
-                                localStorage.setItem(key,'1')
-                                // localStorage.setItem(LOCAL_INGS_KEY,updatedIngs)
-
-                
-                            }
-                        })
-
-                        setFavCounter(favCounter + 1)
-                 
-    
+                        setIngs(ingre)
+                        // ingre.map(ingredient=>{
+                        //     if (ings.includes(ingredient)){
+                        //         const updatedIngs = ings.filter(ing => !ingre.includes(ing))
+                        //         setIngs(updatedIngs)
+                        //         console.log('removed '+ ingredient + ' from ingredient')
+                        //         event.target.classList.remove('active')
+                        //         var key = ingredient + 'Ing'
+                        //         localStorage.setItem(key,'0')
+                        //         // localStorage.setItem(LOCAL_INGS_KEY,updatedIngs)
+                        //     }
+                        //     else {
+                        //         setIngs(prevIngs =>[...prevIngs,ingredient])
+                        //         console.log('added '+ ingredient + ' to ingredient')
+                        //         event.target.classList.add('active')
+                        //         var key = ingredient + 'Ing'
+                        //         localStorage.setItem(key,'1')
+                        //         // localStorage.setItem(LOCAL_INGS_KEY,updatedIngs)
+                        //     }
+                        // })
+                        // setFavCounter(favCounter + 1)
                     }
                     else if (event.target.value == "CocoNut"){
                         const ingre = ["Coco","Nutella","Almendra"]
-    
-                        ingre.map(ingredient=>{
-                            if (ings.includes(ingredient)){
-                                const updatedIngs = ings.filter(ing => !ingre.includes(ing))
-                                setIngs(updatedIngs)
-                                console.log('removed '+ ingredient + ' from ingredient')
-                                event.target.classList.remove('active')
-                                var key = ingredient + 'Ing'
-                                localStorage.setItem(key,'0')
-                                
-                            }
-                            else {
-                                setIngs(prevIngs =>[...prevIngs,ingredient])
-                                console.log('added '+ ingredient + ' to ingredient')
-                                event.target.classList.add('active')
-                                var key = ingredient + 'Ing'
-                                localStorage.setItem(key,'1')
-                
-                            }
-                        })
-                        setFavCounter(favCounter + 1)
-                        
+                        setIngs(ingre)
+                        // ingre.map(ingredient=>{
+                        //     if (ings.includes(ingredient)){
+                        //         const updatedIngs = ings.filter(ing => !ingre.includes(ing))
+                        //         setIngs(updatedIngs)
+                        //         console.log('removed '+ ingredient + ' from ingredient')
+                        //         event.target.classList.remove('active')
+                        //         var key = ingredient + 'Ing'
+                        //         localStorage.setItem(key,'0')
+                        //     }
+                        //     else {
+                        //         setIngs(prevIngs =>[...prevIngs,ingredient])
+                        //         console.log('added '+ ingredient + ' to ingredient')
+                        //         event.target.classList.add('active')
+                        //         var key = ingredient + 'Ing'
+                        //         localStorage.setItem(key,'1')
+                        //     }
+                        // })
+                        // setFavCounter(favCounter + 1)
     
                     }
                     else if (event.target.value == "CinnamonAndCarrot"){
                         const ingre = ["BizcochoDeZanahoria","Canela","Queso"]
-    
-                        ingre.map(ingredient=>{
-                            if (ings.includes(ingredient)){
-                                const updatedIngs = ings.filter(ing => !ingre.includes(ing))
-                                setIngs(updatedIngs)
-                                console.log('removed '+ ingredient + ' from ingredient')
-                                event.target.classList.remove('active')
-                                var key = ingredient + 'Ing'
-                                localStorage.setItem(key,'0')
+                        setIngs(ingre)
+                        // ingre.map(ingredient=>{
+                        //     if (ings.includes(ingredient)){
+                        //         const updatedIngs = ings.filter(ing => !ingre.includes(ing))
+                        //         setIngs(updatedIngs)
+                        //         console.log('removed '+ ingredient + ' from ingredient')
+                        //         event.target.classList.remove('active')
+                        //         var key = ingredient + 'Ing'
+                        //         localStorage.setItem(key,'0')
                                 
-                            }
-                            else {
-                                setIngs(prevIngs =>[...prevIngs,ingredient])
-                                console.log('added '+ ingredient + ' to ingredient')
-                                event.target.classList.add('active')
-                                var key = ingredient + 'Ing'
-                                localStorage.setItem(key,'1')
+                        //     }
+                        //     else {
+                        //         setIngs(prevIngs =>[...prevIngs,ingredient])
+                        //         console.log('added '+ ingredient + ' to ingredient')
+                        //         event.target.classList.add('active')
+                        //         var key = ingredient + 'Ing'
+                        //         localStorage.setItem(key,'1')
                 
-                            }
-                        })
-                        setFavCounter(favCounter + 1)
+                        //     }
+                        // })
+                        // setFavCounter(favCounter + 1)
 
                  
     
                     }
                     else if (event.target.value == "ILoveCoffee"){
                         const ingre = ["Caramelo","Café","Almendra"]
-    
-                        ingre.map(ingredient=>{
-                            if (ings.includes(ingredient)){
-                                const updatedIngs = ings.filter(ing => !ingre.includes(ing))
-                                setIngs(updatedIngs)
-                                console.log('removed '+ ingredient + ' from ingredient')
-                                event.target.classList.remove('active')
-                                var key = ingredient + 'Ing'
-                                localStorage.setItem(key,'0')
+                        setIngs(ingre)
+                        // ingre.map(ingredient=>{
+                        //     if (ings.includes(ingredient)){
+                        //         const updatedIngs = ings.filter(ing => !ingre.includes(ing))
+                        //         setIngs(updatedIngs)
+                        //         console.log('removed '+ ingredient + ' from ingredient')
+                        //         event.target.classList.remove('active')
+                        //         var key = ingredient + 'Ing'
+                        //         localStorage.setItem(key,'0')
                                 
-                            }
-                            else {
-                                setIngs(prevIngs =>[...prevIngs,ingredient])
-                                console.log('added '+ ingredient + ' to ingredient')
-                                event.target.classList.add('active')
-                                var key = ingredient + 'Ing'
-                                localStorage.setItem(key,'1')
+                        //     }
+                        //     else {
+                        //         setIngs(prevIngs =>[...prevIngs,ingredient])
+                        //         console.log('added '+ ingredient + ' to ingredient')
+                        //         event.target.classList.add('active')
+                        //         var key = ingredient + 'Ing'
+                        //         localStorage.setItem(key,'1')
                 
-                            }
-                        })
-                        setFavCounter(favCounter + 1)
+                        //     }
+                        // })
+                        // setFavCounter(favCounter + 1)
 
                  
     
                     }
                     else if (event.target.value == "Smores"){
                         const ingre = ["Marshmellow","Crackers","Chocolate"]
-    
-                        ingre.map(ingredient=>{
-                            if (ings.includes(ingredient)){
-                                const updatedIngs = ings.filter(ing => !ingre.includes(ing))
-                                setIngs(updatedIngs)
-                                console.log('removed '+ ingredient + ' from ingredient')
-                                event.target.classList.remove('active')
-                                var key = ingredient + 'Ing'
-                                localStorage.setItem(key,'0')
+                        setIngs(ingre)
+                        // ingre.map(ingredient=>{
+                        //     if (ings.includes(ingredient)){
+                        //         const updatedIngs = ings.filter(ing => !ingre.includes(ing))
+                        //         setIngs(updatedIngs)
+                        //         console.log('removed '+ ingredient + ' from ingredient')
+                        //         event.target.classList.remove('active')
+                        //         var key = ingredient + 'Ing'
+                        //         localStorage.setItem(key,'0')
                                 
-                            }
-                            else {
-                                setIngs(prevIngs =>[...prevIngs,ingredient])
-                                console.log('added '+ ingredient + ' to ingredient')
-                                event.target.classList.add('active')
-                                var key = ingredient + 'Ing'
-                                localStorage.setItem(key,'1')
+                        //     }
+                        //     else {
+                        //         setIngs(prevIngs =>[...prevIngs,ingredient])
+                        //         console.log('added '+ ingredient + ' to ingredient')
+                        //         event.target.classList.add('active')
+                        //         var key = ingredient + 'Ing'
+                        //         localStorage.setItem(key,'1')
                 
-                            }
-                        })
-                        setFavCounter(favCounter + 1)
+                        //     }
+                        // })
+                        // setFavCounter(favCounter + 1)
 
                  
     
                     }
                     else if (event.target.value == "StrawberryShortcake"){
                         const ingre = ["Fresa","BizcochoDeVainilla","Queso"]
-    
-                        ingre.map(ingredient=>{
-                            if (ings.includes(ingredient)){
-                                const updatedIngs = ings.filter(ing => !ingre.includes(ing))
-                                setIngs(updatedIngs)
-                                console.log('removed '+ ingredient + ' from ingredient')
-                                event.target.classList.remove('active')
-                                var key = ingredient + 'Ing'
-                                localStorage.setItem(key,'0')
+                        setIngs(ingre)
+                        // ingre.map(ingredient=>{
+                        //     if (ings.includes(ingredient)){
+                        //         const updatedIngs = ings.filter(ing => !ingre.includes(ing))
+                        //         setIngs(updatedIngs)
+                        //         console.log('removed '+ ingredient + ' from ingredient')
+                        //         event.target.classList.remove('active')
+                        //         var key = ingredient + 'Ing'
+                        //         localStorage.setItem(key,'0')
                                 
-                            }
-                            else {
-                                setIngs(prevIngs =>[...prevIngs,ingredient])
-                                console.log('added '+ ingredient + ' to ingredient')
-                                event.target.classList.add('active')
-                                var key = ingredient + 'Ing'
-                                localStorage.setItem(key,'1')
+                        //     }
+                        //     else {
+                        //         setIngs(prevIngs =>[...prevIngs,ingredient])
+                        //         console.log('added '+ ingredient + ' to ingredient')
+                        //         event.target.classList.add('active')
+                        //         var key = ingredient + 'Ing'
+                        //         localStorage.setItem(key,'1')
                 
-                            }
-                        })
-                        setFavCounter(favCounter + 1)
+                        //     }
+                        // })
+                        // setFavCounter(favCounter + 1)
                         
                  
     
                     }
                 // }
-                }
+                
                     
                
             }
@@ -1012,7 +1013,7 @@ function TerminalScreen() {
 
                 setType(event.target.value)
                     // setTypeCounter(typeCounter + 1)
-                    event.target.classList.add('active')
+                event.target.classList.add('active')
 
                 setTypeFlags((prevFlags) => {
                         const updatedFlags = {};
@@ -1250,6 +1251,71 @@ function TerminalScreen() {
             <h2 className="mb-4">Elige Ingredientes</h2>
             <div className="d-flex flex-wrap gap-3 justify-content-center">
                 {/* Your buttons or cards can go here */}
+                     <div className='' style={{width:'90vw'}}>
+
+                             <button 
+                                className="rounded-3 w-100 col d-flex flex-row text-start justify-content-between border border-light p-4 bg-light m-2"
+                                >
+                                <div className="lead" onClick={handleFavorites}>
+                                    Favorites
+                                </div>
+
+                             
+
+                                <div className="d-flex align-items-center gap-2">
+                                    <i className="bi bi-search"></i>
+                                    <input 
+                                    type="text" 
+                                    className="form-control form-control-md" 
+                                    style={{ maxWidth: '150px' }} 
+                                    onChange={handleFavoritesSearch} 
+                                    placeholder="Search"
+                                    />
+                                </div>
+                                </button>
+
+                             <div className="overflow-scroll d-flex" >
+                                 {listaDeFavoritos.map(fav=>(
+                                    <button className={favoriteFlag[`${fav.nombre}`]  ? 'btn btn-outline-secondary m-1 ingredients rounded-pill favorite active p-4 ' : 'rounded-pill btn btn-outline-secondary m-1 favorite ingredients p-4' }value={fav.nombre} onClick={add}  >{fav.nombre}</button>
+                                ))}
+                            </div>
+                               {hideIngredients && (
+                                <button 
+                                className="btn btn-danger p-3 w-100" 
+                                onClick={() => {
+                                    setFavFlag({
+                                    CookiesAndCream: false,
+                                    CocoNut: false,
+                                    ILoveCoffee: false,
+                                    Smores: false,
+                                    CinnamonAndCarrot: false,
+                                    StrawberryShortcake: false,
+                                    });
+                                    setIngs([]);
+                                }}
+                                >
+                                Quitar selección
+                                </button>
+
+                                )}
+                            {/* {favoritesButtons && <div className="overflow-scroll d-flex" >
+                                {listaDeFavoritos.map(fav=>(
+                                    <button className={favoriteFlag[`${fav.nombre}`]  ? 'btn btn-outline-secondary m-1 ingredients favorite active p-3 ' : 'btn btn-outline-secondary m-1 favorite ingredients p-3' }value={fav.nombre} onClick={add}  >{fav.nombre}</button>
+                                ))}
+                               
+
+
+                                </div>} */}
+                        </div>
+                        {!hideIngredients && (
+                        <div className="mt-3">
+                            {/* Aquí va el contenido que solo se muestra si hideIngredients es false */}
+                            <p className="text-muted">Aquí se muestran los ingredientes.</p>
+                            {/* Puedes colocar cualquier componente, tabla, lista, etc. */}
+                            
+                        </div>
+                        )}
+
             </div>
             </div>
         );
