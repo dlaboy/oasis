@@ -156,6 +156,7 @@ function TerminalScreen() {
 
 
     const [hideIngredients, setHideIngredients] = useState(false);
+    const [hideFavorites, setHideFavorites] = useState(false);
 
 
     
@@ -212,6 +213,7 @@ function TerminalScreen() {
     // Si al menos uno de los favoritos está activado, ocultar ingredientes
     const shouldHide = Object.values(favoriteFlag).some(flag => flag === true);
     setHideIngredients(shouldHide);
+
     }, [favoriteFlag]);
 
    
@@ -219,7 +221,7 @@ function TerminalScreen() {
 
 
     useEffect(()=>{
-        
+        var storeFavFlags = JSON.parse(localStorage.getItem('FavFlag'));
         var storeName = JSON.parse(localStorage.getItem(LOCAL_NAME_KEY));
         var storeType = JSON.parse(localStorage.getItem(LOCAL_TYPE_KEY));
         var storedIngs = JSON.parse(localStorage.getItem(LOCAL_INGS_KEY));
@@ -229,9 +231,14 @@ function TerminalScreen() {
         var storeNewItem = JSON.parse(localStorage.getItem(LOCAL_ITEM_KEY));
         var storeOrder = JSON.parse(localStorage.getItem(LOCAL_ORDER_KEY));
         var storePM = JSON.parse(localStorage.getItem(LOCAL_PM_KEY));
+
+        // localStorage.setItem('FavFlag',JSON.stringify(favoriteFlag))
         
 
         if (checkButtons){
+            if (storeFavFlags){
+                setFavFlag(storeFavFlags)
+            }
             if(storeName){
                 setName(storeName)
             }
@@ -239,6 +246,11 @@ function TerminalScreen() {
             if(storedIngs){
              
                 setIngs(storedIngs)
+                setButtons((prev) =>
+                        prev.map((item) =>
+                        item.ruta === 'ingredientes' ? { ...item, selected: true } : item
+                        )
+                    );
                 storedIngs.forEach(function(i){
                     var ingKey = i + 'Ing';
                     console.log(ingKey)
@@ -288,13 +300,13 @@ function TerminalScreen() {
                 })
             }
             if(storeType){
+                setButtons((prev) =>
+                    prev.map((item) =>
+                    item.ruta === 'tipo' ? { ...item, selected: true } : item
+                    )
+                );
                 if (storeType != type){
                     setType(storeType)
-                    setButtons((prev) =>
-                        prev.map((item) =>
-                        item.ruta === 'tipo' ? { ...item, selected: true } : item
-                        )
-                    );
                                     }
                 if (storeType === 'rolls'){
                     typeFlags['rolls'] = true;
@@ -317,11 +329,21 @@ function TerminalScreen() {
   
             }
             if(storeQty){
+                 setButtons((prev) =>
+                        prev.map((item) =>
+                        item.ruta === 'cantidad' ? { ...item, selected: true } : item
+                        )
+                );
                 if (storeQty != qty){
                     setQty(storeQty)
                 }
             }
             if(storeComments){
+                setButtons((prev) =>
+                        prev.map((item) =>
+                        item.ruta === 'comentarios' ? { ...item, selected: true } : item
+                        )
+                );
                 if (storeComments != comments){
                     setComments(storeComments)
                 }
@@ -555,8 +577,12 @@ function TerminalScreen() {
         else{
             ingsMounted.current = true;
         }
-        
     },[ings])
+
+    useEffect(() => {
+    const hasAnyIngredient = Object.values(ingsFlag).some(flag => flag === true);
+    setHideFavorites(hasAnyIngredient);
+    }, [ingsFlag]);
 
     useEffect(()=>{
         if(topsMounted.current){
@@ -790,11 +816,14 @@ function TerminalScreen() {
                             for (const key in prevFlags) {
                             updatedFlags[key] = key === event.target.value;
                             }
+                            localStorage.setItem('FavFlag', JSON.stringify(updatedFlags))
+
                             return updatedFlags;
                     });     
                     if (event.target.value == "CookiesAndCream"){
                         const ingre = ["Oreo","Chips","Queso"]
                         setIngs(ingre)
+                        
                         // ingre.map(ingredient=>{
                         //     if (ings.includes(ingredient)){
                         //         const updatedIngs = ings.filter(ing => !ingre.includes(ing))
@@ -842,6 +871,7 @@ function TerminalScreen() {
                     else if (event.target.value == "CinnamonAndCarrot"){
                         const ingre = ["BizcochoDeZanahoria","Canela","Queso"]
                         setIngs(ingre)
+                        
                         // ingre.map(ingredient=>{
                         //     if (ings.includes(ingredient)){
                         //         const updatedIngs = ings.filter(ing => !ingre.includes(ing))
@@ -869,6 +899,7 @@ function TerminalScreen() {
                     else if (event.target.value == "ILoveCoffee"){
                         const ingre = ["Caramelo","Café","Almendra"]
                         setIngs(ingre)
+                       
                         // ingre.map(ingredient=>{
                         //     if (ings.includes(ingredient)){
                         //         const updatedIngs = ings.filter(ing => !ingre.includes(ing))
@@ -896,6 +927,7 @@ function TerminalScreen() {
                     else if (event.target.value == "Smores"){
                         const ingre = ["Marshmellow","Crackers","Chocolate"]
                         setIngs(ingre)
+                       
                         // ingre.map(ingredient=>{
                         //     if (ings.includes(ingredient)){
                         //         const updatedIngs = ings.filter(ing => !ingre.includes(ing))
@@ -923,6 +955,8 @@ function TerminalScreen() {
                     else if (event.target.value == "StrawberryShortcake"){
                         const ingre = ["Fresa","BizcochoDeVainilla","Queso"]
                         setIngs(ingre)
+                     
+                        
                         // ingre.map(ingredient=>{
                         //     if (ings.includes(ingredient)){
                         //         const updatedIngs = ings.filter(ing => !ingre.includes(ing))
@@ -1183,6 +1217,18 @@ function TerminalScreen() {
     const handleVolver = () => {
     window.location.href = '/terminal'; // or use navigate() if using react-router
     };
+    
+
+    const scrollRef = useRef(null);
+
+    const scrollLeft = () => {
+    if (scrollRef.current) scrollRef.current.scrollLeft -= 150;
+    };
+
+    const scrollRight = () => {
+    if (scrollRef.current) scrollRef.current.scrollLeft += 150;
+    };
+
 
     if (loading) {
     return (
@@ -1199,18 +1245,28 @@ function TerminalScreen() {
     else if(ruta == 'tipo') {
         return (
             <div className="container mt-4">
-                <h2 className="mb-4">Elige un Tipo</h2>
+                <div className="d-flex flex-row justify-content-between align-items-center">
+                    <button 
+                        className="btn btn-outline-dark me-2" 
+                        // onClick={!hideIngredients ? scrollLeft : undefined}
+                        onClick={handleVolver}
+                        // disabled={hideIngredients}
+                        >
+                        <i className="bi bi-chevron-left"></i>
+                    </button>
+                    <h2 className="mb-4">Elige un Tipo</h2>
+                </div>
                 <div className="d-flex flex-wrap gap-3 justify-content-center align-items-center">
                     {/* Your buttons or cards can go here */}
                             { typeAlert && <div className='text-danger text-center'>Only One Type per Item</div> }
                     <div className='mt-3 mb-3 d-flex flex-wrap w-100 justify-content-center align-items-center ' style={{height:'80vh'}}>
                             {/* <div className="col w-25 type-text text-start">Type</div> */}
-                            <div className=" d-flex flex-wrap w-100 justify-content-around align-items-center gap-4"  >
-                                    <button style={{width: '300px', height: '175px'}} className={typeFlags.rolls ? 'btn btn-outline-secondary rounded-pill type active p-4' : 'rounded-pill btn btn-outline-secondary type p-4'} value={'rolls'} onClick={add}> <h4 className='display-4' style={{pointerEvents : 'none'}}>Rolls</h4> </button>
-                                    <button style={{width: '300px', height: '175px'}} className= {typeFlags.shakes ? 'btn btn-outline-secondary type rounded-pill active p-4':'rounded-pill btn btn-outline-secondary type p-4'}  value={'shakes'} onClick={add}> <h4 className='display-4' style={{pointerEvents : 'none'}}>Shakes</h4> </button>
-                                    <button style={{width: '300px', height: '175px'}} className={typeFlags.banana ? 'btn btn-outline-secondary rounded-pill type active p-4':'rounded-pill btn btn-outline-secondary type p-4'} value={'banana'} onClick={add}> <h4 className='display-4' style={{pointerEvents : 'none'}}>Banana</h4> </button>
-                                    <button style={{width: '300px', height: '175px'}} className={typeFlags.puppy ? 'btn btn-outline-secondary rounded-pill type active p-4':'rounded-pill btn btn-outline-secondary type p-4'} value={'puppy'} onClick={add}> <h4 className='display-4' style={{pointerEvents : 'none'}}>Puppy</h4> </button>
-                                    <button style={{width: '300px', height: '175px'}} className={typeFlags.drinks ? 'btn btn-outline-secondary rounded-pill type active p-4':'rounded-pill btn btn-outline-secondary type p-4'} value={'drinks'} onClick={add}> <h4 className='display-4' style={{pointerEvents : 'none'}}>Drinks</h4> </button>
+                            <div className=" d-flex flex-wrap w-100 justify-content-around align-items-center gap-3"  >
+                                    <button style={{width: '300px', height: '175px'}} className={typeFlags.rolls ? 'btn btn-outline-secondary rounded-pill type active p-3' : 'rounded-pill btn btn-outline-secondary type p-3'} value={'rolls'} onClick={add}> <h4 className='display-4' style={{pointerEvents : 'none'}}>Rolls</h4> </button>
+                                    <button style={{width: '300px', height: '175px'}} className= {typeFlags.shakes ? 'btn btn-outline-secondary type rounded-pill active p-3':'rounded-pill btn btn-outline-secondary type p-3'}  value={'shakes'} onClick={add}> <h4 className='display-4' style={{pointerEvents : 'none'}}>Shakes</h4> </button>
+                                    <button style={{width: '300px', height: '175px'}} className={typeFlags.banana ? 'btn btn-outline-secondary rounded-pill type active p-3':'rounded-pill btn btn-outline-secondary type p-3'} value={'banana'} onClick={add}> <h4 className='display-4' style={{pointerEvents : 'none'}}>Banana</h4> </button>
+                                    <button style={{width: '300px', height: '175px'}} className={typeFlags.puppy ? 'btn btn-outline-secondary rounded-pill type active p-3':'rounded-pill btn btn-outline-secondary type p-3'} value={'puppy'} onClick={add}> <h4 className='display-4' style={{pointerEvents : 'none'}}>Puppy</h4> </button>
+                                    <button style={{width: '300px', height: '175px'}} className={typeFlags.drinks ? 'btn btn-outline-secondary rounded-pill type active p-3':'rounded-pill btn btn-outline-secondary type p-3'} value={'drinks'} onClick={add}> <h4 className='display-4' style={{pointerEvents : 'none'}}>Drinks</h4> </button>
                             </div>
                           <div className="d-flex flex-row align-items-center gap-4 mt-5">
                             <button
@@ -1247,41 +1303,36 @@ function TerminalScreen() {
      }
      else if(ruta == 'ingredientes') {
         return (
-            <div className="container mt-4">
-            <h2 className="mb-4">Elige Ingredientes</h2>
-            <div className="d-flex flex-wrap gap-3 justify-content-center">
+            <div className="container mt-4 d-flew flex-column justify-content-center align-items-center gap-4" style={{maxHeight:'100vh',maxWidth:'90vw'}}>
+                <div className="d-flex flex-row justify-content-between align-items-center" style={{maxWidth:'90vw',minWidth:'90vw'}}>
+                    <button 
+                        className="btn btn-outline-dark" 
+                        // onClick={!hideIngredients ? scrollLeft : undefined}
+                        onClick={handleVolver}
+                        // disabled={hideIngredients}
+                        >
+                        <i className="bi bi-chevron-left"></i>
+                    </button>
+                    <h2 className="">Elige Ingredientes</h2>
+                </div>
+               < div className=" d-flex flex-column align-items-center justify-content-center">
+                {/* <div className="d-flex flex-wrap gap-3 justify-content-center" > */}
                 {/* Your buttons or cards can go here */}
-                     <div className='' style={{width:'90vw'}}>
-
-                             <button 
-                                className="rounded-3 w-100 col d-flex flex-row text-start justify-content-between border border-light p-4 bg-light m-2"
-                                >
-                                <div className="lead" onClick={handleFavorites}>
-                                    Favorites
+                     <div className='' style={{minWidth:'90vw'}}>
+                           <div className="">
+                            <button 
+                                className={`rounded-3 w-100 col d-flex flex-row text-start justify-content-between border border-light p-4 ${
+                                hideFavorites ? 'bg-secondary-subtle' : 'bg-light'
+                                }`}
+                                disabled={hideFavorites}
+                            >
+                                <div className="lead" onClick={!hideFavorites ? handleFavorites : undefined}>
+                                Favorites
                                 </div>
 
-                             
-
-                                <div className="d-flex align-items-center gap-2">
-                                    <i className="bi bi-search"></i>
-                                    <input 
-                                    type="text" 
-                                    className="form-control form-control-md" 
-                                    style={{ maxWidth: '150px' }} 
-                                    onChange={handleFavoritesSearch} 
-                                    placeholder="Search"
-                                    />
-                                </div>
-                                </button>
-
-                             <div className="overflow-scroll d-flex" >
-                                 {listaDeFavoritos.map(fav=>(
-                                    <button className={favoriteFlag[`${fav.nombre}`]  ? 'btn btn-outline-secondary m-1 ingredients rounded-pill favorite active p-4 ' : 'rounded-pill btn btn-outline-secondary m-1 favorite ingredients p-4' }value={fav.nombre} onClick={add}  >{fav.nombre}</button>
-                                ))}
-                            </div>
-                               {hideIngredients && (
+                                {hideIngredients && (
                                 <button 
-                                className="btn btn-danger p-3 w-100" 
+                                className="btn btn-outline-danger p-3 rounded-pill" 
                                 onClick={() => {
                                     setFavFlag({
                                     CookiesAndCream: false,
@@ -1292,29 +1343,211 @@ function TerminalScreen() {
                                     StrawberryShortcake: false,
                                     });
                                     setIngs([]);
+                                    localStorage.setItem('FavFlag', JSON.stringify({
+                                    CookiesAndCream: false,
+                                    CocoNut: false,
+                                    ILoveCoffee: false,
+                                    Smores: false,
+                                    CinnamonAndCarrot: false,
+                                    StrawberryShortcake: false,
+                                    }))
+                                    localStorage.setItem(LOCAL_INGS_KEY, JSON.stringify([]));
                                 }}
                                 >
                                 Quitar selección
                                 </button>
+                            )}
 
-                                )}
+                                <div className="d-flex align-items-center gap-2">
+                                <i className="bi bi-search"></i>
+                                <input 
+                                    type="text" 
+                                    className="form-control form-control-md"
+                                    style={{ maxWidth: '150px' }}
+                                    onChange={!hideFavorites ? handleFavoritesSearch : undefined}
+                                    placeholder="Search"
+                                    disabled={hideFavorites}
+                                />
+                                </div>
+                            </button>
+
+                            <div 
+                                className="overflow-scroll d-flex flex-wrap"
+                                style={{ opacity: hideFavorites ? 0.5 : 1, pointerEvents: hideFavorites ? 'none' : 'auto' }}
+                            >
+                                {listaDeFavoritos.map(fav => (
+                                <button
+                                    key={fav.nombre}
+                                    className={
+                                    favoriteFlag[fav.nombre]
+                                        ? 'btn btn-outline-secondary m-1 ingredients rounded-pill favorite active p-4'
+                                        : 'rounded-pill btn btn-outline-secondary m-1 favorite ingredients p-4'
+                                    }
+                                    value={fav.nombre}
+                                    onClick={add}
+                                    disabled={hideFavorites}
+                                >
+                                    {fav.nombre}
+                                </button>
+                                ))}
+                            </div>
+
+                            
+                            </div>
+
+
                             {/* {favoritesButtons && <div className="overflow-scroll d-flex" >
                                 {listaDeFavoritos.map(fav=>(
                                     <button className={favoriteFlag[`${fav.nombre}`]  ? 'btn btn-outline-secondary m-1 ingredients favorite active p-3 ' : 'btn btn-outline-secondary m-1 favorite ingredients p-3' }value={fav.nombre} onClick={add}  >{fav.nombre}</button>
                                 ))}
                                
-
+                        
 
                                 </div>} */}
+                       <div className=" d-flex flex-column align-items-center justify-content-center">
+                            <button 
+                                className={`rounded-3 w-100 col d-flex flex-row text-start justify-content-between border align-items-center border-light p-4 m-2 ${
+                                hideIngredients ? 'bg-secondary-subtle' : 'bg-light'
+                                }`}
+                                disabled={hideIngredients}
+                            >
+                                <div className="lead" onClick={!hideIngredients ? handleIngredients : undefined}>
+                                Ingredients
+                                </div>
+
+                                <div className="d-flex align-items-center gap-2">
+                                <i className="bi bi-search"></i>
+                                <input 
+                                    type="text" 
+                                    className="form-control form-control-md"
+                                    style={{ maxWidth: '150px' }}
+                                    onChange={!hideIngredients ? handleIngredientSearch : undefined}
+                                    placeholder="Search"
+                                    disabled={hideIngredients}
+                                />
+                                </div>
+                            </button>
+
+                            <div className="d-flex flex-row justify-content-between align-items-center w-100 mt-3 mb-3 m-2">
+                                <button 
+                                className="btn btn-outline-dark" 
+                                onClick={!hideIngredients ? scrollLeft : undefined}
+                                disabled={hideIngredients}
+                                >
+                                <i className="bi bi-chevron-left"></i>
+                                </button>
+
+                                <button 
+                                className="btn btn-outline-dark" 
+                                onClick={!hideIngredients ? scrollRight : undefined}
+                                disabled={hideIngredients}
+                                >
+                                <i className="bi bi-chevron-right"></i>
+                                </button>
+                            </div>
+
+                            <div className="d-flex align-items-center">
+                                <div 
+                                className="overflow-scroll d-flex flex-row flex-nowrap"
+                                ref={scrollRef}
+                                style={{
+                                    maxWidth: '90vw',
+                                    maxHeight: '30vh',
+                                    opacity: hideIngredients ? 0.5 : 1,
+                                    pointerEvents: hideIngredients ? 'none' : 'auto',
+                                }}
+                                >
+                                {listaDeIngredientes.map((ing) => (
+                                    <button
+                                    key={ing.nombre}
+                                    className={
+                                        ingsFlag[`${ing.nombre}Ing`]
+                                        ? 'btn btn-outline-secondary m-1 ingredients active p-4 rounded-pill w-100'
+                                        : 'btn btn-outline-secondary m-1 ingredients p-4 rounded-pill w-100'
+                                    }
+                                    value={ing.nombre}
+                                    onClick={add}
+                                    disabled={hideIngredients}
+                                    >
+                                    {ing.nombre}
+                                    </button>
+                                ))}
+                                </div>
+                            </div>
+
+                            <div className="" style={{maxWidth: '90vw',minWidth: '90vw', maxHeight: '30vh', overflowY: 'auto'}}>
+                                {ings.length > 0 && (
+                                    <div className="d-flex justify-content-center align-items-center">
+                                        <div 
+                                        className=" position-fixed  bottom-0 m-4"
+                                        style={{ zIndex: 1000 }}
+                                        >
+                                            <div className="d-flex flex-row align-items-center gap-4">
+                                                <button
+                                                className={`btn ${isSaved ? 'btn-success' : 'btn-dark'} rounded-pill p-4 d-flex align-items-center justify-content-center gap-3`}
+                                                onClick={handleGuardado}
+                                                >
+                                                {isSaved ? (
+                                                    <>
+                                                    <i className="bi bi-check-circle-fill text-white lead"></i>
+                                                    <h4 className="lead">Guardado</h4>
+                                                    </>
+                                                ) : (
+                                                    <h4 className="lead">Guardar</h4>
+                                                )}
+                                                </button>
+
+                                                {isSaved && (
+                                                <button
+                                                    className="btn btn-dark rounded-pill px-5 py-3"
+                                                    onClick={handleVolver}
+                                                >
+                                                    <h4 className="lead">Volver</h4>
+                                                </button>
+                                                )}
+                                        </div>
+                                    </div>
+
+
+
+                                    <div className="mt-3 bg-primary p-4 rounded-5 " style={{maxWidth: '90vw',minWidth: '90vw', maxHeight: '30vh', overflowY: 'auto'}}>
+                                        <h4 className="text-center text-light lead fw-bold">Ingredientes Seleccionados</h4>
+                                        <ul className="list-group d-flex flex-row flex-wrap justify-content-around w-100">
+                                        {ings.map((ing, index) => (
+                                            <li key={index} className="list-group-item d-flex justify-content-between align-items-center p-4 mb-1 rounded-5 bg-light">
+                                            <div className="lead">
+                                                {ing}
+                                            </div>
+                                            
+                                             {!hideIngredients && (
+                                               <button 
+                                                className="btn btn-danger btn-md ms-4" 
+                                                onClick={() => {
+                                                const updatedIngs = ings.filter(i => i !== ing);
+                                                setIngs(updatedIngs);
+                                                var key = ing + 'Ing';
+                                                localStorage.setItem(key,'0');
+                                                setIngsFlag(prevState => ({
+                                                    ...prevState,
+                                                    [key]: false
+                                                }));
+                                                }}
+                                            >
+                                                <i className="bi bi-x"></i>
+                                            </button>
+                                            )}
+                                            
+                                            </li>
+                                        ))}
+                                        </ul>
+                                    </div>
+                                    </div>
+                                )}
+                            </div>
+                            </div>
+
                         </div>
-                        {!hideIngredients && (
-                        <div className="mt-3">
-                            {/* Aquí va el contenido que solo se muestra si hideIngredients es false */}
-                            <p className="text-muted">Aquí se muestran los ingredientes.</p>
-                            {/* Puedes colocar cualquier componente, tabla, lista, etc. */}
-                            
-                        </div>
-                        )}
+
 
             </div>
             </div>
@@ -1324,7 +1557,18 @@ function TerminalScreen() {
      else if(ruta == 'toppings') {
         return (
             <div className="container mt-4">
-            <h2 className="mb-4">Elige Toppings</h2>
+                <div className="d-flex flex-row justify-content-between align-items-center">
+                    <button 
+                        className="btn btn-outline-dark me-2" 
+                        // onClick={!hideIngredients ? scrollLeft : undefined}
+                        onClick={handleVolver}
+                        // disabled={hideIngredients}
+                        >
+                        <i className="bi bi-chevron-left"></i>
+                    </button>
+                    <h2 className="mb-4">Elige Toppings</h2>
+
+                </div>
             <div className="d-flex flex-wrap gap-3 justify-content-center">
                 {/* Your buttons or cards can go here */}
             </div>
@@ -1335,9 +1579,59 @@ function TerminalScreen() {
       else if(ruta == 'cantidad') {
         return (
             <div className="container mt-4">
-            <h2 className="mb-4">Elige Cantidad</h2>
+                <div className="d-flex flex-row justify-content-between align-items-center">
+
+                    <button 
+                        className="btn btn-outline-dark me-2" 
+                        // onClick={!hideIngredients ? scrollLeft : undefined}
+                        onClick={handleVolver}
+                        // disabled={hideIngredients}
+                        >
+                        <i className="bi bi-chevron-left"></i>
+                    </button>
+                    <h2 className="mb-4">Elige Cantidad</h2>
+
+                </div>
             <div className="d-flex flex-wrap gap-3 justify-content-center">
                 {/* Your buttons or cards can go here */}
+                <div className=' d-flex flex-column m-2 p-3  justify-content-center align-items-center gap-3' style={{width:'90vw'}}>
+                         <div className=" display-6">Cantidad</div>
+                         <div className=" d-flex flex-row w-100 justify-content-around align-items-center">
+                                <button className='btn btn-primary rounded-pill display-6' onClick={handleDecrement}>-</button>
+                             
+                             <div className=" display-6 ">
+                             {qty}
+                             </div>
+                                 <button className='btn btn-primary rounded-pill display-6' onClick={handleIncrement}>+</button>
+                         </div>
+        
+                </div>
+                <div className="d-flex flex-row align-items-center gap-4 mt-5">
+                            <button
+                                className={`btn ${isSaved ? 'btn-success' : 'btn-primary'} rounded-pill p-4 d-flex align-items-center justify-content-center gap-3`}
+                                onClick={handleGuardado}
+                            >
+                                {isSaved ? (
+                                <>
+                                    <i className="bi bi-check-circle-fill text-white display-5"></i>
+                                    <h4 className="display-4  p-4">Guardado</h4>
+                                </>
+                                ) : (
+                                <h4 className="display-4  p-4">Guardar</h4>
+                                )}
+                            </button>
+
+                            {isSaved && (
+                                <button
+                                className="btn btn-outline-dark rounded-pill px-5 py-3"
+                                onClick={handleVolver}
+                                >
+                                <h4 className=" display-4 p-4">Volver</h4>
+                                </button>
+                            )}
+                </div>
+
+
             </div>
             </div>
         );
@@ -1346,7 +1640,19 @@ function TerminalScreen() {
      else if(ruta == 'comentarios') {
         return (
             <div className="container mt-4">
-            <h2 className="mb-4">Escribe Comentarios</h2>
+                <div className="d-flex flex-row justify-content-between align-items-center">
+
+                    <button 
+                        className="btn btn-outline-dark me-2" 
+                        // onClick={!hideIngredients ? scrollLeft : undefined}
+                        onClick={handleVolver}
+                        // disabled={hideIngredients}
+                        >
+                        <i className="bi bi-chevron-left"></i>
+                    </button>
+                    <h2 className="mb-4">Escribe Comentarios</h2>
+
+                </div>
             <div className="d-flex flex-wrap gap-3 justify-content-center">
                 {/* Your buttons or cards can go here */}
             </div>
