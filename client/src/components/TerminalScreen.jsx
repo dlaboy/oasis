@@ -6,7 +6,7 @@ import axios from 'axios';
 import { ItemContext } from '../../context/ItemContext';
 import './TerminalScreen.css'
 import { Toaster, toast } from 'react-hot-toast';
-import ChooseType from './Choosetype';
+// import ChooseType from './Choosetype';
 
 
 
