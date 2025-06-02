@@ -10,7 +10,7 @@ input[type="number"] {
   }
 .botones-actiones{
     width: 40vw;
-    height: 20vh;
+    height: 15vh;
     position: absolute;
     top: 75vh;
 }

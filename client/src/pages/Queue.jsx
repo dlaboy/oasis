@@ -424,80 +424,68 @@ const [visibleOrders, setVisibleOrders] = useState({});
                     </div>
                     <div className={itemVisibility[order._id] ? 'd-flex flex-column bg-secondary-subtle p-3 w-100':'d-none bg-secondary-subtle '}>
                     <div className="d-flex flex-column w-100 ">
-                      {order.items.map(item =>(
-                      <div className=" border-bottom border-dark w-100">
-                        <div className="d-flex flex-row bg-danger-subtle p-3">
-                           <div className='fw-bold fs-4'> Tipo:  </div> 
-                           <div className="fs-4">
-                           {item.type}
-                           {/* <div className="text-secondary">
-                              {editEnable[order._id] ? (<input className='w-75' defaultValue={item.type} />):(<div></div>)}
-                              </div> */}
-                            </div> 
-                        </div>
-                        <div className="d-flex flex-column bg-warning-subtle p-3">
-                        {item && item.type !== 'drinks' && (
-                            <div className="fw-bold fs-4">
-                              Ingredientes:
-                            </div>
-                          )}
-                          <ul className="d-flex flex-column">
-                            {item.type !== 'drinks'&&item.ings.map((ing=>(  
-                              <li className='fs-4'>{ing}
-                              {/* <div className="text-secondary">
-                              {editEnable[order._id] ? (<input className='w-75' defaultValue={ing}/>):(<div></div>)}
-                              </div> */}
-                              </li>
-                            )))}
-                          </ul>
-                        </div>
-                        <div className="d-flex flex-column bg-primary-subtle p-3">
-                        {item && item.type !== 'drinks' && (
-                            <div className="fw-bold fs-4">
-                              Toppings:
-                            </div>
-                          )}
-                          <ul className="d-flex flex-column">
+                      {order.items.map((item, idx) => (
+  <div key={idx} className="border-bottom border-dark w-100">
+    <div className="d-flex flex-row bg-danger-subtle p-3">
+      <div className='fw-bold fs-4'>Tipo:</div>
+      <div className="fs-4 ms-3">
+        {item.type === 'rolls' && 'Rolls'}
+        {item.type === 'banana' && 'Banana Split'}
+        {item.type === 'shakes' && 'Shakes'}
+        {item.type === 'puppy' && 'Puppy Rolls'}
+        {item.type === 'drinks' && 'Drinks'}
+      </div>
+    </div>
 
-                            {item.type !== 'drinks'&& item.tops.map((top=>(
-                              <li className='fs-4'>{top}
-                                {/* <div className="text-secondary">
-                                {editEnable[order._id] ? (<input  className='w-75' defaultValue={top}/>):(<div></div>)}
-                                </div> */}
-                              </li>
-                            )))}
-                          </ul>
-                        </div>
-                        <div className="d-flex flex-column bg-info-subtle p-3">
-                          <div className="fw-bold fs-4">
-                            Cantidad: 
-                          </div>
-                          <ul className="col d-flex flex-row w-100 justify-content-between fs-4">
-                            {item.qty}
-                            {/* {editEnable[order._id] ? (
-                              <input type="text" className='w-25' defaultValue={item.qty}/>
-                            ):( 
-                            <div className="col">
-                            {item.qty}
-                            </div>)
-                            } */}
-                        </ul>
-                        </div>
-                        <div className="d-flex flex-column pb-2 bg-success-subtle p-3">
-                          <div className="fw-bold fs-4">
-                            Comentarios: 
-                          </div>
-                          <ul className="d-flex flex-column fs-4">
-                            
-                            {item.comments}
-                            {/* <div className="text-secondary">
-                              {editEnable[order._id] ? (<input className='w-100' defaultValue={item.comments}/>):(<div></div>)}
-                              </div> */}
-                          </ul>
-                        </div>
-                          
-                      </div>
+    {item.type !== 'drinks' && (
+      <>
+        <div className="d-flex flex-column bg-warning-subtle p-3">
+          <div className="fw-bold fs-4">Ingredientes:</div>
+          <ul className="d-flex flex-column">
+            {item.ings.map((ing, i) => (
+              <li key={i} className="fs-4">{ing}</li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="d-flex flex-column bg-primary-subtle p-3">
+          <div className="fw-bold fs-4">Toppings por helado:</div>
+          <ul className="d-flex flex-column">
+            {Object.entries(item.tops || {}).map(([iceIndex, toppings]) => (
+              <li key={iceIndex} className="fs-4 mb-2">
+                <strong>Helado #{parseInt(iceIndex) + 1}:</strong>
+                {toppings.length > 0 ? (
+                  <div className="d-flex flex-wrap gap-2 mt-2">
+                    {toppings.map((top, i) => (
+                      <span key={i} className="badge bg-primary fs-5 p-2 rounded-pill">
+                        {top}
+                      </span>
                     ))}
+                  </div>
+                ) : (
+                  <span className="text-muted ms-2">Ninguno</span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </>
+    )}
+
+    <div className="d-flex flex-column bg-info-subtle p-3">
+      <div className="fw-bold fs-4">Cantidad:</div>
+      <div className="fs-4">{item.qty}</div>
+    </div>
+
+    <div className="d-flex flex-column pb-2 bg-success-subtle p-3">
+      <div className="fw-bold fs-4">Comentarios:</div>
+      <div className="fs-4">
+        {item.comments || <span className="text-muted">Ninguno</span>}
+      </div>
+    </div>
+  </div>
+))}
+
                     </div>
                     <div className="d-flex flex-column">
                       <div className="fw-bold d-flex flex-row w-100">

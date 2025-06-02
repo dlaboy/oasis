@@ -897,90 +897,75 @@ const addActive = (event) =>{
 
   return (
     // <div className='m-2 bg-light' style={{height:'95vh',width:'30vw'}}>
-    <div className={hideOrders ? 'bg-white order-container shadow-lg':'d-none bg-white order-container'} >
+    <div className={hideOrders ? 'bg-dark order-container shadow-lg':'d-none bg-dark order-container'} style={{height:'100vh',zIndex:'1000'}} >
       <Modal show={detailShow} onHide={handleDetailClose}>
           <Modal.Header closeButton>
             <Modal.Title>Detalles de la Orden</Modal.Title>
           </Modal.Header>
           <Modal.Body className='overflow-scroll detalles-body'>
           <div className={itemVisibility[orderToShow._id] ? 'detalle-de-orden d-flex flex-column bg-primary-subtle p-2':'d-flex  flex-column'}>
-            <div className="d-flex flex-column overflow-scroll bg-secondary-subtle">
-              {orderToShow?.items && orderToShow.items.map(item =>(
-              <div className="border-bottom border-dark">
-                <div className="d-flex flex-column justify-content-around">
-                  <div className='fw-bold'> Type:  </div> 
-                  <div className="">
-                    <ul>
-                    {/* {item.type} */}
-                    {item.type === 'rolls' && 'Rolls'}
-                    {item.type === 'banana' && 'Banana Split'}
-                    {item.type === 'shakes' && 'Shakes'}
-                    {item.type === 'puppy' && 'Puppy Rolls'}
-                    {item.type === 'drinks' && 'Drinks'}
+           <div className="d-flex flex-column overflow-scroll bg-secondary-subtle">
+  {orderToShow?.items && orderToShow.items.map((item, index) => (
+    <div key={index} className="border-bottom border-dark p-3">
+      <div className="d-flex flex-column mb-2">
+        <div className='fw-bold'>Tipo:</div> 
+        <div>
+          {item.type === 'rolls' && 'Rolls'}
+          {item.type === 'banana' && 'Banana Split'}
+          {item.type === 'shakes' && 'Shakes'}
+          {item.type === 'puppy' && 'Puppy Rolls'}
+          {item.type === 'drinks' && 'Drinks'}
+        </div>
+      </div>
 
-                    </ul>
-                  
-                  {/* <div className="text-secondary">
-                      {editEnable[order._id] ? (<input className='w-75' defaultValue={item.type} />):(<div></div>)}
-                      </div> */}
-                    </div> 
-                </div>
-                <div className="d-flex flex-column justify-content-around">
-                {item && item.type !== 'drinks' && (
-                            <div className="fw-bold">
-                              Ingredients:
-                            </div>
-                          )}
-                  <ul className="d-flex flex-column">
-                    {item && item.type !== 'drinks'&& item.ings.map((ing=>(  
-                      <li>{ing}
-                      {/* <div className="text-secondary">
-                      {editEnable[order._id] ? (<input className='w-75' defaultValue={ing}/>):(<div></div>)}
-                      </div> */}
-                      </li>
-                    )))}
-                  </ul>
-                </div>
-                <div className="d-flex flex-column  justify-content-around">
-                {item && item.type !== 'drinks' && (
-                            <div className="fw-bold">
-                              Toppings:
-                            </div>
-                          )}
-                  <ul className="d-flex flex-column">
+      {item.type !== 'drinks' && (
+        <>
+          <div className="d-flex flex-column mb-2">
+            <div className="fw-bold">Ingredientes:</div>
+            <ul className="list-group list-group-flush">
+              {item.ings?.map((ing, i) => (
+                <li key={i} className="list-group-item bg-transparent ps-0">{ing}</li>
+              ))}
+            </ul>
+          </div>
 
-                    { item.type !== 'drinks'&& item.tops.map((top=>(
-                      <li className=''>{top}
-                        {/* <div className="text-secondary">
-                        {editEnable[order._id] ? (<input  className='w-75' defaultValue={top}/>):(<div></div>)}
-                        </div> */}
-                      </li>
-                    )))}
-                  </ul>
-                </div>
-                <div className="d-flex flex-column justify-content-around ">
-                  <div className="fw-bold ">
-                    Quantity: 
-                  </div>
-                  <ul className="">
-                    {item.qty}
-                  
-                  </ul>
-                </div>
-                <div className="d-flex flex-column pb-2 justify-content-around">
-                  <div className="fw-bold">
-                    Comments: 
-                  </div>
-                  <ul className="">
-                    
-                    {item.comments}
-                    
-                  </ul>
-                </div>
-                  
-              </div>
-            ))}
-            </div>
+          <div className="d-flex flex-column mb-2">
+            <div className="fw-bold">Toppings por helado:</div>
+            <ul className="list-group list-group-flush">
+              {Object.entries(item.tops || {}).map(([iceIndex, toppings]) => (
+                <li key={iceIndex} className="list-group-item bg-transparent ps-0">
+                  <strong>Helado #{parseInt(iceIndex) + 1}:</strong>
+                  {toppings.length > 0 ? (
+                    <div className="d-flex flex-wrap gap-2 mt-2">
+                      {toppings.map((top, idx) => (
+                        <span key={idx} className="badge bg-primary p-2 fs-6 rounded-pill">
+                          {top}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <span className="text-muted ms-2">Ninguno</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </>
+      )}
+
+      <div className="d-flex flex-column mb-2">
+        <div className="fw-bold">Cantidad:</div>
+        <div>{item.qty}</div>
+      </div>
+
+      <div className="d-flex flex-column">
+        <div className="fw-bold">Comentarios:</div>
+        <div>{item.comments || <span className="text-muted">Ninguno</span>}</div>
+      </div>
+    </div>
+  ))}
+</div>
+
             <div className="d-flex flex-column bg-light">
               <div className="fw-bold d-flex flex-row">
                 <div className="">
@@ -1037,12 +1022,12 @@ const addActive = (event) =>{
           <div className="d-flex flex-column text-center" style={{height:'15vh'}}>
             <div className="d-flex flex-row justify-content-between">
               <Nav>
-                <Nav.Link to='/' as={NavLink} className='btn  p-3  w-100 text-center'>Home</Nav.Link>
+                <Nav.Link to='/' as={NavLink} className='btn text-light p-3 w-100 text-center'>Home</Nav.Link>
               </Nav>
-              <button className="p-3 btn btn-outline-light closeShowOrders" onClick={handleShowOrders}><img className='closeIcon' src="/close-4.png" alt="" /></button>
+              <button className="p-3 btn btn-outline-primary closeShowOrders text-light" onClick={handleShowOrders}>Close</button>
 
             </div>
-            <div className='d-flex flex-row w-100 justify-content-between p-3 text-start'>
+            <div className='d-flex flex-row w-100 justify-content-between p-3 text-start text-light'>
                 <div className="">
                 Queued Orders
                 </div>
@@ -1079,15 +1064,15 @@ const addActive = (event) =>{
         </div>
         <div className="d-flex flex-column" >
           <div className="p-3 d-flex justify-content-between">
-            <div>Current Order</div>
+            <div className='text-light'>Current Order</div>
             <button className='rounded-3 bg-light border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-2' onClick={handleClear}>Clear</button>
           </div>
           <div  className=" w-100  p-3 d-flex flex-row justify-content-between" style={{zIndex:'1'}}>
             <div className="">
-              <div className="">
+              <div className="text-light">
               Client: {name}
               </div>
-              <div className="">
+              <div className="text-light">
               Total: {<CurrencyFormatter value={totalToPay} currency='USD'/>}
               </div>
             </div>
@@ -1103,91 +1088,86 @@ const addActive = (event) =>{
        
             
           {/* <div style={order.items ? {height:'20vh'}: {height:'0vh'}} className="m-3 overflow-scroll "> */}
-          <div style={order.items ? {height:'20vh'}: {height:'0vh'}} className="orden-de-ahora bg-secondary-subtle overflow-scroll mt-3">
-              { order ? ( order?.items &&
+         <div style={order.items ? { height: '30vh' } : { height: '0vh' }} className="orden-de-ahora bg-secondary-subtle overflow-auto mt-3 rounded shadow">
+  {order?.items?.length > 0 ? (
+    order.items.map((item) => (
+      <div key={item.item_id} className="border-bottom border-dark d-flex flex-row p-3">
+        <div className="w-100 pe-3">
+          <h5 className="mb-2">
+            <strong>Tipo:</strong>{' '}
+            {item.type === 'rolls' && 'Rolls'}
+            {item.type === 'banana' && 'Banana Split'}
+            {item.type === 'shakes' && 'Shakes'}
+            {item.type === 'puppy' && 'Puppy Rolls'}
+            {item.type === 'drinks' && 'Drinks'}
+          </h5>
 
-                order.items.map(item =>  (
-                  <div key={item.item_id} className='border-bottom border-dark d-flex flex-row '>
-                    <div className="w-100 p-3">
-                      <div className="d-flex flex-column">
-                        <div className="">
-                          Type: 
+          {item.type !== 'drinks' && (
+            <>
+              <div className="mb-2">
+                <strong>Ingredientes:</strong>
+                <ul className="list-group list-group-flush mt-1">
+                  {item.ings?.map((ing, idx) => (
+                    <li key={idx} className="list-group-item bg-transparent ps-0">{ing}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="mb-2">
+                <strong>Toppings por helado:</strong>
+                <ul className="list-group list-group-flush mt-1">
+                  {Object.entries(item.tops || {}).map(([iceIndex, toppings]) => (
+                    <li key={iceIndex} className="list-group-item bg-transparent ps-0">
+                      <strong>Helado #{parseInt(iceIndex) + 1}:</strong>{' '}
+                      {toppings.length > 0 ? (
+                        <div className="d-flex flex-wrap gap-2 mt-2">
+                          {toppings.map((top, idx) => (
+                            <span key={idx} className="badge bg-primary fs-6 p-2 rounded-pill">
+                              {top}
+                            </span>
+                          ))}
                         </div>
-                        <ul className="">
-                        {item.type === 'rolls' && 'Rolls'}
-                        {item.type === 'banana' && 'Banana Split'}
-                        {item.type === 'shakes' && 'Shakes'}
-                        {item.type === 'puppy' && 'Puppy Rolls'}
-                        {item.type === 'drinks' && 'Drinks'}
-                        </ul>
-                      </div>
-                      {item && item.type !== 'drinks' && (
-                            <div className="">
-                              Ingredients:
-                            </div>
-                          )}
-                      <ul className="">
-                        {item && item.type !== 'drinks' && item.ings.map((ing=>(  
-                                <li>{ing}
-                                {/* <div className="text-secondary">
-                                {editEnable[order._id] ? (<input className='w-75' defaultValue={ing}/>):(<div></div>)}
-                                </div> */}
-                                </li>
-                              )))}
-                      </ul>
-                      <div className="">
-                      {item && item.type !== 'drinks' && (
-                            <div className="">
-                              Toppings:
-                            </div>
-                          )}                        <ul>
-                            {item && item.type !== 'drinks' && item.tops.map((top=>(
-                                <li className=''>{top}
-                                  {/* <div className="text-secondary">
-                                  {editEnable[order._id] ? (<input  className='w-75' defaultValue={top}/>):(<div></div>)}
-                                  </div> */}
-                                </li>
-                              )))}
-                        </ul>
-                      </div>
-                      <div className="d-flex flex-column">
-                        <div className="">
-                          Qty: 
-                        </div>
-                        <ul className="">
-                          {item.qty}
-                        </ul>
-                      </div>
-                      <div className="d-flex flex-column">
-                        <div className="">
-                          Comments: 
-                        </div>
-                        <ul className="">
-                          {item.comments}
-                        </ul>
-                      </div>
-                    </div>
-                    <div className="d-flex justify-content-center align-items-center w-25">
-                      <button className="btn text-secondary" onClick={()=>handleDeleteItem(item.item_id)}>
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                ))
-              ):(
-                <div className=""></div>
-              ) }
-              
-            
-            </div>
-            
+                      ) : (
+                        <span className="text-muted ms-2">Ninguno</span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </>
+          )}
+
+          <div className="mb-2">
+            <strong>Cantidad:</strong> {item.qty}
           </div>
-          <div className="botones-actiones d-flex align-items-center justify-content-around flex-column">
-            <div className="text-danger">{adviceMessage}</div>
-            <button type='button' onClick={handleChargeShow} className='btn btn-outline-primary rounded-pill p-3'> Additional Charge</button>
-            <div className="d-flex flex-column w-100 justify-content-around">
-              <button type='button' onClick={handleShow} className='btn btn-primary p-3'>Send Order</button>
+
+          {item.comments && (
+            <div className="mb-2">
+              <strong>Comentarios:</strong> {item.comments}
             </div>
+          )}
+        </div>
+
+        <div className="d-flex justify-content-center align-items-center w-25">
+          <button className="btn btn-outline-danger" onClick={() => handleDeleteItem(item.item_id)}>
+            Eliminar
+          </button>
+        </div>
+      </div>
+    ))
+  ) : (
+    <div className="p-3 text-muted">No hay ítems en la orden.</div>
+  )}
+</div>
+
+          
+          </div>
+          <div className="botones-actiones d-flex align-items-center justify-content-around flex-column gap-3 bg-dark">
+            <div className="text-danger d-flex gap-3">{adviceMessage}</div>
+              <div className="d-flex flex-row w-100 justify-content-around align-items-center">
+                <button type='button' onClick={handleChargeShow} className='d-flex btn btn-primary rounded-pill p-3'> Additional Charge</button>
+                <button type='button' onClick={handleShow} className='btn btn-success p-3 rounded-pill'>Send Order</button>
+              </div>
 
           </div>
 

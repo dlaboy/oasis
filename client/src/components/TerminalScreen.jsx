@@ -6,6 +6,7 @@ import axios from 'axios';
 import { ItemContext } from '../../context/ItemContext';
 import './TerminalScreen.css'
 import { Toaster, toast } from 'react-hot-toast';
+import { set } from 'lodash';
 // import ChooseType from './Choosetype';
 
 
@@ -37,7 +38,9 @@ function TerminalScreen() {
     const [typeAlert, setTypeAlert] = useState(false)
     const [favAlert, setFavAlert] = useState(false)
     const [ings, setIngs] = useState([]);
-    const [tops, setTops] = useState([]);
+    // const [tops, setTops] = useState([]);
+    const [tops, setTops] = useState({}); // No un array plano
+
     const [qty, setQty] = useState(0);
     const [agua, setAgua] = useState(0);
 
@@ -246,11 +249,13 @@ function TerminalScreen() {
             if(storedIngs){
              
                 setIngs(storedIngs)
-                setButtons((prev) =>
-                        prev.map((item) =>
-                        item.ruta === 'ingredientes' ? { ...item, selected: true } : item
-                        )
-                    );
+                if (Object.keys(storedIngs).length > 0) {
+                    setButtons((prev) =>
+                           prev.map((item) =>
+                           item.ruta === 'ingredientes' ? { ...item, selected: true } : item
+                           )
+                       );
+                }
                 storedIngs.forEach(function(i){
                     var ingKey = i + 'Ing';
                     console.log(ingKey)
@@ -280,25 +285,29 @@ function TerminalScreen() {
                    
                 })
             }
-            if(storeTops){
-                setTops(storeTops)
-                storeTops.forEach(function(i){
-                    var topKey = i + 'Top';
-                    if(localStorage.getItem(topKey)){
-                        for (const key in topsFlag){
-                            if(key === topKey){
-                                if(localStorage.getItem(topKey) === '1'){
-                                    topsFlag[topKey] = true
-                                    console.log('true')
-                                }
-                                else{
-                                    topsFlag[topKey] = false
-                                }
-                            }
-                        }
+             if (storeTops) {
+                setTops(storeTops);
+                if (Object.keys(storeTops).length > 0) {
+                    setButtons((prev) =>
+                           prev.map((item) =>
+                           item.ruta === 'toppings' ? { ...item, selected: true } : item
+                           )
+                       );
+                }
+
+                Object.values(storeTops).forEach((toppingList) => {
+                    toppingList.forEach((topping) => {
+                    const topKey = topping + 'Top';
+                    if (localStorage.getItem(topKey)) {
+                        setTopsFlag(prev => ({
+                        ...prev,
+                        [topKey]: localStorage.getItem(topKey) === '1'
+                        }));
                     }
-                })
-            }
+                    });
+                });
+                }
+
             if(storeType){
                 setButtons((prev) =>
                     prev.map((item) =>
@@ -1136,14 +1145,14 @@ function TerminalScreen() {
                     item_id: getRandomInt(0,100000000),
                     type:type,
                     ings:ings,
-                    tops:tops,
+                    tops: Object.values(tops),
                     qty:qty,
                     comments:comments
                 });
                 setType("")
                 setTypeCounter(typeCounter -1)
                 setIngs([])
-                setTops([])
+                setTops({})
                 setRequired(false)   
                 setQty(0)
                 setComments("")
@@ -1164,6 +1173,32 @@ function TerminalScreen() {
                     });
                     return resetFlags;
                 });
+                setFavFlag(prevState => {
+                const resetFlags = {};
+                Object.keys(prevState).forEach(key => {
+                    resetFlags[key] = false;
+                });
+                return resetFlags;
+                });
+                localStorage.setItem('FavFlag', JSON.stringify({
+                CookiesAndCream: false,
+                CocoNut: false,
+                ILoveCoffee: false,
+                Smores: false,
+                CinnamonAndCarrot: false,
+                StrawberryShortcake: false
+                }));
+
+                setButtons(prevButtons =>
+                prevButtons.map(btn => ({
+                    ...btn,
+                    selected: false
+                }))
+                );
+
+
+                
+
             }
             toast.success('Item añadido a la orden!')
             // playSound()
@@ -1505,8 +1540,8 @@ function TerminalScreen() {
                                                     <h4 className="lead">Volver</h4>
                                                 </button>
                                                 )}
+                                            </div>
                                         </div>
-                                    </div>
 
 
 
@@ -1571,6 +1606,137 @@ function TerminalScreen() {
                 </div>
             <div className="d-flex flex-wrap gap-3 justify-content-center">
                 {/* Your buttons or cards can go here */}
+                 {/* Toppings Section */}
+         {qty >= 1 && (
+            <>
+                <h4 className="text-secondary mb-3">Toppings por helado</h4>
+                {Array.from({ length: qty }, (_, i) => {
+                const heladoNum = i;
+                const toppingSet = tops[heladoNum] || [];
+
+                return (
+                    <div key={heladoNum} className="mb-4">
+                        <div className="">
+                            <h5>Helado #{heladoNum + 1}</h5>
+                            {/* <div className="d-flex align-items-center gap-2">
+                                <i className="bi bi-search"></i>
+                                <input 
+                                    type="text" 
+                                    className="form-control form-control-md"
+                                    style={{ maxWidth: '150px' }}
+                                    onChange={handleToppingSearch}
+                                    placeholder="Search"
+                                    // disabled={hideFavorites}
+                                />
+                                </div> */}
+                        </div>
+                    <div className="d-flex flex-wrap gap-3 mt-2 justify-content-center">
+                        {listaDeToppings.map((opt, idx) => (
+                        <button
+                            type="button"
+                            key={idx}
+                            className={`btn btn-outline-primary fw-bold px-4 py-3 fs-5 rounded-3 ${
+                            toppingSet.includes(opt.nombre) ? 'active' : ''
+                            }`}
+                            onClick={() => {
+                            const updatedSet = [...toppingSet];
+                            const index = updatedSet.indexOf(opt.nombre);
+                            if (index > -1) {
+                                updatedSet.splice(index, 1); // remove
+                            } else if (updatedSet.length < 3) {
+                                updatedSet.push(opt.nombre); // add
+                            }
+
+                            setTops(prev => ({
+                                ...prev,
+                                [heladoNum]: updatedSet
+                            }));
+                            }}
+                        >
+                            {opt.nombre}
+                        </button>
+                        ))}
+                    </div>
+                    </div>
+                );
+                })}
+            </>
+            )}
+            {/* Selection Summary */}
+            {qty >= 1 && (
+            <div className="mt-4 bg-light p-4 rounded-4 shadow-sm d-flex flex-column justify-content-center align-items-center" style={{maxWidth: '90vw',minWidth: '90vw'}}>
+                <h4 className="text-secondary">Tu selección</h4>
+                <ul className="list-group mt-3">
+
+                {Object.entries(tops).map(([index, tSet]) => (
+                    <li key={index} className="list-group-item fs-5">
+                    <strong>Toppings Helado #{parseInt(index) + 1}:</strong>
+                    <div className="d-flex flex-wrap gap-2 mt-2">
+                        {tSet.length > 0 ? (
+                        tSet.map((top, i) => (
+                            <span key={i} className="badge bg-primary fs-6 p-3 rounded-pill">
+                            {top}
+                            <button
+                                type="button"
+                                className="btn btn-sm btn-light ms-2 py-0 px-2"
+                                onClick={() => {
+                                const updated = [...tSet];
+                                updated.splice(i, 1);
+                                setTops(prev => ({
+                                    ...prev,
+                                    [index]: updated
+                                }));
+                                }}
+                            >
+                                ✕
+                            </button>
+                            </span>
+                        ))
+                        ) : (
+                        <span className="text-muted">Ninguno</span>
+                        )}
+                    </div>
+                    </li>
+                ))}
+
+                <li className="list-group-item fs-5">
+                    <strong>Cantidad de helados:</strong> {qty}
+                </li>
+                </ul>
+                       <div 
+                                        className="d-flex align-items-center justify-content-center m-4"
+                                        style={{ zIndex: 1000 }}
+                                        >
+                                            <div className="d-flex flex-row align-items-center gap-4">
+                                                <button
+                                                className={`btn ${isSaved ? 'btn-success' : 'btn-dark'} rounded-pill p-4 d-flex align-items-center justify-content-center gap-3`}
+                                                onClick={handleGuardado}
+                                                >
+                                                {isSaved ? (
+                                                    <>
+                                                    <i className="bi bi-check-circle-fill text-white lead"></i>
+                                                    <h4 className="lead">Guardado</h4>
+                                                    </>
+                                                ) : (
+                                                    <h4 className="lead">Guardar</h4>
+                                                )}
+                                                </button>
+
+                                                {isSaved && (
+                                                <button
+                                                    className="btn btn-dark rounded-pill px-5 py-3"
+                                                    onClick={handleVolver}
+                                                >
+                                                    <h4 className="lead">Volver</h4>
+                                                </button>
+                                                )}
+                                            </div>
+                                        </div>
+                
+            </div>
+            )}
+
+
             </div>
             </div>
         );
@@ -1680,13 +1846,13 @@ function TerminalScreen() {
                     </div>
                    
             </div>
-            <div className=" w-100 d-flex flex-wrap justify-content-around align-items-center" style={{width:'90vw',height:'80vh'}}>
+            <div className=" w-100 d-flex flex-wrap justify-content-around align-items-center" style={{width:'90vw',height:'70vh'}}>
                <div className="d-flex flex-wrap gap-3 justify-content-center mt-4">
                 {buttons.map((but, idx) => {
                 let isDisabled = false;
 
                 // Define tu lógica por índice
-                if (idx === 1 && type === 0) {
+                if (idx === 1 && (type === 0 || type == "") ) {
                     isDisabled = true; // botón 2 depende de `ings`
                 }
 
@@ -1714,6 +1880,7 @@ function TerminalScreen() {
                         backgroundColor: isDisabled ? '#dee2e6' : 'transparent',
                         color: isDisabled ? '#6c757d' : 'inherit',
                         cursor: isDisabled ? 'not-allowed' : 'pointer',
+                        
                     }}
                     onClick={() => choose(but.ruta)}
                     disabled={isDisabled}
@@ -1730,6 +1897,17 @@ function TerminalScreen() {
 
 
             </div>
+            <div className="col w-100 d-flex justify-content-center align-items-center flex-column">
+                     {/* { required && <div className='text-danger text-center'>Missing fields</div> } */}
+                    <button className='btn btn-primary p-3 rounded-pill display-6' onClick={handleNewItem}>
+                        <p className='display-6 p-3'>
+                            Añadir Item a la Orden
+                        </p>
+                    </button>
+                     {/* <ToastContainer/> */}
+                     <Toaster position="top-right" />
+
+             </div>
         </div>
         // <div className=" bg-light terminal-screen" >
         //     <div className=' d-flex flex-column terminal-screen-2' style={{height:'95vh',overflowY:'scroll'}} key={componentKey}>
