@@ -1846,7 +1846,7 @@ function TerminalScreen() {
                     </div>
                    
             </div>
-            <div className=" w-100 d-flex flex-wrap justify-content-around align-items-center" style={{width:'90vw',height:'70vh'}}>
+            <div className=" w-100 d-flex flex-wrap justify-content-around align-items-center" style={{maxWidth:'90vw',height:'70vh'}}>
                <div className="d-flex flex-wrap gap-3 justify-content-center mt-4">
                 {buttons.map((but, idx) => {
                 let isDisabled = false;
@@ -1880,7 +1880,7 @@ function TerminalScreen() {
                         backgroundColor: isDisabled ? '#dee2e6' : 'transparent',
                         color: isDisabled ? '#6c757d' : 'inherit',
                         cursor: isDisabled ? 'not-allowed' : 'pointer',
-                        
+
                     }}
                     onClick={() => choose(but.ruta)}
                     disabled={isDisabled}
