@@ -897,74 +897,540 @@ const addActive = (event) =>{
 
   return (
     // <div className='m-2 bg-light' style={{height:'95vh',width:'30vw'}}>
-    <div className={hideOrders ? 'bg-dark order-container shadow-lg d-flex flex-column' : 'd-none'} 
-     style={{ height: '100vh', zIndex: '1000', overflowY: 'auto' }}>
-  
-  <div className="container-fluid px-3 px-md-5">
-    {/* HEADER */}
-    <div className="d-flex flex-column flex-md-row justify-content-between align-items-center py-3 text-light">
-      <Nav>
-        <Nav.Link to="/" as={NavLink} className="btn btn-outline-light">Home</Nav.Link>
-      </Nav>
-      <h4 className="mt-3 mt-md-0">Queued Orders</h4>
-      <button className="btn btn-outline-primary" onClick={handleShowOrders}>Cerrar</button>
-    </div>
+    <div className={hideOrders ? 'bg-dark order-container shadow-lg':'d-none bg-dark order-container'} style={{height:'100vh',zIndex:'1000'}} >
+      <Modal show={detailShow} onHide={handleDetailClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Detalles de la Orden</Modal.Title>
+          </Modal.Header>
+          <Modal.Body className='overflow-scroll detalles-body'>
+          <div className={itemVisibility[orderToShow._id] ? 'detalle-de-orden d-flex flex-column bg-primary-subtle p-2':'d-flex  flex-column'}>
+           <div className="d-flex flex-column overflow-scroll bg-secondary-subtle">
+  {orderToShow?.items && orderToShow.items.map((item, index) => (
+    <div key={index} className="border-bottom border-dark p-3">
+      <div className="d-flex flex-column mb-2">
+        <div className='fw-bold'>Tipo:</div> 
+        <div>
+          {item.type === 'rolls' && 'Rolls'}
+          {item.type === 'banana' && 'Banana Split'}
+          {item.type === 'shakes' && 'Shakes'}
+          {item.type === 'puppy' && 'Puppy Rolls'}
+          {item.type === 'drinks' && 'Drinks'}
+        </div>
+      </div>
 
-    {/* QUEUED ORDERS */}
-    <div className="ordenes-esperando overflow-auto" style={{ maxHeight: '35vh' }}>
-      {currentOrders?.length > 0 ? (
-        currentOrders.map(order => (
-          <div key={order._id} className="list-group-item bg-light-subtle d-flex justify-content-between align-items-center">
-            <button className="btn btn-link" onClick={() => handleDetailShow(order)}>
-              {order.client_name}
-            </button>
-            <button className="btn btn-outline-danger btn-sm" onClick={() => handleDeleteShow(order._id)}>Eliminar</button>
+      {item.type !== 'drinks' && (
+        <>
+          <div className="d-flex flex-column mb-2">
+            <div className="fw-bold">Ingredientes:</div>
+            <ul className="list-group list-group-flush">
+              {item.ings?.map((ing, i) => (
+                <li key={i} className="list-group-item bg-transparent ps-0">{ing}</li>
+              ))}
+            </ul>
           </div>
-        ))
-      ) : (
-        <div className="text-light">No hay órdenes</div>
+
+          <div className="d-flex flex-column mb-2">
+            <div className="fw-bold">Toppings por helado:</div>
+            <ul className="list-group list-group-flush">
+              {Object.entries(item.tops || {}).map(([iceIndex, toppings]) => (
+                <li key={iceIndex} className="list-group-item bg-transparent ps-0">
+                  <strong>Helado #{parseInt(iceIndex) + 1}:</strong>
+                  {toppings.length > 0 ? (
+                    <div className="d-flex flex-wrap gap-2 mt-2">
+                      {toppings.map((top, idx) => (
+                        <span key={idx} className="badge bg-primary p-2 fs-6 rounded-pill">
+                          {top}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <span className="text-muted ms-2">Ninguno</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </>
       )}
-    </div>
 
-    {/* CURRENT ORDER SECTION */}
-    <div className="mt-4 bg-secondary-subtle p-3 rounded shadow-sm">
-      <div className="d-flex justify-content-between text-light mb-3">
-        <div>Cliente: {name}</div>
-        <div>Total: {<CurrencyFormatter value={totalToPay} currency='USD' />}</div>
+      <div className="d-flex flex-column mb-2">
+        <div className="fw-bold">Cantidad:</div>
+        <div>{item.qty}</div>
       </div>
-      
-      <div style={{ maxHeight: '30vh' }} className="overflow-auto bg-white rounded">
-        {order?.items?.length > 0 ? (
-          order.items.map((item) => (
-            <div key={item.item_id} className="border-bottom p-3">
-              <h5>{item.type}</h5>
-              {item.ings?.length > 0 && (
-                <>
-                  <strong>Ingredientes:</strong>
-                  <ul className="list-unstyled">
-                    {item.ings.map((ing, i) => (
-                      <li key={i}>{ing}</li>
-                    ))}
-                  </ul>
-                </>
-              )}
-              {/* Repite similar para toppings, qty y comentarios */}
-            </div>
-          ))
-        ) : (
-          <p className="text-muted">No hay ítems en esta orden.</p>
-        )}
+
+      <div className="d-flex flex-column">
+        <div className="fw-bold">Comentarios:</div>
+        <div>{item.comments || <span className="text-muted">Ninguno</span>}</div>
       </div>
     </div>
-
-    {/* ACTION BUTTONS */}
-    <div className="d-flex flex-column flex-md-row justify-content-around align-items-center mt-4 gap-3">
-      <button className="btn btn-warning px-4 py-2" onClick={handleChargeShow}>Cargo Adicional</button>
-      <button className="btn btn-success px-4 py-2" onClick={handleShow}>Enviar Orden</button>
-    </div>
-  </div>
+  ))}
 </div>
 
+            <div className="d-flex flex-column bg-light">
+              <div className="fw-bold d-flex flex-row">
+                <div className="">
+                  Payment Method:
+                </div>
+                <div className="fw-normal d-flex justify-content-center align-items-center">
+                  {orderToShow.payment_method}
+                </div>
+              </div>
+              {/* <div className={editEnable[order._id] ? 'd-flex justify-content-center align-items-center':'d-none'}>
+                <div className="">
+                  <button className='btn btn-primary'onClick={()=>handleUpdate(order._id, order.name, order.items, order.payment_method)} >Save</button>
+                </div>
+
+              </div> */}
+
+            </div>
+            <div className="fw-bold d-flex flex-row bg-light">
+                <div className="">
+                  Total to Pay:
+                </div>
+                <div className="fw-normal d-flex justify-content-center align-items-center">
+                  {<CurrencyFormatter value={orderToShow.total} />}
+                </div>
+              </div>
+            
+          </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleDetailClose}>
+              Close
+            </Button>
+            {/* <button className='btn btn-primary' onClick={()=>handleDelete(idToDelete)}>
+              Delete
+            </button> */}
+          </Modal.Footer>
+      </Modal>
+      <Modal show={deleteShow} onHide={handleDeleteClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Deleting Order</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Warning, you're about to delete an order!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleDeleteClose}>
+            Cancel
+          </Button>
+          <button className='btn btn-primary' onClick={()=>handleDelete(idToDelete)}>
+            Delete
+          </button>
+        </Modal.Footer>
+      </Modal>
+        {/* <div  className=""  style={{height:'95vh',width:'30vw'}}> */}
+        <div  className="" >
+          <div className="d-flex flex-column text-center" style={{height:'15vh'}}>
+            <div className="d-flex flex-row justify-content-between">
+              <Nav>
+                <Nav.Link to='/' as={NavLink} className='btn text-light p-3 w-100 text-center'>Home</Nav.Link>
+              </Nav>
+              <button className="p-3 btn btn-outline-primary closeShowOrders text-light" onClick={handleShowOrders}>Close</button>
+
+            </div>
+            <div className='d-flex flex-row w-100 justify-content-between p-3 text-start text-light'>
+                <div className="">
+                Queued Orders
+                </div>
+            </div>
+          </div>
+          <div  className="ordenes-esperando overflow-scroll">
+            {currentOrders ? (
+              <div className='list-group'> 
+                {currentOrders.map(order =>(
+                  <div key={order._id} >
+                    <div className={order.status == 'done' ? 'bg-success-subtle list-group-item list-group-item-action p-3 d-flex flex-row justify-content-between': ' list-group-item list-group-item-action p-3 d-flex flex-row justify-content-between'} >
+                      {/* <button className='btn' onClick={() => toggleVisibility(order._id)}> */}
+                      <button className='btn' onClick={() => handleDetailShow(order)}>
+                        {order.client_name} 
+                      </button>
+                      <div className="">
+                        {/* <button className='btn text-secondary' onClick={()=>toggleEdit(order._id)}>Edit</button> */}
+                        <button  className="btn text-secondary" onClick={()=>handleDeleteShow(order._id)}>Delete</button>
+                        
+                      </div>
+                    </div>
+                    
+          
+                  </div>
+            
+                )
+                )}
+              </div>):(
+                <div className="bg-white">No Orders</div>
+                
+              )
+            }
+          </div>
+        </div>
+        <div className="d-flex flex-column" >
+          <div className="p-3 d-flex justify-content-between">
+            <div className='text-light'>Current Order</div>
+            <button className='rounded-3 bg-light border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-2' onClick={handleClear}>Clear</button>
+          </div>
+          <div  className=" w-100  p-3 d-flex flex-row justify-content-between" style={{zIndex:'1'}}>
+            <div className="">
+              <div className="text-light">
+              Client: {name}
+              </div>
+              <div className="text-light">
+              Total: {<CurrencyFormatter value={totalToPay} currency='USD'/>}
+              </div>
+            </div>
+             
+              {/* <div className="">
+              Items In Order: { totalItems }
+              </div> */}
+              <button className='rounded-3 bg-light border-light border-top-0 border-end-0 border-start-0 border-bottom-1 p-2' onClick={handleEditShow}>Edit Order</button>
+
+
+          </div>
+          <div>
+       
+            
+          {/* <div style={order.items ? {height:'20vh'}: {height:'0vh'}} className="m-3 overflow-scroll "> */}
+         <div style={order.items ? { height: '30vh' } : { height: '0vh' }} className="orden-de-ahora bg-secondary-subtle overflow-auto mt-3 rounded shadow">
+  {order?.items?.length > 0 ? (
+    order.items.map((item) => (
+      <div key={item.item_id} className="border-bottom border-dark d-flex flex-row p-3">
+        <div className="w-100 pe-3">
+          <h5 className="mb-2">
+            <strong>Tipo:</strong>{' '}
+            {item.type === 'rolls' && 'Rolls'}
+            {item.type === 'banana' && 'Banana Split'}
+            {item.type === 'shakes' && 'Shakes'}
+            {item.type === 'puppy' && 'Puppy Rolls'}
+            {item.type === 'drinks' && 'Drinks'}
+          </h5>
+
+          {item.type !== 'drinks' && (
+            <>
+              <div className="mb-2">
+                <strong>Ingredientes:</strong>
+                <ul className="list-group list-group-flush mt-1">
+                  {item.ings?.map((ing, idx) => (
+                    <li key={idx} className="list-group-item bg-transparent ps-0">{ing}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="mb-2">
+                <strong>Toppings por helado:</strong>
+                <ul className="list-group list-group-flush mt-1">
+                  {Object.entries(item.tops || {}).map(([iceIndex, toppings]) => (
+                    <li key={iceIndex} className="list-group-item bg-transparent ps-0">
+                      <strong>Helado #{parseInt(iceIndex) + 1}:</strong>{' '}
+                      {toppings.length > 0 ? (
+                        <div className="d-flex flex-wrap gap-2 mt-2">
+                          {toppings.map((top, idx) => (
+                            <span key={idx} className="badge bg-primary fs-6 p-2 rounded-pill">
+                              {top}
+                            </span>
+                          ))}
+                        </div>
+                      ) : (
+                        <span className="text-muted ms-2">Ninguno</span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </>
+          )}
+
+          <div className="mb-2">
+            <strong>Cantidad:</strong> {item.qty}
+          </div>
+
+          {item.comments && (
+            <div className="mb-2">
+              <strong>Comentarios:</strong> {item.comments}
+            </div>
+          )}
+        </div>
+
+        <div className="d-flex justify-content-center align-items-center w-25">
+          <button className="btn btn-outline-danger" onClick={() => handleDeleteItem(item.item_id)}>
+            Eliminar
+          </button>
+        </div>
+      </div>
+    ))
+  ) : (
+    <div className="p-3 text-muted">No hay ítems en la orden.</div>
+  )}
+</div>
+
+          
+          </div>
+          <div className="botones-actiones d-flex align-items-center justify-content-around flex-column gap-3 bg-dark">
+            <div className="text-danger d-flex gap-3">{adviceMessage}</div>
+              <div className="d-flex flex-row w-100 justify-content-around align-items-center">
+                <button type='button' onClick={handleChargeShow} className='d-flex btn btn-primary rounded-pill p-3'> Additional Charge</button>
+                <button type='button' onClick={handleShow} className='btn btn-success p-3 rounded-pill'>Send Order</button>
+              </div>
+
+          </div>
+
+        </div>
+          <Modal show={editModal} onHide={handleEditClose} centered size='xl' >
+            <Modal.Header closeButton>
+              <Modal.Title>Editando Orden</Modal.Title>
+                <div className="text-danger">{adviceMessage}</div>
+            </Modal.Header>
+              <Modal.Body className='overflow-scroll detalles-body'>
+              <div  className=" bg-secondary-subtle overflow-scroll">
+              { order ? ( order?.items &&
+
+                order.items.map(item =>  (
+                  <div key={item.item_id} className='border-bottom border-dark d-flex flex-row '>
+                    <div className="w-100 p-3">
+                      <div className="btn d-flex flex-column justify-content-start align-items-start" onClick={()=>handleEdit(item.item_id,'type')}>
+                        <div className="">
+                          Type: 
+                        </div>
+                        <ul className="">
+                        {item.type === 'rolls' && 'Rolls'}
+                    {item.type === 'banana' && 'Banana Split'}
+                    {item.type === 'shakes' && 'Shakes'}
+                    {item.type === 'puppy' && 'Puppy Rolls'}
+                    {item.type === 'drinks' && 'Drinks'}
+                        </ul>
+                      </div>
+                      <div style={ (editType && itemsIDtoEdit === item.item_id )? {display:'flex'}: {display:'none'}} className='mt-3 mb-3 flex-column  w-100 justify-content-center align-items-center bg-primary-subtle'>
+                        {/* <div className="col w-25 type-text text-start">Type</div> */}
+                        <div className=" d-flex flex-row w-100 justify-content-around align-items-center "  style={{pointerEvents : 'none'}}>
+                            <div className=" me-1">
+                                <button style={{pointerEvents : 'auto'}} className={newTypeFlags.rolls ? 'btn btn-outline-secondary type active p-3' : 'btn btn-outline-secondary type p-3'} value={'rolls'} onClick={handleNewType}>Rolls</button>
+                            </div>
+                            <div className=" ms-1 me-1">
+                                <button style={{pointerEvents : 'auto'}} className= {newTypeFlags.shakes ? 'btn btn-outline-secondary type active p-3':'btn btn-outline-secondary type p-3'}  value={'shakes'} onClick={handleNewType}>Shakes</button>
+        
+        
+                            </div>
+                            <div className=" ms-1 me-1">
+                                <button style={{pointerEvents : 'auto'}} className={newTypeFlags.banana ? 'btn btn-outline-secondary type active p-3':'btn btn-outline-secondary type p-3'} value={'banana'} onClick={handleNewType}>Banana</button>
+        
+                                
+                            </div>
+                            <div className=" ms-1 me-1">
+                                <button style={{pointerEvents : 'auto'}} className={newTypeFlags.puppy ? 'btn btn-outline-secondary type active p-3':'btn btn-outline-secondary type p-3'} value={'puppy'} onClick={handleNewType}>Puppy</button>
+        
+                            </div>
+                            <div className=" ms-1 me-1">
+                                <button style={{pointerEvents : 'auto'}} className={newTypeFlags.drinks ? 'btn btn-outline-secondary type active p-3':'btn btn-outline-secondary type p-3'} value={'drinks'} onClick={handleNewType}>Drinks</button>
+        
+                            </div>
+                        </div>
+                        <button  className={newType ?? newType != item.type ?? newType != "" ? 'btn btn-primary p-2 mt-1 w-100':'btn btn-outline-secondary p-2 mt-1 w-100 disabled' } onClick={()=>updateItemValue(order.items,item.item_id,'type',newType,item.type,0)}>Guardar</button>
+                        {/* <input type="text" value={newType} className='' /> */}
+                    </div>
+                      <div className="btn d-flex flex-column justify-content-start align-items-start" onClick={()=>handleEdit(item.item_id,'ings')}>   
+                      {item && item.type !== 'drinks' && (
+                            <div className="" >
+                              Ingredients:
+                            </div>
+                          )}
+                      <ul className="d-flex flex-column justify-content-start align-items-start">
+                        {item && item.type !== 'drinks' && item.ings.map((ing=>(  
+                                <li>{ing}
+                                {/* <div className="text-secondary">
+                                {editEnable[order._id] ? (<input className='w-75' defaultValue={ing}/>):(<div></div>)}
+                                </div> */}
+                                </li>
+                              )))}
+
+                      </ul>
+                      </div>
+                      <div style={ (editIngs && itemsIDtoEdit === item.item_id) ? {display:'flex'}: {display:'none'}} className=" flex-column bg-primary-subtle" >
+                        <div className="w-100">
+                          <input type="text" className='p-1 w-100' onChange={handleIngredientSearch} placeholder='Buscar ingrediente'/>
+                        </div>
+                        <div className="d-flex flex-row overflow-scroll">
+                        {listaDeIngredientes.map(ing=>(
+                              <button className={'btn btn-outline-secondary m-1 ingredients p-3' }value={ing.nombre} onClick={addActive} >{ing.nombre}</button>
+                        ))}         
+                        </div>
+                        <div className="d-flex flex-column justify-content-center align-items-center">
+                          <div className="">Ingredientes nuevos para este item</div>
+                            <ul className="d-flex flex-row justify-content-around align-items-center w-100">
+                            {newIngs && newIngs.length != 0 && newIngs.map((ing=>(  
+                                    <li>{ing}
+                                    {/* <div className="text-secondary">
+                                    {editEnable[order._id] ? (<input className='w-75' defaultValue={ing}/>):(<div></div>)}
+                                    </div> */}
+                                    </li>
+                                  )))}
+
+                          </ul>
+                        </div>
+                        <button  className={ newIngs.length !== 0 ? 'btn btn-primary p-2 mt-1 w-100':'btn btn-outline-secondary p-2 mt-1 w-100 disabled' } onClick={()=>updateItemValue(order.items,item.item_id,'ings',newIngs,item.ings,0)}>Guardar</button>
+
+                      </div>
+                      <div className="btn d-flex flex-column justify-content-start align-items-start" onClick={()=>handleEdit(item.item_id,'tops')}>
+                        
+                      {item && item.type !== 'drinks' && (
+                            <div className="">
+                              Toppings:
+                            </div>
+                          )}                        <ul>
+                            {item && item.type !== 'drinks' && item.tops.map((top=>(
+                                <li className=''>{top}
+                                  {/* <div className="text-secondary">
+                                  {editEnable[order._id] ? (<input  className='w-75' defaultValue={top}/>):(<div></div>)}
+                                  </div> */}
+                                </li>
+                              )))}
+                        </ul>
+                      </div>
+                      <div style={ (editTops && itemsIDtoEdit === item.item_id) ? {display:'flex'}: {display:'none'}} className=" flex-column bg-primary-subtle" >
+                        <div className="w-100">
+                          <input type="text" className='p-1 w-100' onChange={handleToppingSearch} placeholder='Buscar topping'/>
+                        </div>
+                        <div className="d-flex flex-row overflow-scroll">
+                        <button className={'btn btn-outline-secondary m-1 toppings p-3' }value={"No toppings"} onClick={addActive} >No toppings</button>
+
+                        {listaDeToppings.map(top=>(
+                              <button className={'btn btn-outline-secondary m-1 toppings p-3' }value={top.nombre} onClick={addActive} >{top.nombre}</button>
+                        ))}         
+                        </div>
+                        <div className="d-flex flex-column justify-content-center align-items-center">
+                          <div className="">Toppings nuevos para este item</div>
+                            <ul className="d-flex flex-row justify-content-around align-items-center w-100">
+                            {newTops && newTops.length != 0 && newTops.map((top=>(  
+                                    <li>{top}
+                                    {/* <div className="text-secondary">
+                                    {editEnable[order._id] ? (<input className='w-75' defaultValue={ing}/>):(<div></div>)}
+                                    </div> */}
+                                    </li>
+                                  )))}
+
+                          </ul>
+                        </div>
+                        <button  className={'btn btn-primary p-2 mt-1 w-100' } onClick={()=>updateItemValue(order.items,item.item_id,'tops',newTops,item.tops,0)}>Guardar</button>
+
+                      </div>
+                      <div className="btn d-flex flex-column justify-content-start align-items-start" onClick={()=>handleEdit(item.item_id,'qty')}>
+                        <div className="">
+                          Qty: 
+                        </div>
+                        <ul className="">
+                          {item.qty}
+                        </ul>
+                      </div>
+                      <div style={ (editQty && itemsIDtoEdit === item.item_id) ? {display:'flex'}: {display:'none'}} className=" flex-column bg-primary-subtle justify-content-center align-items-center w-100">
+                          <div className=" d-flex flex-row w-100 justify-content-around p-2">
+                                <div className="">
+                                    <button className='btn btn-outline-primary rounded-pill' onClick={handleDecrementNewQty}>-</button>
+                                </div>
+                                <div className="">
+                                {newQty}
+                                </div>
+                                <div className="">
+                                    <button className='btn btn-outline-primary rounded-pill' onClick={handleIncrementNewQty}>+</button>
+                                </div>
+                            </div>
+                            <button  className= 'btn btn-primary p-2 mt-1 w-100' onClick={()=>updateItemValue(order.items,item.item_id,'qty',newType,item.type,newQty)}>Guardar</button>
+
+
+
+                      </div>
+                      <div className="btn d-flex flex-column justify-content-start align-items-start" onClick={()=>handleEdit(item.item_id,'comments')}>
+                        <div className="">
+                          Comments: 
+                        </div>
+                        <ul className="">
+                          {item.comments}
+                        </ul>
+                      </div>
+                      <div style={ (editComments && itemsIDtoEdit === item.item_id) ? {display:'flex'}: {display:'none'}} className="p-2 flex-column bg-primary-subtle align-items-center justify-content-center" >
+                        <div className="">
+                            <textarea name="" id="" cols="60" rows="4" defaultValue={newComments} onChange={handleNewComments} className='rounded-3'></textarea>
+                        </div>
+                        <button  className='btn btn-primary p-2 mt-1 w-100' onClick={()=>updateItemValue(order.items,item.item_id,'comments',newComments,item.comments,0)}>Guardar</button>
+                      </div>
+                    </div>
+                    {/* <div className="d-flex justify-content-around align-items-center w-25 flex-column">
+                      <button className="btn text-secondary" onClick={()=>handleDeleteItem(item.item_id)}>
+                        Edit
+                      </button>
+                      <button className="btn text-secondary" onClick={()=>handleDeleteItem(item.item_id)}>
+                        Delete
+                      </button>
+                    </div> */}
+                  </div>
+                ))
+              ):(
+                <div className=""></div>
+              ) }
+              
+            
+              </div>
+            
+          
+              </Modal.Body>
+              <Modal.Footer>
+              {/* <div className="">
+                  Método de pago: {metodo}
+              </div>
+
+              <Button variant="secondary" onClick={handleClose}>
+                  Close
+              </Button>
+              <Button variant="primary" onClick={handleOrder}>
+                  Send Order
+              </Button> */}
+            </Modal.Footer>
+          </Modal>
+          <Modal show={metodoModal} onHide={handleClose} centered>
+            <Modal.Header closeButton>
+              <Modal.Title>Método de Pago</Modal.Title>
+                <div className="text-danger">{adviceMessage}</div>
+              </Modal.Header>
+              <Modal.Body className='w-100'>
+                  <button className="btn btn-warning w-50" onClick={handlePayment} value={"ATH"}>ATH Móvil</button>
+                  <button className="btn btn-success w-50" onClick={handlePayment} value={"CASH"}>CASH</button>
+              </Modal.Body>
+              <Modal.Footer>
+              <div className="">
+                  Método de pago: {metodo}
+              </div>
+
+              <Button variant="secondary" onClick={handleClose}>
+                  Close
+              </Button>
+              <Button variant="primary" onClick={handleOrder}>
+                  Send Order
+              </Button>
+            </Modal.Footer>
+          </Modal>
+            <Modal show={chargeShow} onHide={handleChargeHide} centered>
+            <Modal.Header closeButton>
+              <Modal.Title>Cargo Adicional</Modal.Title>
+              </Modal.Header>
+              <Modal.Body className='w-100 d-flex flex-row justify-content-between'>
+                  <div className="">
+                      <button className='btn btn-outline-primary rounded-pill p-3' onClick={handleDecrement}>-</button>
+                  </div>
+                  <div className=" d-flex flex-row justify-content-center align-items-center">
+                    <span class="p-3">$</span>
+                    <input type="number"  min={-100} onChange={handleCharge} id='charge' value={charge} className='increment-charge bg-secondary-subtle rounded-3 p-3 border-0'/>
+                  </div>
+                  <div className="">
+                      <button className='btn btn-outline-primary rounded-pill p-3' onClick={handleIncrement}>+</button>
+                  </div>
+              </Modal.Body>
+              <Modal.Footer>
+                
+              <Button variant="secondary" onClick={handleChargeHide}>
+                  Cerrar
+              </Button>
+              <Button variant="primary" onClick={añadirCargo}>
+                  Añadir Cargo
+              </Button>
+            </Modal.Footer>
+            </Modal>
+
+    </div>
   )
 }
 
