@@ -1029,12 +1029,12 @@ const addActive = (event) =>{
             </div>
             <div className='d-flex flex-row w-100 justify-content-between p-3 text-start text-light'>
                 <div className="">
-                Queued Orders
+                 Órdenes Pendientes
                 </div>
             </div>
           </div>
-          <div  className="ordenes-esperando overflow-scroll">
-            {currentOrders ? (
+          <div  className="ordenes-esperando overflow-scroll rounded-3">
+              {currentOrders && currentOrders.length > 0 ? (
               <div className='list-group'> 
                 {currentOrders.map(order =>(
                   <div key={order._id} >
@@ -1056,7 +1056,7 @@ const addActive = (event) =>{
                 )
                 )}
               </div>):(
-                <div className="bg-white">No Orders</div>
+                <div className="text-secondary text-center h-100 w-100 d-flex bg-dark justify-content-center align-items-center">No Hay Órdenes</div>
                 
               )
             }
@@ -1088,88 +1088,91 @@ const addActive = (event) =>{
        
             
           {/* <div style={order.items ? {height:'20vh'}: {height:'0vh'}} className="m-3 overflow-scroll "> */}
-         <div style={order.items ? { height: '30vh' } : { height: '0vh' }} className="orden-de-ahora bg-secondary-subtle overflow-auto mt-3 rounded shadow">
-  {order?.items?.length > 0 ? (
-    order.items.map((item) => (
-      <div key={item.item_id} className="border-bottom border-dark d-flex flex-row p-3">
-        <div className="w-100 pe-3">
-          <h5 className="mb-2">
-            <strong>Tipo:</strong>{' '}
-            {item.type === 'rolls' && 'Rolls'}
-            {item.type === 'banana' && 'Banana Split'}
-            {item.type === 'shakes' && 'Shakes'}
-            {item.type === 'puppy' && 'Puppy Rolls'}
-            {item.type === 'drinks' && 'Drinks'}
-          </h5>
+         <div className="orden-de-ahora overflow-auto mt-3" style={{ height: '30vh' }}>
+         {/* <div style={order.items && order.items.length > 0 ? { height: '30vh' } : { height: '0vh' }} className="orden-de-ahora bg-secondary-subtle overflow-auto mt-3 rounded shadow"> */}
+  {order.items && order.items.length > 0 ? (
+  order.items.map((item) => (
+    <div key={item.item_id} className="border-bottom border-dark d-flex flex-row p-3 ">
+      <div className="w-100 pe-3">
+        <h5 className="mb-2">
+          <strong>Tipo:</strong>{' '}
+          {item.type === 'rolls' && 'Rolls'}
+          {item.type === 'banana' && 'Banana Split'}
+          {item.type === 'shakes' && 'Shakes'}
+          {item.type === 'puppy' && 'Puppy Rolls'}
+          {item.type === 'drinks' && 'Drinks'}
+        </h5>
 
-          {item.type !== 'drinks' && (
-            <>
-              <div className="mb-2">
-                <strong>Ingredientes:</strong>
-                <ul className="list-group list-group-flush mt-1">
-                  {item.ings?.map((ing, idx) => (
-                    <li key={idx} className="list-group-item bg-transparent ps-0">{ing}</li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="mb-2">
-                <strong>Toppings por helado:</strong>
-                <ul className="list-group list-group-flush mt-1">
-                  {Object.entries(item.tops || {}).map(([iceIndex, toppings]) => (
-                    <li key={iceIndex} className="list-group-item bg-transparent ps-0">
-                      <strong>Helado #{parseInt(iceIndex) + 1}:</strong>{' '}
-                      {toppings.length > 0 ? (
-                        <div className="d-flex flex-wrap gap-2 mt-2">
-                          {toppings.map((top, idx) => (
-                            <span key={idx} className="badge bg-primary fs-6 p-2 rounded-pill">
-                              {top}
-                            </span>
-                          ))}
-                        </div>
-                      ) : (
-                        <span className="text-muted ms-2">Ninguno</span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </>
-          )}
-
-          <div className="mb-2">
-            <strong>Cantidad:</strong> {item.qty}
-          </div>
-
-          {item.comments && (
+        {item.type !== 'drinks' && (
+          <>
             <div className="mb-2">
-              <strong>Comentarios:</strong> {item.comments}
+              <strong>Ingredientes:</strong>
+              <ul className="list-group list-group-flush mt-1">
+                {item.ings?.map((ing, idx) => (
+                  <li key={idx} className="list-group-item bg-transparent ps-0">{ing}</li>
+                ))}
+              </ul>
             </div>
-          )}
+
+            <div className="mb-2">
+              <strong>Toppings por helado:</strong>
+              <ul className="list-group list-group-flush mt-1">
+                {Object.entries(item.tops || {}).map(([iceIndex, toppings]) => (
+                  <li key={iceIndex} className="list-group-item bg-transparent ps-0">
+                    <strong>Helado #{parseInt(iceIndex) + 1}:</strong>{' '}
+                    {toppings.length > 0 ? (
+                      <div className="d-flex flex-wrap gap-2 mt-2">
+                        {toppings.map((top, idx) => (
+                          <span key={idx} className="badge bg-primary fs-6 p-2 rounded-pill">
+                            {top}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="text-muted ms-2">Ninguno</span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </>
+        )}
+
+        <div className="mb-2">
+          <strong>Cantidad:</strong> {item.qty}
         </div>
 
-        <div className="d-flex justify-content-center align-items-center w-25">
-          <button className="btn btn-outline-danger" onClick={() => handleDeleteItem(item.item_id)}>
-            Eliminar
-          </button>
-        </div>
-      </div>
-    ))
-  ) : (
-    <div className="p-3 text-muted">No hay ítems en la orden.</div>
-  )}
-</div>
-
-          
+        {item.comments && (
+          <div className="mb-2">
+            <strong>Comentarios:</strong> {item.comments}
           </div>
-          <div className="botones-actiones d-flex align-items-center justify-content-around flex-column gap-3 bg-dark">
-            <div className="text-danger d-flex gap-3">{adviceMessage}</div>
+        )}
+      </div>
+
+      <div className="d-flex justify-content-center align-items-center w-25">
+        <button className="btn btn-outline-danger" onClick={() => handleDeleteItem(item.item_id)}>
+          Eliminar
+        </button>
+      </div>
+    </div>
+  ))
+) : (
+    <div className="text-secondary text-center h-100 w-100 d-flex bg-dark justify-content-center align-items-center">No Hay Items en la Orden</div>
+)}
+
+</div>
+<div className="botones-actiones d-flex align-items-center justify-content-around flex-column gap-3 bg-dark">
+            {/* <div className="text-danger d-flex gap-3">{adviceMessage}</div> */}
               <div className="d-flex flex-row w-100 justify-content-around align-items-center">
                 <button type='button' onClick={handleChargeShow} className='d-flex btn btn-primary rounded-pill p-3'> Additional Charge</button>
                 <button type='button' onClick={handleShow} className='btn btn-success p-3 rounded-pill'>Send Order</button>
               </div>
 
-          </div>
+</div>
+
+          
+</div>
+        
 
         </div>
           <Modal show={editModal} onHide={handleEditClose} centered size='xl' >

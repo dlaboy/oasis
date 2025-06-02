@@ -8,18 +8,18 @@ input[type="number"] {
   input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
   }
-.botones-actiones{
-    width: 40vw;
+/* .botones-actiones{
+    width: 40vw; 
     height: 15vh;
     position: absolute;
     top: 75vh;
-}
-.orden-de-ahora{
+} */
+/* .orden-de-ahora{
     width: 40vw;
     position: absolute;
     top: 53vh;
 
-}
+} */
 .ordenes-esperando{
     width: 40vw;
     height: 20vh;
