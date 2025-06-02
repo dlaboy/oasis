@@ -1829,86 +1829,75 @@ function TerminalScreen() {
 
 
     return (
-        <div className="bg-light terminal-screen">
+        <div className="bg-light terminal-screen container-fluid py-4">
 
-            <div className=" w-100 d-flex flex-row justify-content-around align-items-center" style={{width:'90vw'}}>
-                    <div className=" d-flex  align-items-center justify-content-center btn rounded-pill btn-outline-primary p-2 mt-4" onClick={handleShowOrders}>
-                        <div className="lead p-3">
-                            Orders Screen
-                        </div>
-                    </div>
-                    <div className="  pt-4 ">
-                         {/* <label htmlFor="cliente">Nombre</label> */}
-                        <div className=" ">
-                             <input type="text" name='cliente'   className="form-control border p-3 border-dark rounded-3 fs-3" placeholder='Nombre del Ciente' value={name} onChange={handleName} />
-                             {/* <button type='button' className='btn btn-primary rounded-start-0 p-2 ' onClick={handleSave}>  {isInputDisabled ? 'Change' : 'Save '}</button> */}
-                        </div>
-                    </div>
-                   
-            </div>
-            <div className=" w-100 d-flex flex-wrap justify-content-around align-items-center" style={{width:'90vw',height:'70vh'}}>
-               <div className="d-flex flex-wrap gap-3 justify-content-center mt-4">
-                {buttons.map((but, idx) => {
-                let isDisabled = false;
+  {/* Encabezado */}
+  <div className="row justify-content-center mb-4">
+    <div className="col-12 col-md-4 mb-3 d-flex justify-content-center">
+      <div
+        className="btn btn-outline-primary rounded-pill px-4 py-3 w-100 text-center"
+        onClick={handleShowOrders}
+      >
+        <span className="lead">Orders Screen</span>
+      </div>
+    </div>
+    <div className="col-12 col-md-6">
+      <input
+        type="text"
+        name="cliente"
+        className="form-control border border-dark rounded-3 fs-4 py-3"
+        placeholder="Nombre del Cliente"
+        value={name}
+        onChange={handleName}
+      />
+    </div>
+  </div>
 
-                // Define tu lógica por índice
-                if (idx === 1 && (type === 0 || type == "") ) {
-                    isDisabled = true; // botón 2 depende de `ings`
-                }
+  {/* Botones */}
+  <div className="row justify-content-center">
+    <div className="col-12 d-flex flex-wrap justify-content-center gap-4">
+      {buttons.map((but, idx) => {
+        let isDisabled = false;
+        if (idx === 1 && (type === 0 || type === "")) isDisabled = true;
+        if (idx === 2 && ings.length === 0) isDisabled = true;
+        if (idx === 3 && qty === 0) isDisabled = true;
 
-                // Puedes seguir añadiendo más condiciones por índice:
-                // if (idx === 2 && otraCondición === false) isDisabled = true;
-                 if (idx === 2 && ings.length == 0) {
-                    isDisabled = true; // botón 2 depende de `ings`
-                }
+        return (
+          <button
+            key={idx}
+            className={`btn btn-outline-dark rounded d-flex flex-column align-items-center justify-content-center text-center ${but.ruta}`}
+            style={{
+              width: '100%',
+              maxWidth: '400px',
+              height: '180px',
+              backgroundColor: isDisabled ? '#dee2e6' : 'transparent',
+              color: isDisabled ? '#6c757d' : 'inherit',
+              cursor: isDisabled ? 'not-allowed' : 'pointer',
+            }}
+            onClick={() => choose(but.ruta)}
+            disabled={isDisabled}
+          >
+            {but.selected && (
+              <i className="bi bi-check-circle-fill text-success display-4 mb-2"></i>
+            )}
+            <h4 className="display-6 m-0">{but.label}</h4>
+          </button>
+        );
+      })}
+    </div>
+  </div>
 
-                 if (idx === 3 && qty == 0) {
-                    isDisabled = true; // botón 2 depende de `ings`
-                }
-               
+  {/* Botón de Añadir Item */}
+  <div className="row mt-5 justify-content-center">
+    <div className="col-12 col-md-6 text-center">
+      <button className="btn btn-primary p-4 rounded-pill w-100 fs-3" onClick={handleNewItem}>
+        Añadir Item a la Orden
+      </button>
+      <Toaster position="top-right" />
+    </div>
+  </div>
+</div>
 
-
-
-
-                return (
-                    <button
-                    key={idx}
-                    className={`btn btn-outline-dark rounded text-center d-flex flex-column align-items-center justify-content-center ${but.ruta}`}
-                    style={{
-                        width: '450px',
-                        height: '200px',
-                        backgroundColor: isDisabled ? '#dee2e6' : 'transparent',
-                        color: isDisabled ? '#6c757d' : 'inherit',
-                        cursor: isDisabled ? 'not-allowed' : 'pointer',
-
-                    }}
-                    onClick={() => choose(but.ruta)}
-                    disabled={isDisabled}
-                    >
-                    {but.selected && (
-                        <i className="me-3 bi bi-check-circle-fill text-success display-3"></i>
-                    )}
-                    <h4 className="display-3 m-0">{but.label}</h4>
-                    </button>
-                );
-                })}
-
-                </div>
-
-
-            </div>
-            <div className="col w-100 d-flex justify-content-center align-items-center flex-column">
-                     {/* { required && <div className='text-danger text-center'>Missing fields</div> } */}
-                    <button className='btn btn-primary p-3 rounded-pill display-6' onClick={handleNewItem}>
-                        <p className='display-6 p-3'>
-                            Añadir Item a la Orden
-                        </p>
-                    </button>
-                     {/* <ToastContainer/> */}
-                     <Toaster position="top-right" />
-
-             </div>
-        </div>
         // <div className=" bg-light terminal-screen" >
         //     <div className=' d-flex flex-column terminal-screen-2' style={{height:'95vh',overflowY:'scroll'}} key={componentKey}>
         //         <div className=" w-100 d-flex flex-row justify-content-around align-items-center" style={{width:'90vw'}}>
