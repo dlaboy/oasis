@@ -1109,7 +1109,7 @@ const addActive = (event) =>{
               <strong>Ingredientes:</strong>
               <ul className="list-group list-group-flush mt-1 text-light">
                 {item.ings?.map((ing, idx) => (
-                  <li key={idx} className="list-group-item bg-transparent ps-0">{ing}</li>
+                  <li key={idx} className="list-group-item bg-transparent ps-0 text-light">{ing}</li>
                 ))}
               </ul>
             </div>
