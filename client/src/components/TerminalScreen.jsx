@@ -1763,12 +1763,12 @@ function TerminalScreen() {
                 <div className=' d-flex flex-column m-2 p-3  justify-content-center align-items-center gap-3' style={{width:'90vw'}}>
                          <div className=" display-6">Cantidad</div>
                          <div className=" d-flex flex-row w-100 justify-content-around align-items-center">
-                                <button className='btn btn-primary rounded-pill display-6' onClick={handleDecrement}>-</button>
+                                <button className='btn btn-primary rounded-pill display-6' onClick={handleDecrement}><p className='display-6'>-</p></button>
                              
                              <div className=" display-6 ">
                              {qty}
                              </div>
-                                 <button className='btn btn-primary rounded-pill display-6' onClick={handleIncrement}>+</button>
+                                 <button className='btn btn-primary rounded-pill display-6' onClick={handleIncrement}><p className='display-6'>+</p></button>
                          </div>
         
                 </div>
