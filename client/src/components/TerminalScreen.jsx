@@ -1829,7 +1829,7 @@ function TerminalScreen() {
 
 
     return (
-        <div className="bg-light terminal-screen container-fluid py-4">
+        <div className="bg-light terminal-screen container-fluid py-4" style={{ minHeight: '100vh' }}>
 
   {/* Encabezado */}
   <div className="row justify-content-center mb-4">
