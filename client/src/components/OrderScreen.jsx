@@ -1088,11 +1088,11 @@ const addActive = (event) =>{
        
             
           {/* <div style={order.items ? {height:'20vh'}: {height:'0vh'}} className="m-3 overflow-scroll "> */}
-         <div className="orden-de-ahora overflow-auto mt-3" style={{ height: '30vh' }}>
+         <div className="orden-de-ahora overflow-auto mt-3 text-light" style={{ height: '30vh' }}>
          {/* <div style={order.items && order.items.length > 0 ? { height: '30vh' } : { height: '0vh' }} className="orden-de-ahora bg-secondary-subtle overflow-auto mt-3 rounded shadow"> */}
   {order.items && order.items.length > 0 ? (
   order.items.map((item) => (
-    <div key={item.item_id} className="border-bottom border-dark d-flex flex-row p-3 ">
+    <div key={item.item_id} className="border-bottom border-dark d-flex flex-row p-3 text-light">
       <div className="w-100 pe-3">
         <h5 className="mb-2">
           <strong>Tipo:</strong>{' '}
