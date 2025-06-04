@@ -2049,7 +2049,7 @@ function TerminalScreen() {
     className="position-fixed end-0 bottom-0 bg-light border p-4 rounded shadow"
     style={{ width: '50vw', height: '50vh', zIndex: 999, overflowY: 'auto' }}
   >
-    <div className="">
+    <div className="d-flex flex-row justify-content-between align-items-center mb-3">
         <h5 className="fw-bold">Tu selección</h5>
          <button 
         className="btn btn-sm btn-outline-danger rounded-circle p-3"
