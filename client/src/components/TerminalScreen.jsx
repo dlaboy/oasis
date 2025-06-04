@@ -1993,7 +1993,7 @@ function TerminalScreen() {
     })
     .map((but) => {
         let isDisabled = false;
-
+        if (but.ruta === 'ingredientes' && ings.length === 0) isDisabled = true;
         if (but.ruta === 'cantidad' && ings.length === 0) isDisabled = true;
         if (but.ruta === 'toppings' && qty === 0) isDisabled = true;
 
