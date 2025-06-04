@@ -2047,9 +2047,19 @@ function TerminalScreen() {
 {showSelection && (
   <div 
     className="position-fixed end-0 bottom-0 bg-light border p-4 rounded shadow"
-    style={{ width: '25vw', height: '50vh', zIndex: 999, overflowY: 'auto' }}
+    style={{ width: '50vw', height: '50vh', zIndex: 999, overflowY: 'auto' }}
   >
-    <h5 className="fw-bold">Tu selección</h5>
+    <div className="">
+        <h5 className="fw-bold">Tu selección</h5>
+         <button 
+        className="btn btn-sm btn-outline-danger rounded-circle p-3"
+        onClick={() => setShowSelection(prev => !prev)}
+        title="Tu selección"
+        >
+            <i className="bi bi-x-lg"></i>    
+        </button>
+    </div>
+
     <ul className="list-group mt-3">
       <li className="list-group-item d-flex flex-row">
         <strong>Tipo:</strong>   
