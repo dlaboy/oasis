@@ -2084,7 +2084,7 @@ function TerminalScreen() {
                 <ul className="list-group d-flex flex-row flex-wrap">
                   {ings.map((i, idx) => (
                     <span key={idx} className="badge bg-success p-2 fs-6 rounded-pill">
-                        <li key={idx} className="text-light bg-success p-1">
+                        <li key={idx} className="text-light bg-success p-1 unstyled-list-item">
                         {i}
                         </li>
                     </span>
