@@ -1996,7 +1996,7 @@ function TerminalScreen() {
     })
     .map((but) => {
         let isDisabled = false;
-        if (but.ruta === 'ingredientes' && ings.length === 0) isDisabled = true;
+        if (but.ruta === 'ingredientes' && type === 0 ||type === "") isDisabled = true;
         if (but.ruta === 'cantidad' && ings.length === 0) isDisabled = true;
         if (but.ruta === 'toppings' && qty === 0) isDisabled = true;
 
@@ -2051,27 +2051,84 @@ function TerminalScreen() {
   >
     <h5 className="fw-bold">Tu selección</h5>
     <ul className="list-group mt-3">
-      <li className="list-group-item"><strong>Tipo:</strong> {type || 'No seleccionado'}</li>
-      <li className="list-group-item">
-        <strong>Ingredientes:</strong>
-        <ul className="mt-2">
-          {Array.isArray(ings) && ings.length > 0
-            ? ings.map((i, idx) => <li key={idx}>{i}</li>)
-            : <li className="text-muted">Ninguno</li>}
-        </ul>
+      <li className="list-group-item d-flex flex-row">
+        <strong>Tipo:</strong>   
+        <div className="">
+            <span className="badge bg-dark p-2 fs-6 rounded-pill">
+        {type === 'rolls' && 'Rollitos'}
+                    {type === 'banana' && 'Banana Split'}
+                    {type === 'shakes' && 'Batidas'}
+                    {type === 'puppy' && 'Puppy Rolls'}
+                    {type === 'drinks' && 'Bebidas'}
+            </span>
+        </div>
+        
       </li>
+
+      {type !== 'drinks' && (
+        <>
+          <li className="list-group-item">
+            <strong>Ingredientes:</strong>
+            <div className="mt-2">
+              {Array.isArray(ings) && ings.length > 0 ? (
+                <ul className="list-group d-flex flex-row flex-wrap">
+                  {ings.map((i, idx) => (
+                    <span key={idx} className="badge bg-success p-2 fs-6 rounded-pill">
+                        <li key={idx} className="text-light bg-success p-1">
+                        {i}
+                        </li>
+                    </span>
+                  ))}
+                </ul>
+              ) : (
+                <span className="text-muted">Ninguno</span>
+              )}
+            </div>
+          </li>
+
+          <li className="list-group-item">
+            <strong>Toppings por helado:</strong>
+            <div className="mt-2">
+              {Object.entries(tops).length > 0 ? (
+                <ul className="list-group">
+                  {Object.entries(tops).map(([idx, list]) => (
+                    <li key={idx} className="list-group-item">
+                      <strong>Helado #{parseInt(idx) + 1}:</strong>
+                      <ul className="mt-1">
+                        {list.length > 0 ? (
+                          list.map((top, i) => (
+                            <span key={i} className="badge bg-primary p-2 fs-6 rounded-pill">
+
+                                <li key={i} className="p-1">{top}</li>
+                            </span>
+                          ))
+                        ) : (
+                          <li className="text-muted ps-3">Ninguno</li>
+                        )}
+                      </ul>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <span className="text-muted">Ninguno</span>
+              )}
+            </div>
+          </li>
+        </>
+      )}
+
       <li className="list-group-item">
-        <strong>Toppings:</strong>
-        <ul className="mt-2">
-          {Object.values(tops).flat().length > 0
-            ? Object.values(tops).flat().map((t, idx) => <li key={idx}>{t}</li>)
-            : <li className="text-muted">Ninguno</li>}
-        </ul>
+        <strong>Cantidad:</strong>{' '}
+        <span  className="badge bg-danger p-2 fs-6 rounded-pill">
+
+        {agua > 0 && qty == 0? `${agua} (agua)` : qty > 0 ? `${qty} (helados)` : 'No asignada'}
+
+        </span>
       </li>
-      <li className="list-group-item"><strong>Cantidad:</strong> {qty}</li>
     </ul>
   </div>
 )}
+
 
 
 </div>
