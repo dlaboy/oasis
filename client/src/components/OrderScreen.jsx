@@ -932,7 +932,7 @@ const addActive = (event) =>{
           <div className="d-flex flex-column mb-2">
             <div className="fw-bold">Toppings por helado:</div>
             <ul className="list-group list-group-flush">
-              {Object.entries(item.tops || {}).map(([iceIndex, toppings]) => (
+              {item.tops ?? Object.entries(item.tops || {}).map(([iceIndex, toppings]) => (
                 <li key={iceIndex} className="list-group-item bg-transparent ps-0">
                   <strong>Helado #{parseInt(iceIndex) + 1}:</strong>
                   {toppings.length > 0 ? (

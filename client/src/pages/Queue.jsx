@@ -458,7 +458,7 @@ const [visibleOrders, setVisibleOrders] = useState({});
         <div className="d-flex flex-column bg-primary-subtle p-3">
           <div className="fw-bold fs-4">Toppings por helado:</div>
           <ul className="d-flex flex-column">
-            {Object.entries(item.tops || {}).map(([iceIndex, toppings]) => (
+            {item.tops ?? Object.entries(item.tops || {}).map(([iceIndex, toppings]) => (
               <li key={iceIndex} className="fs-4 mb-2">
                 <strong>Helado #{parseInt(iceIndex) + 1}:</strong>
                 {toppings.length > 0 ? (
