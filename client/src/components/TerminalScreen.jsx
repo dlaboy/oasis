@@ -1221,7 +1221,7 @@ function TerminalScreen() {
                     selected: false
                 }))
                 );
-                window.reload()
+                window.location.reload()
 
 
                 

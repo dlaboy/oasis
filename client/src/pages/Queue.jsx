@@ -426,24 +426,31 @@ const [visibleOrders, setVisibleOrders] = useState({});
                     <div className="d-flex flex-column w-100 ">
                       {order.items.map((item, idx) => (
   <div key={idx} className="border-bottom border-dark w-100">
-    <div className="d-flex flex-row bg-danger-subtle p-3">
+    <div className="d-flex flex-row bg-warning-subtle p-3">
       <div className='fw-bold fs-4'>Tipo:</div>
       <div className="fs-4 ms-3">
-        {item.type === 'rolls' && 'Rolls'}
-        {item.type === 'banana' && 'Banana Split'}
-        {item.type === 'shakes' && 'Shakes'}
+        <span  className="badge bg-dark fs-5 p-2 rounded-pill">
+                  {item.type === 'rolls' && 'Rollitos'}
+          {item.type === 'banana' && 'Banana Split'}
+        {item.type === 'shakes' && 'Batidas'}
         {item.type === 'puppy' && 'Puppy Rolls'}
-        {item.type === 'drinks' && 'Drinks'}
+        {item.type === 'drinks' && 'Bebidas'}
+        </span>
+        
       </div>
     </div>
 
     {item.type !== 'drinks' && (
       <>
-        <div className="d-flex flex-column bg-warning-subtle p-3">
+        <div className="d-flex flex-column bg-success-subtle p-3">
           <div className="fw-bold fs-4">Ingredientes:</div>
           <ul className="d-flex flex-column">
             {item.ings.map((ing, i) => (
-              <li key={i} className="fs-4">{ing}</li>
+              <li key={i} className="fs-4">
+                <span  className="badge bg-success fs-5 p-2 rounded-pill">
+                  {ing}
+                </span>
+              </li>
             ))}
           </ul>
         </div>
@@ -472,12 +479,16 @@ const [visibleOrders, setVisibleOrders] = useState({});
       </>
     )}
 
-    <div className="d-flex flex-column bg-info-subtle p-3">
+    <div className="d-flex flex-column bg-danger-subtle p-3">
       <div className="fw-bold fs-4">Cantidad:</div>
-      <div className="fs-4">{item.qty}</div>
+      <div className="fs-4">
+         <span  className="badge bg-danger fs-5 p-2 rounded-pill">
+            {item.qty}
+          </span>
+      </div>
     </div>
 
-    <div className="d-flex flex-column pb-2 bg-success-subtle p-3">
+    <div className="d-flex flex-column pb-2 bg-light-subtle p-3">
       <div className="fw-bold fs-4">Comentarios:</div>
       <div className="fs-4">
         {item.comments || <span className="text-muted">Ninguno</span>}

@@ -1092,34 +1092,55 @@ const addActive = (event) =>{
          {/* <div style={order.items && order.items.length > 0 ? { height: '30vh' } : { height: '0vh' }} className="orden-de-ahora bg-secondary-subtle overflow-auto mt-3 rounded shadow"> */}
   {order.items && order.items.length > 0 ? (
   order.items.map((item) => (
-    <div key={item.item_id} className="border-bottom border-dark d-flex flex-row p-3 text-light">
-      <div className="w-100 pe-3">
-        <h5 className="mb-2">
-          <strong>Tipo:</strong>{' '}
-          {item.type === 'rolls' && 'Rolls'}
-          {item.type === 'banana' && 'Banana Split'}
-          {item.type === 'shakes' && 'Shakes'}
-          {item.type === 'puppy' && 'Puppy Rolls'}
-          {item.type === 'drinks' && 'Drinks'}
-        </h5>
+    <div key={item.item_id} className="border border-light d-flex flex-row p-3 ">
+      <div className="w-100 pe-3 ">
+        <div className="d-flex flex-row justify-content-between align-items-center mb-2">
+          <h5 className="mb-2 text-warning">
+            {/* <strong>Tipo:</strong>{' '} */}
+            {item.type === 'rolls' && 'Rollitos'}
+            {item.type === 'banana' && 'Banana Split'}
+            {item.type === 'shakes' && 'Batidas'}
+            {item.type === 'puppy' && 'Puppy Rolls'}
+            {item.type === 'drinks' && 'Bebidas'}
+          </h5>
+          <div className="d-flex justify-content-center align-items-center w-25">
+          <button className="btn btn-outline-danger" onClick={() => handleDeleteItem(item.item_id)}>
+            Eliminar
+          </button>
+          </div>
+        </div>
 
         {item.type !== 'drinks' && (
           <>
             <div className="mb-2">
-              <strong>Ingredientes:</strong>
+              <strong className='text-success-subtle'>Ingredientes:</strong>
               <ul className="list-group list-group-flush mt-1 text-light">
                 {item.ings?.map((ing, idx) => (
-                  <li key={idx} className="list-group-item bg-transparent ps-0 text-light">{ing}</li>
-                ))}
+                  // <li key={idx} className="list-group-item bg-transparent ps-0 text-light">{ing}</li>
+                  <li key={idx} className="list-group-item bg-transparent ps-0">
+                    {/* <strong className='text-light'>Helado #{parseInt(iceIndex) + 1}:</strong>{' '} */}
+                    {/* {toppings.length > 0 ? ( */}
+                      <div className="d-flex flex-wrap gap-2 mt-2">
+                        {/* {toppings.map((top, idx) => ( */}
+                          <span key={idx} className="badge bg-success fs-6 p-2 rounded-pill">
+                            {ing}
+                          </span>
+                        {/* ))} */}
+                      </div>
+                    {/* ) : (
+                      <span className="text-muted ms-2">Ninguno</span>
+                    )} */}
+                  </li>
+               ))}
               </ul>
             </div>
 
             <div className="mb-2">
-              <strong>Toppings por helado:</strong>
+              <strong className=''>Toppings por helado:</strong>
               <ul className="list-group list-group-flush mt-1">
                 {Object.entries(item.tops || {}).map(([iceIndex, toppings]) => (
                   <li key={iceIndex} className="list-group-item bg-transparent ps-0">
-                    <strong>Helado #{parseInt(iceIndex) + 1}:</strong>{' '}
+                    <strong className='text-light'>Helado #{parseInt(iceIndex) + 1}:</strong>{' '}
                     {toppings.length > 0 ? (
                       <div className="d-flex flex-wrap gap-2 mt-2">
                         {toppings.map((top, idx) => (
@@ -1139,7 +1160,12 @@ const addActive = (event) =>{
         )}
 
         <div className="mb-2">
-          <strong>Cantidad:</strong> {item.qty}
+          <strong>Cantidad:</strong> 
+          <div className="text-danger">
+             <span  className="badge bg-danger fs-6 p-2 rounded-pill">
+                {item.qty}
+              </span>
+          </div>
         </div>
 
         {item.comments && (
@@ -1149,11 +1175,7 @@ const addActive = (event) =>{
         )}
       </div>
 
-      <div className="d-flex justify-content-center align-items-center w-25">
-        <button className="btn btn-outline-danger" onClick={() => handleDeleteItem(item.item_id)}>
-          Eliminar
-        </button>
-      </div>
+      
     </div>
   ))
 ) : (
