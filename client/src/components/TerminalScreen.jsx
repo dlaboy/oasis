@@ -1221,6 +1221,7 @@ function TerminalScreen() {
                     selected: false
                 }))
                 );
+                window.reload()
 
 
                 
