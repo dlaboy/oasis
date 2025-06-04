@@ -2081,10 +2081,10 @@ function TerminalScreen() {
             <strong>Ingredientes:</strong>
             <div className="mt-2">
               {Array.isArray(ings) && ings.length > 0 ? (
-                <ul className="list-group d-flex flex-row flex-wrap">
+                <ul className="list-group d-flex flex-row flex-wrap list-unstyled">
                   {ings.map((i, idx) => (
                     <span key={idx} className="badge bg-success p-2 fs-6 rounded-pill">
-                        <li key={idx} className="text-light bg-success p-1 unstyled-list-item">
+                        <li key={idx} className="text-light bg-success p-1">
                         {i}
                         </li>
                     </span>
