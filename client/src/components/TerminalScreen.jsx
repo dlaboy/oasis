@@ -1295,6 +1295,9 @@ function TerminalScreen() {
     if (scrollRef.current) scrollRef.current.scrollLeft += 150;
     };
 
+    const [showSelection, setShowSelection] = useState(false);
+
+
 
     if (loading) {
     return (
@@ -2032,6 +2035,45 @@ function TerminalScreen() {
       <Toaster position="top-right" />
     </div>
   </div>
+  <div className="text-end me-4 mt-3">
+    <button 
+        className="btn btn-outline-primary rounded-circle p-3"
+        onClick={() => setShowSelection(prev => !prev)}
+        title="Tu selección"
+    >
+        <i className="bi bi-info-lg fs-4"></i>
+    </button>
+</div>
+{showSelection && (
+  <div 
+    className="position-fixed end-0 bottom-0 bg-light border p-4 rounded shadow"
+    style={{ width: '25vw', height: '50vh', zIndex: 999, overflowY: 'auto' }}
+  >
+    <h5 className="fw-bold">Tu selección</h5>
+    <ul className="list-group mt-3">
+      <li className="list-group-item"><strong>Tipo:</strong> {type || 'No seleccionado'}</li>
+      <li className="list-group-item">
+        <strong>Ingredientes:</strong>
+        <ul className="mt-2">
+          {Array.isArray(ings) && ings.length > 0
+            ? ings.map((i, idx) => <li key={idx}>{i}</li>)
+            : <li className="text-muted">Ninguno</li>}
+        </ul>
+      </li>
+      <li className="list-group-item">
+        <strong>Toppings:</strong>
+        <ul className="mt-2">
+          {Object.values(tops).flat().length > 0
+            ? Object.values(tops).flat().map((t, idx) => <li key={idx}>{t}</li>)
+            : <li className="text-muted">Ninguno</li>}
+        </ul>
+      </li>
+      <li className="list-group-item"><strong>Cantidad:</strong> {qty}</li>
+    </ul>
+  </div>
+)}
+
+
 </div>
 
         // <div className=" bg-light terminal-screen" >
