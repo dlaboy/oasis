@@ -205,6 +205,10 @@ function TerminalScreen() {
        console.log('Current state of ingsFlag:', ingsFlag);
     },[listaDeIngredientes])
 
+    // useEffect(()=>{
+    //     localStorage.setItem('AGUA',JSON.stringify(agua))
+    // },[agua])
+
 
     const playSound = () => {
         const audio = new Audio('/sounds/success.mp3'); // path is relative to public/
@@ -225,6 +229,7 @@ function TerminalScreen() {
 
     useEffect(()=>{
         var storeFavFlags = JSON.parse(localStorage.getItem('FavFlag'));
+        var storeAgua = JSON.parse(localStorage.getItem('AGUA'));
         var storeName = JSON.parse(localStorage.getItem(LOCAL_NAME_KEY));
         var storeType = JSON.parse(localStorage.getItem(LOCAL_TYPE_KEY));
         var storedIngs = JSON.parse(localStorage.getItem(LOCAL_INGS_KEY));
@@ -236,7 +241,12 @@ function TerminalScreen() {
         var storePM = JSON.parse(localStorage.getItem(LOCAL_PM_KEY));
 
         // localStorage.setItem('FavFlag',JSON.stringify(favoriteFlag))
-        
+
+            //  setButtons((prev) =>
+            //                prev.map((item) =>
+            //                item.ruta === 'bebidas' ? { ...item, selected: true } : item
+            //                )
+            //     );
 
         if (checkButtons){
             if (storeFavFlags){
@@ -314,6 +324,19 @@ function TerminalScreen() {
                     item.ruta === 'tipo' ? { ...item, selected: true } : item
                     )
                 );
+                 if (storeAgua > 0){
+                        setAgua(storeAgua)
+                        console.log("Store Qty is greater than 0")
+                        setButtons((prev) =>
+                           prev.map((item) =>
+                           item.ruta === 'bebidas' ? { ...item, selected: true } : item
+                           )
+                        );
+                    }
+                    else{
+                        console.log("Store Qty in Else:", storeAgua)
+
+                    }
                 if (storeType != type){
                     setType(storeType)
                                     }
@@ -333,6 +356,9 @@ function TerminalScreen() {
                 }
                 else if (storeType === 'drinks'){
                     typeFlags['drinks']= true
+                    console.log("DRINKS")
+
+                   
                 }
       
   
@@ -1223,6 +1249,7 @@ function TerminalScreen() {
 
     const [buttons,setButtons] = useState([
         {label:'Tipo',ruta:'tipo', selected:false},
+        {label:'Bebidas',ruta:'bebidas', selected:false},
         {label:'Ingredientes',ruta:'ingredientes', selected:false},
         {label:'Cantidad',ruta:'cantidad', selected:false},
         {label:'Toppings',ruta:'toppings', selected:false},   
@@ -1248,6 +1275,9 @@ function TerminalScreen() {
         setIsSaved(true);
         // Optional: Reset to false after a few seconds
         // setTimeout(() => setIsSaved(false), 3000);
+        if (type == "drinks"){
+            localStorage.setItem('AGUA',JSON.stringify(agua))
+        }
     };
     const handleVolver = () => {
     window.location.href = '/terminal'; // or use navigate() if using react-router
@@ -1742,6 +1772,100 @@ function TerminalScreen() {
         );
                 
      }
+     else if(ruta == 'bebidas') {
+        return (
+            <div className="container mt-4 d-flew flex-column justify-content-center align-items-center gap-4" style={{maxHeight:'100vh',maxWidth:'90vw'}}>
+                <div className="d-flex flex-row justify-content-between align-items-center">
+
+                    <button 
+                        className="btn btn-outline-dark me-2" 
+                        // onClick={!hideIngredients ? scrollLeft : undefined}
+                        onClick={handleVolver}
+                        // disabled={hideIngredients}
+                        >
+                        <i className="bi bi-chevron-left"></i>
+                    </button>
+                    <h2 className="mb-4">Elige Bebida</h2>
+
+                </div>
+                    <div className=' d-flex flex-column m-2 p-3 lead justify-content-center align-items-center ' style={{ width: '90vw' }}>
+                         <div className="lead">Agua</div>
+                         <div className="d-flex flex-row justify-content-around align-items-center gap-3 w-100">
+                            <button className='btn btn-outline-primary rounded-pill lead' onClick={handleDecrementAgua}>-</button>
+                            <div className="lead">
+                                {agua}
+                            </div>
+                            <button className='btn btn-outline-primary rounded-pill lead' onClick={handleIncrementAgua}>+</button>
+                         </div>
+                     </div>
+                           <div className="d-flex flex-row align-items-center justify-content-center gap-4 mt-5">
+                            <button
+                                className={`btn ${isSaved ? 'btn-success' : 'btn-primary'} rounded-pill p-4 d-flex align-items-center justify-content-center gap-3`}
+                                onClick={handleGuardado}
+                            >
+                                {isSaved ? (
+                                <>
+                                    <i className="bi bi-check-circle-fill text-white display-5"></i>
+                                    <h4 className="display-4  p-4">Guardado</h4>
+                                </>
+                                ) : (
+                                <h4 className="display-4  p-4">Guardar</h4>
+                                )}
+                            </button>
+
+                            {isSaved && (
+                                <button
+                                className="btn btn-outline-dark rounded-pill px-5 py-3"
+                                onClick={handleVolver}
+                                >
+                                <h4 className=" display-4 p-4">Volver</h4>
+                                </button>
+                            )}
+                </div>
+                {/* <div className="d-flex flex-wrap gap-3 justify-content-center">
+                    <div className=' d-flex flex-column m-2 p-3  justify-content-center align-items-center gap-3' style={{width:'90vw'}}>
+                            <div className=" display-6">Cantidad</div>
+                            <div className=" d-flex flex-row w-100 justify-content-around align-items-center">
+                                    <button className='btn btn-primary rounded-pill display-6' onClick={handleDecrement}><p className='display-6'>-</p></button>
+                                
+                                <div className=" display-6 ">
+                                {qty}
+                                </div>
+                                    <button className='btn btn-primary rounded-pill display-6' onClick={handleIncrement}><p className='display-6'>+</p></button>
+                            </div>
+            
+                    </div>
+                    <div className="d-flex flex-row align-items-center gap-4 mt-5">
+                                <button
+                                    className={`btn ${isSaved ? 'btn-success' : 'btn-primary'} rounded-pill p-4 d-flex align-items-center justify-content-center gap-3`}
+                                    onClick={handleGuardado}
+                                >
+                                    {isSaved ? (
+                                    <>
+                                        <i className="bi bi-check-circle-fill text-white display-5"></i>
+                                        <h4 className="display-4  p-4">Guardado</h4>
+                                    </>
+                                    ) : (
+                                    <h4 className="display-4  p-4">Guardar</h4>
+                                    )}
+                                </button>
+
+                                {isSaved && (
+                                    <button
+                                    className="btn btn-outline-dark rounded-pill px-5 py-3"
+                                    onClick={handleVolver}
+                                    >
+                                    <h4 className=" display-4 p-4">Volver</h4>
+                                    </button>
+                                )}
+                    </div>
+
+
+                </div> */}
+            </div>
+        );
+                
+     }
       else if(ruta == 'cantidad') {
         return (
             <div className="container mt-4">
@@ -1856,34 +1980,45 @@ function TerminalScreen() {
   {/* Botones */}
   <div className="row justify-content-center">
     <div className="col-12 d-flex flex-wrap justify-content-center gap-4">
-      {buttons.map((but, idx) => {
+   {buttons
+    .filter((but) => {
+        // Hide "Bebidas" unless type is "drinks"
+        if (but.ruta === 'bebidas' && type !== 'drinks') return false;
+
+        // Hide "Ingredientes" and "Toppings" if type is "drinks"
+        if ((but.ruta === 'ingredientes' || but.ruta === 'toppings' || but.ruta === 'cantidad') && type === 'drinks') return false;
+
+        return true;
+    })
+    .map((but) => {
         let isDisabled = false;
-        if (idx === 1 && (type === 0 || type === "")) isDisabled = true;
-        if (idx === 2 && ings.length === 0) isDisabled = true;
-        if (idx === 3 && qty === 0) isDisabled = true;
+
+        if (but.ruta === 'cantidad' && ings.length === 0) isDisabled = true;
+        if (but.ruta === 'toppings' && qty === 0) isDisabled = true;
 
         return (
-          <button
-            key={idx}
+        <button
+            key={but.ruta}
             className={`btn btn-outline-dark rounded d-flex flex-column align-items-center justify-content-center text-center ${but.ruta}`}
             style={{
-              width: '100%',
-              maxWidth: '400px',
-              height: '180px',
-              backgroundColor: isDisabled ? '#dee2e6' : 'transparent',
-              color: isDisabled ? '#6c757d' : 'inherit',
-              cursor: isDisabled ? 'not-allowed' : 'pointer',
+            width: '100%',
+            maxWidth: '400px',
+            height: '180px',
+            backgroundColor: isDisabled ? '#dee2e6' : 'transparent',
+            color: isDisabled ? '#6c757d' : 'inherit',
+            cursor: isDisabled ? 'not-allowed' : 'pointer',
             }}
             onClick={() => choose(but.ruta)}
             disabled={isDisabled}
-          >
+        >
             {but.selected && (
-              <i className="bi bi-check-circle-fill text-success display-4 mb-2"></i>
+            <i className="bi bi-check-circle-fill text-success display-4 mb-2"></i>
             )}
             <h4 className="display-6 m-0">{but.label}</h4>
-          </button>
+        </button>
         );
-      })}
+    })}
+
     </div>
   </div>
 
