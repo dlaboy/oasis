@@ -1313,10 +1313,11 @@ const [data, setData] = useState([]);
   <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 w-100">
     {data?.length > 0 ? (
       data.map((item, idx) => {
-        const fecha = parseISO(item.ds);
-        const diaSemana = item.weekday || format(fecha, 'EEEE', { locale: es });
-        const fechaBonita = format(fecha, 'dd/MM/yyyy');
-        const prediccion = item.yhat ?? 0;
+        // Validaciones
+        const fechaValida = item?.ds ? parseISO(item.ds) : null;
+        const diaSemana = item?.weekday || (fechaValida ? format(fechaValida, 'EEEE', { locale: es }) : 'Día');
+        const fechaBonita = fechaValida ? format(fechaValida, 'dd/MM/yyyy') : 'Fecha desconocida';
+        const prediccion = typeof item?.yhat === 'number' ? item.yhat : 0;
 
         return (
           <div key={idx} className="col">
