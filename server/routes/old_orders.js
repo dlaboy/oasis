@@ -197,6 +197,8 @@ router.get('/avgICperHourPerDay', async function (req, res) {
 
   // Structure: { 'Monday': { '01 PM': { total: X, days: Set() }, ... } }
   const stats = {};
+  const today = moment().tz('America/Puerto_Rico').format('YYYY-MM-DD');
+
 
   orders.forEach(order => {
     if (order.Date) {
@@ -204,6 +206,8 @@ router.get('/avgICperHourPerDay', async function (req, res) {
       const hour = date.format('hh A');
       const dayName = date.format('dddd');
       const day = date.format('YYYY-MM-DD');
+      if (day === today) return; // ⛔️ Ignora las órdenes de hoy
+
 
       if (!stats[dayName]) {
         stats[dayName] = {};
