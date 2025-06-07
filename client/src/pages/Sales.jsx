@@ -15,6 +15,10 @@ import FileUpload from '../components/FileUploadTest';
 import { Toaster, toast } from 'react-hot-toast';
 import Calendar from '../tools/Calendar';
 import moment from 'moment';
+import { format, parseISO } from 'date-fns';
+import { es } from 'date-fns/locale';
+
+
 
 const formatCurrency = (value) => {
     return new Intl.NumberFormat('en-US', {
@@ -234,6 +238,8 @@ function Sales(){
   },[stat])
 
   const submitRef = useRef();
+const [data, setData] = useState([]);
+
 
 
     useEffect(()=>{
@@ -267,7 +273,37 @@ function Sales(){
                 
         //       })
         // })
-       
+         fetch("/api/predict")
+        .then(res => res.json())
+        .then(setData)
+        .catch(console.error);
+      const fetchWeather = async () => {
+        const latitud = 18.4655;
+        const longitud = -66.1057;
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitud}&longitude=${longitud}&daily=weathercode,temperature_2m_max,temperature_2m_min&&temperature_unit=fahrenheit&timezone=auto`;
+
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+
+                const dias = data.daily.time.map((fecha, i) => ({
+                fecha,
+                dia: format(parseISO(fecha), 'EEEE', { locale: es }),
+                tempMax: data.daily.temperature_2m_max[i],
+                tempMin: data.daily.temperature_2m_min[i],
+                codigo: data.daily.weathercode[i]
+                }));
+
+                setPronostico(dias);
+            } catch (err) {
+                console.error('Error al obtener el pronóstico:', err);
+            } finally {
+                setCargando(false);
+            }
+        };
+
+
+        fetchWeather();
 
 
 
@@ -1108,6 +1144,42 @@ function Sales(){
     const [hoursKeys,setHoursKeys] = useState([])
     const [hoursCount,setHoursCounts] = useState([])
 
+    const [showSelection, setShowSelection] = useState(false);
+
+    const [pronostico, setPronostico] = useState([]);
+    const [cargando, setCargando] = useState(true);
+
+    const descripcionClima = (codigo) => {
+        const descripciones = {
+        0: 'Cielo despejado ☀️',
+        1: 'Mayormente despejado 🌤️',
+        2: 'Parcialmente nublado ⛅',
+        3: 'Nublado ☁️',
+        45: 'Niebla 🌫️',
+        48: 'Niebla con escarcha ❄️',
+        51: 'Llovizna ligera 🌦️',
+        53: 'Llovizna moderada 🌦️',
+        55: 'Llovizna densa 🌧️',
+        61: 'Lluvia ligera 🌧️',
+        63: 'Lluvia moderada 🌧️',
+        65: 'Lluvia intensa 🌧️',
+        80: 'Chubascos 🌦️',
+        95: 'Tormenta ⛈️',
+        };
+        return descripciones[codigo] || 'Clima desconocido';
+    };
+
+    if (cargando) return <p>Cargando pronóstico...</p>;
+
+
+    // useEffect(() => {
+    //     fetch("/api/predict")
+    //     .then(res => res.json())
+    //     .then(setData)
+    //     .catch(console.error);
+    // }, []);
+
+
     
 
     return (
@@ -1155,6 +1227,20 @@ function Sales(){
             <div className="pt-3 pb-3 d-flex w-75 text-center justify-content-center align-items-center display-6">
                         Ventas
             </div>
+            <div className="text-end me-4 mt-3">
+                <button 
+                    className="btn btn-outline-primary rounded-circle p-3 d-flex flex-row"
+                    onClick={() => setShowSelection(prev => !prev)}
+                    title="Tu selección"
+                >
+                    {/* <i className="bi bi-info-lg fs-4"></i> */}
+                    <div className="">AI</div>
+                    <div className="">🧠</div>
+
+                </button>
+                
+            </div>
+           
             <div className="d-flex justify-content-center pt-3 pb-3 w-25">
                 {/* <div
                     className="btn-group rounded-pill border border-dark overflow-hidden"
@@ -1184,6 +1270,103 @@ function Sales(){
 
 
         </div>
+        {showSelection && (
+  <div 
+    className="position-fixed end-0 top-0 bg-light border p-4 rounded shadow bg-dark text-white"
+    style={{ width: '50vw', height: '100vh', zIndex: 999, overflowY: 'auto' }}
+  >
+    <div className="d-flex flex-row justify-content-between align-items-center mb-3">
+        <h5 className="text-center mb-3">Predicciones</h5>
+        <button 
+            className="btn btn-sm btn-outline-danger rounded-circle p-3"
+            onClick={() => setShowSelection(prev => !prev)}
+            title="Tu selección"
+            >
+                <i className="bi bi-x-lg"></i>    
+            </button>
+    </div>
+    <div className="d-flex flex-column justify-content-between align-items-center mb-3">
+        <div className="d-flex flex-row justify-content-between align-items-center mb-3">
+            <div className="bg-dark text-white p-4 rounded shadow">
+            <h2 className="text-center mb-4">🗞️ Pronóstico Semanal del Clima</h2>
+            <div className="row row-cols-1 row-cols-md-3 g-4">
+                {pronostico.map((dia, i) => (
+                <div key={i} className="col">
+                    <div className="card text-white bg-primary h-100">
+                    <div className="card-body">
+                        <h5 className="card-title text-capitalize">{dia.dia}</h5>
+                        <p className="card-text">
+                        <strong>{descripcionClima(dia.codigo)}</strong><br />
+                        Máx: {dia.tempMax}°F | Mín: {dia.tempMin}°F
+                        </p>
+                    </div>
+                    </div>
+                </div>
+                ))}
+            </div>
+            </div>
+            
+        </div>
+    </div>
+<div className="d-flex flex-column justify-content-center align-items-center mb-3">
+  <h2 className="mb-4">🔮 Predicción de Ventas (Próximos 7 días)</h2>
+  <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 w-100">
+    {data?.length > 0 ? (
+      data.map((item, idx) => {
+        const fecha = parseISO(item.ds);
+        const diaSemana = item.weekday || format(fecha, 'EEEE', { locale: es });
+        const fechaBonita = format(fecha, 'dd/MM/yyyy');
+        const prediccion = item.yhat ?? 0;
+
+        return (
+          <div key={idx} className="col">
+            <div className="card text-white bg-primary h-100 shadow-sm">
+              <div className="card-body text-center">
+                <h5 className="card-title text-capitalize">{diaSemana}</h5>
+                <p className="card-text mb-1">{fechaBonita}</p>
+                <p className="card-text fs-5">${prediccion.toFixed(2)}</p>
+              </div>
+            </div>
+          </div>
+        );
+      })
+    ) : (
+      <div className="text-center text-muted">No hay datos disponibles</div>
+    )}
+  </div>
+</div>
+
+    {/* <div className="d-flex flex-row justify-content-between align-items-center mb-3">
+        <h5 className="text-center mb-3">Cantidad de helados</h5>
+        <select name="" id="">
+            <option value="">Diario</option>
+            <option value="">Semanal</option>
+            <option value="">Mensual</option>
+            <option value="">Anual</option>
+        </select>
+    </div>
+    <div className="d-flex flex-row justify-content-between align-items-center mb-3">
+        <h5 className="text-center mb-3">Horas pico</h5>
+        <select name="" id="">
+            <option value="">Diario</option>
+            <option value="">Semanal</option>
+            <option value="">Mensual</option>
+            <option value="">Anual</option>
+        </select>
+    </div>
+    <div className="d-flex flex-row justify-content-between align-items-center mb-3">
+        <h5 className="text-center mb-3">Inventario</h5>
+        <select name="" id="">
+            <option value="">Diario</option>
+            <option value="">Semanal</option>
+            <option value="">Mensual</option>
+            <option value="">Anual</option>
+        </select>
+    </div>
+    
+     */}
+  </div>
+)}
         <div className='d-flex justify-content-start align-items-center flex-column' >
             <div className="d-flex flex-row">
                  <div

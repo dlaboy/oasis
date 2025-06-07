@@ -26,6 +26,7 @@ var ingredienteRouter = require('./routes/ingredientes.js')
 var toppingRouter = require('./routes/toppings.js')
 var favoritesRouter = require('./routes/favorites.js')
 var fileUploadRouter = require('./routes/upload.js')
+var predictor = require('./routes/predict.js');
 const WebSocket = require('ws');
 
 
@@ -53,6 +54,8 @@ app.use('/ingrediente',ingredienteRouter);
 app.use('/topping',toppingRouter);
 app.use('/favorite',favoritesRouter);
 app.use('/upload',fileUploadRouter);
+app.use("/api/predict", predictor);
+
 
 
 
