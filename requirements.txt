@@ -1,0 +1,4 @@
+pymongo
+pandas
+prophet
+python-dotenv
