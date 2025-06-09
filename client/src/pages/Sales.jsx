@@ -1286,7 +1286,7 @@ const [data, setData] = useState([]);
         {showSelection && (
   <div 
     className="position-fixed end-0 top-0 bg-light border p-4 rounded shadow bg-dark text-white"
-    style={{ width: '50vw', height: '100vh', zIndex: 999, overflowY: 'auto' }}
+    style={{ width: '100vw', height: '100vh', zIndex: 999, overflowY: 'auto' }}
   >
     <div className="d-flex flex-row justify-content-between align-items-center mb-3">
         <h5 className="text-center mb-3">Predicciones</h5>
