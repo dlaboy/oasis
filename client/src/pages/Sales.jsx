@@ -277,6 +277,16 @@ const [data, setData] = useState([]);
         .then(res => res.json())
         .then(setData)
         .catch(console.error);
+        const fetchGlobalError = async () => {
+      try {
+        const response = await axios.get('/errorptg/global'); // Ajusta esta URL si usas un proxy o dominio
+        setGlobalError(response.data.porcentaje_error_global);
+      } catch (error) {
+        console.error('Error al obtener el porcentaje de error global:', error);
+      }
+    };
+
+    fetchGlobalError();
       const fetchWeather = async () => {
         const latitud = 18.4655;
         const longitud = -66.1057;
@@ -1149,6 +1159,9 @@ const [data, setData] = useState([]);
     const [pronostico, setPronostico] = useState([]);
     const [cargando, setCargando] = useState(true);
 
+    const [globalError, setGlobalError] = useState(null);
+
+
     const descripcionClima = (codigo) => {
         const descripciones = {
         0: 'Cielo despejado ☀️',
@@ -1309,7 +1322,18 @@ const [data, setData] = useState([]);
         </div>
     </div>
 <div className="d-flex flex-column justify-content-center align-items-center mb-3">
-  <h2 className="mb-4">🔮 Predicción de Ventas (Próximos 7 días)</h2>
+    <div className="text-white">
+        <h2 className="mb-4">🔮 Predicción de Ventas (Próximos 7 días)</h2>
+        <div className="d-flex flex-row justify-content-center align-items-center mb-3">
+        {globalError ? (
+          <div className="alert alert-info p-2 m-0">
+            Porcentaje de error global: <strong>{globalError}</strong>
+          </div>
+        ) : (
+          <div className="text-light">Calculando porcentaje de error...</div>
+        )}
+      </div>
+    </div>
   <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 w-100">
     {data?.length > 0 ? (
       data.map((item, idx) => {

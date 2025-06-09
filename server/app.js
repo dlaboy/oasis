@@ -27,6 +27,8 @@ var toppingRouter = require('./routes/toppings.js')
 var favoritesRouter = require('./routes/favorites.js')
 var fileUploadRouter = require('./routes/upload.js')
 var predictor = require('./routes/predict.js');
+var errorPercentage = require('./routes/errorpercentage.js');
+
 const WebSocket = require('ws');
 
 
@@ -55,6 +57,7 @@ app.use('/topping',toppingRouter);
 app.use('/favorite',favoritesRouter);
 app.use('/upload',fileUploadRouter);
 app.use("/api/predict", predictor);
+app.use("/errorptg", errorPercentage);
 
 
 
